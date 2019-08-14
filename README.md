@@ -1,5 +1,11 @@
 # emulator
 
+## Tutoriais (Mês 1)
+
+[NerdyNights](http://nintendoage.com/forum/messageview.cfm?catid=22&threadid=7155): a series of NES programming lessons, starting from absolutely no knowledge.
+
+[Easy 6502](https://skilldrick.github.io/easy6502/#intro): assembly tutorial.
+
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
 - http://www.obelisk.me.uk/6502/reference.html
