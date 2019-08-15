@@ -27,3 +27,6 @@ Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 ## Emulador Mednafen (oficial da disciplina)
 - `sudo apt-get install mednafen mednaffe`
 
+## Other tools
+- https://wiki.nesdev.com/w/index.php/Tools
+
