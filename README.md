@@ -23,3 +23,7 @@
 Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 - `sudo apt-get install fceux`
 - `nes file.nes`
+
+## Emulador Mednafen (oficial da disciplina)
+- `sudo apt-get install mednafen mednaffe`
+
