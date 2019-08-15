@@ -16,6 +16,9 @@
 ## Assembler NESASM para linux
 - https://github.com/camsaul/nesasm
 
+## Assembler ASM6F (oficial da disciplina)
+- https://github.com/freem/asm6f
+
 ## Emulador FCEUX para linux
 Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 - `sudo apt-get install fceux`
