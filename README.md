@@ -25,8 +25,11 @@ Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 - `nes file.nes`
 
 ## Emulador Mednafen (oficial da disciplina)
-- `sudo apt-get install mednafen mednaffe`
+- `sudo apt-get install mednafen mednaffe
+
+## Extensão do VSCode para 6502
+
+- https://marketplace.visualstudio.com/items?itemName=EngineDesigns.retroassembler
 
 ## Other tools
 - https://wiki.nesdev.com/w/index.php/Tools
-
