@@ -12,6 +12,11 @@ LAST_SPRITE_END = $10 ; LAST_SPRITE_END = 4 * TOTAL_NUM_SPRITES
 PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
+APUFLAGS = $4015
+SQ1_ENV = $4000
+SQ1_LO = $4002
+SQ1_HI = $4003
+
 ;----------------------------------------------------------------
 ; variables
 ;----------------------------------------------------------------
@@ -50,6 +55,15 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
    .base $10000-(PRG_COUNT*$4000)
 
+; TODO: is it ok to just include here?
+Sound:
+    .include "sound/engine.asm"
+
+;----------------------------------------------------------------
+; RESET
+;----------------------------------------------------------------
+
+
 Reset:
     .include "reset.asm"
 
@@ -60,13 +74,13 @@ Reset:
 
 NMI:
     .include "nmi.asm"
-	    
+
 
 ;----------------------------------------------------------------
 ; IRQ
 ;----------------------------------------------------------------
 
-IRQ:    ;NOTE: IRQ code goes here    
+IRQ:    ;NOTE: IRQ code goes here
 
 
 ;----------------------------------------------------------------
@@ -83,7 +97,7 @@ sprites:
 
 background:
     .include "graphics/background.asm"
-  
+
 attribute:
     .include "graphics/attributes.asm"
 
