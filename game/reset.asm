@@ -27,7 +27,7 @@ clrmem:
   STA $0200, x
   INX
   BNE clrmem
-   
+
 vblankwait2:      ; Second wait for vblank, PPU is ready after this
   BIT $2002
   BPL vblankwait2
@@ -63,7 +63,7 @@ LoadSpritesLoop:
   CPX #$10              ; Compare X to hex $10, decimal 16
   BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
                         ; if compare was equal to 16, keep going down
-              
+
 LDX #ZERO              ; start out at 0
 
 ; The following code was extracted from: http://forums.nesdev.com/viewtopic.php?p=134954#p134954
@@ -92,7 +92,7 @@ NameLoop:                       ; loop to draw entire nametable
         DEX
         BNE NameLoop
 
-          
+
 LoadAttribute:
   LDA $2002             ; read PPU status to reset the high/low latch
   LDA #$23
@@ -107,9 +107,9 @@ LoadAttributeLoop:
   CPX #$8              ; Compare X to hex $08, decimal 8 - copying 8 bytes
   BNE LoadAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
                         ; if compare was equal to 128, keep going down
-           
-              
-              
+
+
+
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000
 
@@ -121,6 +121,10 @@ LoadAttributeLoop:
   STA $2006
   STA $2005
   STA $2005
+
+; APU setup
+LDA #%00000001 ; enable SQ1 only
+STA APUFLAGS
 
 Forever:
   JMP Forever     ;jump back to Forever, infinite loop
