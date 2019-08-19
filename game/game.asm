@@ -25,8 +25,13 @@ SQ1_HI = $4003
 
    ;NOTE: declare variables using the DSB and DSW directives, like this:
 
-   pointerLo .dsb 1 ; Variable used during background loop
-   pointerHi .dsb 1 ; Variable used during background loop
+   tile        .dsb 1 ; Variables for background
+   tile_count  .dsb 1
+   attrLow     .dsb 1
+   attrHigh    .dsb 1
+   attrLow2    .dsb 1
+   attrHigh2   .dsb 1
+   aux         .dsb 1
 
    .ende
 
@@ -76,6 +81,12 @@ NMI:
     .include "nmi.asm"
 
 
+;-----------------------------------------------------------------
+; Graphics functions
+;-----------------------------------------------------------------
+
+    .include "graphics/loadbackground.asm"
+
 ;----------------------------------------------------------------
 ; IRQ
 ;----------------------------------------------------------------
@@ -100,6 +111,8 @@ background:
 
 attribute:
     .include "graphics/attributes.asm"
+
+    .include "graphics/matrix.asm"
 
 ;----------------------------------------------------------------
 ; interrupt vectors

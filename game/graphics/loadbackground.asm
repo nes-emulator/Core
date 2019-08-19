@@ -1,22 +1,7 @@
-;; NOT YET FINISHED FILE
 
-
-;; DECLARE SOME VARIABLES HERE
-  .rsset $0000  ;;start variables at ram location 0
-
-tile        .rs 1  ; .rs 1 means reserve one byte of space
-tile_count  .rs 1
-attrLow     .rs 1
-attrHigh    .rs 1
-attrLow2    .rs 1
-attrHigh2   .rs 1
-control     .rs 1
-aux         .rs 1
-
-
-;;;;;;;;;;;;;;;
-; MAIN FUNCTION LOAD BACKGROUND TO BE CALLED
-;;;;;;;;;;;;;;;
+;-----------------------------------------------------------------
+; LoadBackground Main function
+;-----------------------------------------------------------------
 
 LoadBackground:
   LDA #$04
@@ -168,9 +153,10 @@ LoadMatrixAttributeSkipLine:
 LoadMatrixAttributesLoopEnd:
   RTS                   ; Return from function
 
-;;;;;;;;;;;;;;
-; AUXILIAR FUNCTIONS
-;;;;;;;;;;;;;;
+
+;-----------------------------------------------------------------
+; Auxiliar functions
+;-----------------------------------------------------------------
 
 ExtractDataFromTile:
   LDA tile
@@ -263,37 +249,3 @@ LoadTileLowAttribute:
   ASL attrHigh2         ; Move format to wwzz0000
 
   RTS
-
-;;; CONSTANTS
-
-MIDDLE_OPEN = %00000000
-LEFT_WALL_OPEN = %01000000
-LEFT_WALL_CLOSE = %01000100
-RIGHT_WALL_OPEN = %00000100
-RIGHT_WALL_CLOSE = %01000100
-
-;; VARIABLE
-matrix:
-  .db %00000000, %00000000, %00000000, %00000000
-  .db %00000000, %00000000, %00000000, %00000000    ; Space from top
-
-  .db %01010101, %01010101, %01010101, %01010100    ; Top wall
-
-  .db LEFT_WALL_OPEN, MIDDLE_OPEN, MIDDLE_OPEN, RIGHT_WALL_OPEN
-  .db LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, RIGHT_WALL_CLOSE
-
-  .db LEFT_WALL_OPEN, MIDDLE_OPEN, MIDDLE_OPEN, RIGHT_WALL_OPEN
-  .db LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, RIGHT_WALL_CLOSE
-
-  .db LEFT_WALL_OPEN, MIDDLE_OPEN, MIDDLE_OPEN, RIGHT_WALL_OPEN
-  .db LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, RIGHT_WALL_CLOSE
-
-  .db LEFT_WALL_OPEN, MIDDLE_OPEN, MIDDLE_OPEN, RIGHT_WALL_OPEN
-  .db LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, RIGHT_WALL_CLOSE
-
-  .db LEFT_WALL_OPEN, MIDDLE_OPEN, MIDDLE_OPEN, RIGHT_WALL_OPEN
-  .db LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, LEFT_WALL_CLOSE, RIGHT_WALL_CLOSE
-
-  .db LEFT_WALL_OPEN, MIDDLE_OPEN, MIDDLE_OPEN, RIGHT_WALL_OPEN
-
-  .db %01010101, %01010101, %01010101, %01010100     ; Bottom wall
