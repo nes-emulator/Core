@@ -123,7 +123,7 @@ LoadAttributeLoop:
   STA $2005
 
 ; APU setup
-LDA #%00000001 ; enable SQ1 only
+LDA #%00000101 ; enable SQ1 and TRI
 STA APUFLAGS
 
 Forever:

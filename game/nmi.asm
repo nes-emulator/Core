@@ -17,7 +17,8 @@ ReadA:
 	AND #%00000001  ; only look at bit 0
 	BEQ ReadADone   ; branch to ReadADone if button is NOT pressed (0)
 		            ; add instructions here to do something when button IS pressed (1)
-    JSR EternalBeep
+    ; JSR EternalBeep
+    JSR TriangleOn
 ReadADone:          ; handling this button is done
 
 ReadB:
@@ -25,7 +26,8 @@ ReadB:
     AND #%00000001  ; only look at bit 0
     BEQ ReadBDone   ; branch to ReadADone if button is NOT pressed (0)
 	                ; add instructions here to do something when button IS pressed (1)
-    JSR ClearSQ1
+    ; JSR ClearSQ1
+    JSR TriangleOff
 ReadBDone:          ; handling this button is done
 
     ReadSelect:

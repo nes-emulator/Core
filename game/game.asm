@@ -13,9 +13,6 @@ PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 APUFLAGS = $4015
-SQ1_ENV = $4000
-SQ1_LO = $4002
-SQ1_HI = $4003
 
 ;----------------------------------------------------------------
 ; variables
