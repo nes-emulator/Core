@@ -64,51 +64,9 @@ LoadSpritesLoop:
   BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
                         ; if compare was equal to 16, keep going down
 
-LDX #ZERO              ; start out at 0
+  LDX #ZERO             ; start out at 0
 
-; The following code was extracted from: http://forums.nesdev.com/viewtopic.php?p=134954#p134954
-
-LoadBackground:
-
-  ldx #$04;Increment pointer 4 times to write 1024 bytes of data
-
-  lda #$20;High byte of first nametable's address
-  sta $2006
-  ldy #$00;Low byte of first nametable's address
-  sty $2006
-
-SetBg:         ; Set up information for NMI to update background
- LDA #<background;Forgot the # here
- STA pointerLo
- LDA #>background;And here
- STA pointerHi
-
-NameLoop:                       ; loop to draw entire nametable
-        LDA (pointerLo),y
-        STA $2007
-        INY
-        BNE NameLoop
-        INC pointerHi
-        DEX
-        BNE NameLoop
-
-
-LoadAttribute:
-  LDA $2002             ; read PPU status to reset the high/low latch
-  LDA #$23
-  STA $2006             ; write the high byte of $23C0 address
-  LDA #$C0
-  STA $2006             ; write the low byte of $23C0 address
-  LDX #$00              ; start out at 0
-LoadAttributeLoop:
-  LDA attribute, x      ; load data from address (attribute + the value in x)
-  STA $2007             ; write to PPU
-  INX                   ; X = X + 1
-  CPX #$8              ; Compare X to hex $08, decimal 8 - copying 8 bytes
-  BNE LoadAttributeLoop  ; Branch to LoadAttributeLoop if compare was Not Equal to zero
-                        ; if compare was equal to 128, keep going down
-
-
+  JSR LoadBackground    ; Load background function
 
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000
