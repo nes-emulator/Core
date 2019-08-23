@@ -88,10 +88,10 @@ STA APUFLAGS
 setupBrickNumbers:
 ;bit set to store what bricks are still in the screen
 LDX #$00
-LDA #%11111111
+LDA #%00000000
 STA activeBricks,X
 INX
-LDA #%00000001
+LDA #%00000000
 STA activeBricks, X
 
 

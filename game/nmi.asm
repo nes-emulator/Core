@@ -246,18 +246,33 @@ VerifyYDownWallBoundaries:
 
 ;A will store the bitset
 ;X will store the number of the brick being processed
-;requiredBrick is the parameter
-;this odd loop was only made like this to preserve Carry flag of the LSR op
+;requiredBrick is the parameter, a global variable declared in gamw.asm
+;this function will return 0 in flag if the brick is present , otherwise it will return -1 in C
   brickIsPresent:
 	LDX #$00
 	LDA activeBricks
 	brickStatusLoop:
-		CPX requiredBrick
-		BEQ brickVerificationEnd
-		
 		LSR A
 		INX
-	brickVerificationEnd:
-		RTS
+		BEQ currentBrickPresent ; the current brick is present
+
 		
+		;the required brick isnt present
+		CPX requiredBrick
+		BEQ endOfBrickVerification
+		JMP brickStatusLoop
+
+		currentBrickPresent:
+		CPX requiredBrick
+		BEQ endOfBrickVerificationWithFlag:
+
+
+	endOfBrickVerification:
+		LDA #$1
+		CMP #$2
+		RTS
+	endOfBrickVerificationWithFlag:
+		RTS
+
+	
 		  
