@@ -1,8 +1,17 @@
 ;----------------------------------------------------------------
 ; constants
 ;----------------------------------------------------------------
+;top = 0x30
+; bot = 0xd6
+;right = 0xCA
+
+TOP_LIMIT = $2D
+BOT_LIMIT = $D7
+RIGHT_LIMIT = $DA
+LEFT_LIMIT = $09
 
 ONE = $01
+FOUR = $04
 ZERO = $00
 
 FIRST_SPRITE_Y = $0200
@@ -29,6 +38,8 @@ APUFLAGS = $4015
    attrLow2    .dsb 1
    attrHigh2   .dsb 1
    aux         .dsb 1
+
+   
 
    .ende
 

@@ -52,6 +52,19 @@ ReadBDone:          ; handling this button is done
 
 	LDX #ZERO              ; start at 0
 
+YUpMovementInBoundaries:
+	LDA FIRST_SPRITE_Y,x
+	SEC
+	SBC #ONE
+	JSR VerifyYUpWallBoundaries
+	BEQ ReadUpDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE YUpMovementInBoundaries
+	
 	LoadSpritesLoopUp:
 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
 	    SEC             ; make sure carry flag is set
@@ -66,8 +79,12 @@ ReadBDone:          ; handling this button is done
 	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
 	    BNE LoadSpritesLoopUp   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
 
+
+	
+
     ReadUpDone:        ; handling this button is done
 
+	
     ReadDown:
 	LDA $4016       ; player 1 - Start
 	AND #%00000001  ; only look at bit 0
@@ -75,6 +92,19 @@ ReadBDone:          ; handling this button is done
 		        ; add instructions here to do something when button IS pressed (1
 
 	LDX #ZERO              ; start at 0
+
+	YDownMovementInBoundaries:
+	LDA FIRST_SPRITE_Y,x
+	SEC
+	SBC #ONE
+	JSR VerifyYDownWallBoundaries
+	BEQ ReadDownDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE YDownMovementInBoundaries
 
 	LoadSpritesLoopDown:
 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
@@ -92,6 +122,8 @@ ReadBDone:          ; handling this button is done
 
     ReadDownDone:        ; handling this button is done
 
+
+	
     ReadLeft:
 	LDA $4016       ; player 1 - Start
 	AND #%00000001  ; only look at bit 0
@@ -99,6 +131,20 @@ ReadBDone:          ; handling this button is done
 		        ; add instructions here to do something when button IS pressed (1
 
 	LDX #ZERO              ; start at 0
+
+XLeftMovementInBoundaries:
+	LDA FIRST_SPRITE_X,x
+	SEC
+	SBC #ONE
+	JSR VerifyXLeftWallBoundaries
+	BEQ ReadLeftDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE XLeftMovementInBoundaries
+
 
 	LoadSpritesLoopLeft:
 	    LDA FIRST_SPRITE_X,x       ; load sprite X position
@@ -125,6 +171,19 @@ ReadBDone:          ; handling this button is done
 
 	LDX #ZERO              ; start at 0
 
+	XRightMovementInBoundaries:
+	LDA FIRST_SPRITE_X,x
+	SEC
+	SBC #ONE
+	JSR VerifyXRightWallBoundaries
+	BEQ ReadRightDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE XRightMovementInBoundaries
+
 	LoadSpritesLoopRight:
 	    LDA FIRST_SPRITE_X,x       ; load sprite X position
 	    CLC               ; make sure carry flag is set
@@ -142,3 +201,28 @@ ReadBDone:          ; handling this button is done
     ReadRightDone:        ; handling this button is done
 
     RTI             ; return from interrupt
+
+
+VerifyXRightWallBoundaries:
+  CLC
+  SEC
+  CMP #RIGHT_LIMIT
+  RTS
+
+VerifyXLeftWallBoundaries:
+  CLC
+  SEC
+  CMP #LEFT_LIMIT
+  RTS
+
+VerifyYUpWallBoundaries:
+  CLC
+  SEC
+  CMP #TOP_LIMIT
+  RTS
+
+VerifyYDownWallBoundaries:
+  CLC
+  SEC
+  CMP #BOT_LIMIT
+  RTS
