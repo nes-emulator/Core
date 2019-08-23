@@ -207,22 +207,57 @@ VerifyXRightWallBoundaries:
   CLC
   SEC
   CMP #RIGHT_LIMIT
+  BEQ endOfXRightVerification
+  ;if he is planning move to the right, i have to verify possible shock with all left corners
+  ;of the bricks
+  ;first of all i will check which brick is still present
+
+
+  endOfXRightVerification:	
   RTS
 
 VerifyXLeftWallBoundaries:
   CLC
   SEC
   CMP #LEFT_LIMIT
+  BEQ endOfXLeftVerification
+
+  :endOfXLeftVerification
   RTS
 
 VerifyYUpWallBoundaries:
   CLC
   SEC
   CMP #TOP_LIMIT
+  BEQ endOfYUpVerification
+
+  endOfYUpVerification:	
   RTS
 
 VerifyYDownWallBoundaries:
   CLC
   SEC
   CMP #BOT_LIMIT
+  BEQ endOfYDownVerification
+
+
+  endOfYDownVerification:
   RTS
+
+;A will store the bitset
+;X will store the number of the brick being processed
+;requiredBrick is the parameter
+;this odd loop was only made like this to preserve Carry flag of the LSR op
+  brickIsPresent:
+	LDX #$00
+	LDA activeBricks
+	brickStatusLoop:
+		CPX requiredBrick
+		BEQ brickVerificationEnd
+		
+		LSR A
+		INX
+	brickVerificationEnd:
+		RTS
+		
+		  

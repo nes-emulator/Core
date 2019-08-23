@@ -8,7 +8,10 @@
 TOP_LIMIT = $2D
 BOT_LIMIT = $D7
 RIGHT_LIMIT = $DA
-LEFT_LIMIT = $09
+LEFT_LIMIT = $0F
+BRICK_SIZE = $13
+BRICK_LINES = $3
+
 
 ONE = $01
 FOUR = $04
@@ -39,10 +42,12 @@ APUFLAGS = $4015
    attrHigh2   .dsb 1
    aux         .dsb 1
 
-   
+  .ende
 
-   .ende
-
+  .enum $0008
+  activeBricks .DSW 1
+  requiredBrick .DSB 1
+  .ende
    ;NOTE: you can also split the variable declarations into individual pages, like this:
 
    ;.enum $0100
