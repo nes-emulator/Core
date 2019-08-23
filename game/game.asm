@@ -9,8 +9,8 @@ TOP_LIMIT = $2D
 BOT_LIMIT = $D7
 RIGHT_LIMIT = $DA
 LEFT_LIMIT = $0F
-INNE_WALL_SIZE = $13
-BRICK_WALL_LINES = $3
+INNER_WALL_SIZE = $13
+INNER_WALL_LINES = $03
 
 
 ONE = $01
@@ -20,6 +20,7 @@ ZERO = $00
 FIRST_SPRITE_Y = $0200
 FIRST_SPRITE_X = $0203
 LAST_SPRITE_END = $10 ; LAST_SPRITE_END = 4 * TOTAL_NUM_SPRITES
+
 
 PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
@@ -45,8 +46,12 @@ APUFLAGS = $4015
   .ende
 
   .enum $0008
+  stackX .dsb 1
+  stackY .dsb 1
+  stackA .dsb 1
   activeBricks .DSW 1
   requiredBrick .DSB 1
+  currentWallComparison .DSB 1
   .ende
    ;NOTE: you can also split the variable declarations into individual pages, like this:
 

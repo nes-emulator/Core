@@ -94,7 +94,5 @@ INX
 LDA #%00000000
 STA activeBricks, X
 
-
-
 Forever:
   JMP Forever     ;jump back to Forever, infinite loop

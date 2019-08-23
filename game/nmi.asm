@@ -175,6 +175,7 @@ XLeftMovementInBoundaries:
 	LDA FIRST_SPRITE_X,x
 	SEC
 	SBC #ONE
+	LDY FIRST_SPRITE_Y,x
 	JSR VerifyXRightWallBoundaries
 	BEQ ReadRightDone
 	INX
@@ -203,25 +204,50 @@ XLeftMovementInBoundaries:
     RTI             ; return from interrupt
 
 
+;parameter A  = sprite primary verification position (x or Y)
+;Y = Sprite secundary verification (x or Y)
 VerifyXRightWallBoundaries:
+  PHA
+  PHX
+  PHY
+
+
   CLC
   SEC
   CMP #RIGHT_LIMIT
   BEQ endOfXRightVerification
-  ;if he is planning move to the right, i have to verify possible shock with all left corners
-  ;of the bricks
+  ;Brick Verification
+  ;Verify Brick limits
   ;first of all i will check which brick is still present
 
+  ;Inner Wall Verification
+  ;if he is planning move to the right, i have to verify possible shock with all left corners
+  ;of the inner walls
+  
+  TAY
+  LDA #LEFT_LIMIT
+  JSR InnerWallsVerification
+  BNE endOfXRightVerification
+  
+  PLY
+  PHY
+  
+  LDA #TOP_LIMIT
+  JSR InnerWallsVerification
+ 
 
   endOfXRightVerification:	
-  RTS
+	PLY
+	PLX
+	PLA
+  	RTS
 
 VerifyXLeftWallBoundaries:
   CLC
   SEC
   CMP #LEFT_LIMIT
   BEQ endOfXLeftVerification
-
+  ;Verify Brick limits
   :endOfXLeftVerification
   RTS
 
@@ -230,7 +256,7 @@ VerifyYUpWallBoundaries:
   SEC
   CMP #TOP_LIMIT
   BEQ endOfYUpVerification
-
+  ;Verify Brick limits
   endOfYUpVerification:	
   RTS
 
@@ -239,8 +265,7 @@ VerifyYDownWallBoundaries:
   SEC
   CMP #BOT_LIMIT
   BEQ endOfYDownVerification
-
-
+  ;Verify Brick limits
   endOfYDownVerification:
   RTS
 
@@ -274,5 +299,27 @@ VerifyYDownWallBoundaries:
 	endOfBrickVerificationWithFlag:
 		RTS
 
-	
-		  
+;Y = coordinate Postion Y Or Position X	
+;A = Boundary Position (top or Left)
+; Return in Carry = 0 if the colision in this axis willl happen 
+  
+  InnerWallsVerification:
+	PHA
+  	PHX
+  	PHY
+	InnerWallInnerVerificationLoop:
+		CLC
+		ADC #INNER_WALL_SIZE
+		ADC #INNER_WALL_SIZE
+		STA currentWallComparison
+		CPY currentWallComparison
+		BEQ EndOfVerification
+		INX  	
+		CPX #$3 ; change INNER_WALL_LINES later	
+		BNE InnerWallInnerVerificationLoop
+
+	EndOfVerification:
+		PLY
+		PLX
+		PLA
+		RTS
