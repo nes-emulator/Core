@@ -125,4 +125,4 @@ attribute:
 ; CHR-ROM bank
 ;----------------------------------------------------------------
 
-    .incbin "mario.chr"
+    .incbin "bomberman.chr"
