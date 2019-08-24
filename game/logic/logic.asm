@@ -313,5 +313,5 @@ bombExplosion:
 
 ;bomba
 
-bombExplosion:
+placeBomb:
 ;center pos
