@@ -6,18 +6,22 @@
    y_position       .dsb 1
    mirroring        .dsb 1
    initial_sprite   .dsb 1
+
+   ExplosionIsActive .dsb 1
+   tickCounter .dsb 1
+   expCounter .dsb 1
+   MobIsAlive .dsb 1
    .ende
+
+   BOMB_BASE_TIMER = $00
+   MOB_MOV_INTERVAL = $00
 
 ;----------------
 ; Receives bomberman position as logical x_position and y_postion
 ; Moves all his sprites to screen position
 ;----------------
 MoveBomberman:
-    PHA
-    TYA
-    PHA
-    TXA
-    PHA                 ; Push all registers to stack
+    JSR pushRegisters   ; Push all registers to stack
 
     LDA bomberX         ; Get logic X position
     ASL A
@@ -79,11 +83,7 @@ ManageMoveBomberSprites:
     ADC #$08            ; Write fourth x, 8 bits ahead
     STA FIRST_SPRITE_Y, x
 
-    PLA
-    TAY
-    PLA
-    TAX
-    PLA                 ; Pull all registers from stack
+    JSR pullRegisters       ; Pull all registers from stack
 
     RTS
 
