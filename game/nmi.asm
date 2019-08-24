@@ -64,15 +64,13 @@ Up:
     JMP EndOfButtonMovement
 
 EndOfButtonMovement:
-    JSR MoveBombermanDirection  ; Changes bomberman facing direction
+    JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
 
 ReadBombSetup:
     LDA buttons
     AND #%10000000          ; Read A button pressed
     BEQ EndReadBombSetup
-
-    ;; Put bomb logic here
-
+        JSR placeBomb
 
 EndReadBombSetup:
 
@@ -95,14 +93,15 @@ BombTickControl:
     JSR BombNextAnimationStage
 
 BombCounterControl:
-    DEC bombCounter
+    INC bombCounter
     LDA bombCounter
-    CMP #0
+    CMP #BOMB_BASE_TIMER
     BNE ExplosionState
-    ; call explosion logic func
+    ; call explosion logic func, BOMB_BASE_TIMER = #120
+    JSR bombExplosion
+    ;
     LDA #1
     STA explosionSFX        ; set sound engine flag
-
 
 ExplosionState:
     LDA ExplosionIsActive
@@ -111,283 +110,293 @@ ExplosionState:
         INC expCounter
         LDA expCounter
         CMP #60
-        BNE next
+        BNE MobControl
             ; render something
-            ; logic to deactivate explosion (ExplosionIsActive)
+            LDA #0                  ; Deactivate explosion on screen
+            STA ExplosionIsActive
 
+MobControl:
+    LDA MobIsAlive
+    CMP #0
+    BEQ next
+
+    ; call mobWalk
+    ; call mob render
 
 next:
 
+playSoundFrame:
+    JSR soundEngine
 
 JSR pullRegisters
 RTI
 
 ;;;;;;;;;;;;;;; OLD NMI CODE BELOW
 
-
-ReadA:
-    LDA $4016       ; yer 1 - A
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadADone   ; branch to ReadADone if button is NOT pressed (0)
-		            ; add instructions here to do something when button IS pressed (1)
-    ; JSR EternalBeep
-    JSR TriangleOn
-ReadADone:          ; handling this button is done
-
-ReadB:
-    LDA $4016       ; yer 1 - B
-    AND #%00000001  ; only look at bit 0
-    BEQ ReadBDone   ; branch to ReadADone if button is NOT pressed (0)
-	                ; add instructions here to do something when button IS pressed (1)
-    ; JSR ClearSQ1
-    JSR TriangleOff
-ReadBDone:          ; handling this button is done
-
-    ReadSelect:
-	LDA $4016       ; yer 1 - Select
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadSelectDone   ; branch to ReadADone if button is NOT pressed (0)
-		        ; add instructions here to do something when button IS pressed (1)
-    ReadSelectDone:        ; handling this button is done
-
-    ReadStart:
-	LDA $4016       ; yer 1 - Start
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadStartDone   ; branch to ReadADone if button is NOT pressed (0)
-		        ; add instructions here to do something when button IS pressed (1)
-    ReadStartDone:        ; handling this button is done
-
-    ReadUp:
-	LDA $4016       ; player 1 - Start
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadUpDone   ; branch to ReadADone if button is NOT pressed (0)
-		        ; add instructions here to do something when button IS pressed (1)
-
-	LDX #$01
-	JSR MoveBombermanDirection
-
-	LDX #ZERO              ; start at 0
-
-YUpMovementInBoundaries:
-	LDA FIRST_SPRITE_Y,x
-	SEC
-	SBC #ONE
-	JSR VerifyYUpWallBoundaries
-	BEQ ReadUpDone
-	INX
-	INX
-	INX
-	INX
-	CPX #LAST_SPRITE_END
-	BNE YUpMovementInBoundaries
-
-	LoadSpritesLoopUp:
-	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
-	    SEC             ; make sure carry flag is set
-	    SBC #ONE        ; A = A + 1
-	    STA FIRST_SPRITE_Y,x       ; save sprite X position
-
-	    INX
-	    INX
-	    INX
-	    INX
-
-	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
-	    BNE LoadSpritesLoopUp   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
-
-
-
-
-    ReadUpDone:        ; handling this button is done
-
-
-    ReadDown:
-	LDA $4016       ; player 1 - Start
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadDownDone   ; branch to ReadADone if button is NOT pressed (0)
-		        ; add instructions here to do something when button IS pressed (1
-
-
-	LDX #$02
-	JSR MoveBombermanDirection ; move down
-
-	LDX #ZERO              ; start at 0
-
-	YDownMovementInBoundaries:
-	LDA FIRST_SPRITE_Y,x
-	SEC
-	SBC #ONE
-	JSR VerifyYDownWallBoundaries
-	BEQ ReadDownDone
-	INX
-	INX
-	INX
-	INX
-	CPX #LAST_SPRITE_END
-	BNE YDownMovementInBoundaries
-
-	LoadSpritesLoopDown:
-	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
-	    CLC             ; make sure carry flag is set
-	    ADC #ONE        ; A = A + 1
-	    STA FIRST_SPRITE_Y,x       ; save sprite X position
-
-	    INX
-	    INX
-	    INX
-	    INX
-
-	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
-	    BNE LoadSpritesLoopDown   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
-
-    ReadDownDone:        ; handling this button is done
-
-
-
-    ReadLeft:
-	LDA $4016       ; player 1 - Start
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadLeftDone   ; branch to ReadADone if button is NOT pressed (0)
-		        ; add instructions here to do something when button IS pressed (1
-
-	LDX #ZERO              ; start at 0
-
-XLeftMovementInBoundaries:
-	LDA FIRST_SPRITE_X,x
-	SEC
-	SBC #ONE
-	JSR VerifyXLeftWallBoundaries
-	BEQ ReadLeftDone
-	INX
-	INX
-	INX
-	INX
-	CPX #LAST_SPRITE_END
-	BNE XLeftMovementInBoundaries
-
-
-	LoadSpritesLoopLeft:
-	    LDA FIRST_SPRITE_X,x       ; load sprite X position
-	    SEC             ; make sure carry flag is set
-	    SBC #ONE        ; A = A + 1
-	    STA FIRST_SPRITE_X,x       ; save sprite X position
-
-	    INX
-	    INX
-	    INX
-	    INX
-
-	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
-	    BNE LoadSpritesLoopLeft   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
-
-    ReadLeftDone:        ; handling this button is done
-
-
-    ReadRight:
-	LDA $4016       ; player 1 - B
-	AND #%00000001  ; only look at bit 0
-	BEQ ReadRightDone   ; branch to ReadBDone if button is NOT pressed (0)
-		        ; add instructions here to do something when button IS pressed (1)
-
-	LDX #ZERO              ; start at 0
-
-	XRightMovementInBoundaries:
-	LDA FIRST_SPRITE_X,x
-	SEC
-	SBC #ONE
-	LDY FIRST_SPRITE_Y,x
-	JSR VerifyXRightWallBoundaries
-	BEQ ReadRightDone
-	INX
-	INX
-	INX
-	INX
-	CPX #LAST_SPRITE_END
-	BNE XRightMovementInBoundaries
-
-	LoadSpritesLoopRight:
-	    LDA FIRST_SPRITE_X,x       ; load sprite X position
-	    CLC               ; make sure carry flag is set
-	    ADC #ONE          ; A = A + 1
-	    STA FIRST_SPRITE_X,x       ; save sprite X position
-
-	    INX
-	    INX
-	    INX
-	    INX
-
-	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
-	    BNE LoadSpritesLoopRight   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
-
-    ReadRightDone:        ; handling this button is done
-
-    RTI             ; return from interrupt
-
-
-;parameter A  = sprite primary verification position (x or Y)
-;Y = Sprite secundary verification (x or Y)
-VerifyXRightWallBoundaries:
-
-
-
-
-
-  CLC
-  SEC
-  CMP #RIGHT_LIMIT
-  BEQ endOfXRightVerification
-  ;Brick Verification
-  ;Verify Brick limits
-  ;first of all i will check which brick is still present
-
-  ;Inner Wall Verification
-  ;if he is nning move to the right, i have to verify possible shock with all left corners
-  ;of the inner walls
-
-;   TAY
-;   LDA #LEFT_LIMIT
-;   JSR InnerWallsVerification
-;   BNE endOfXRightVerification
-
-;   PLY
 ;
-
-;   LDA #TOP_LIMIT
-;   JSR InnerWallsVerification
-
-
-  endOfXRightVerification:
-	PLY
-	PLX
-
-  	RTS
-
-VerifyXLeftWallBoundaries:
-  CLC
-  SEC
-  CMP #LEFT_LIMIT
-  BEQ endOfXLeftVerification
-  ;Verify Brick limits
-  :endOfXLeftVerification
-  RTS
-
-VerifyYUpWallBoundaries:
-  CLC
-  SEC
-  CMP #TOP_LIMIT
-  BEQ endOfYUpVerification
-  ;Verify Brick limits
-  endOfYUpVerification:
-  RTS
-
-VerifyYDownWallBoundaries:
-  CLC
-  SEC
-  CMP #BOT_LIMIT
-  BEQ endOfYDownVerification
-  ;Verify Brick limits
-  endOfYDownVerification:
-  RTS
+; ReadA:
+;     LDA $4016       ; yer 1 - A
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadADone   ; branch to ReadADone if button is NOT pressed (0)
+; 		            ; add instructions here to do something when button IS pressed (1)
+;     ; JSR EternalBeep
+;     JSR TriangleOn
+; ReadADone:          ; handling this button is done
+;
+; ReadB:
+;     LDA $4016       ; yer 1 - B
+;     AND #%00000001  ; only look at bit 0
+;     BEQ ReadBDone   ; branch to ReadADone if button is NOT pressed (0)
+; 	                ; add instructions here to do something when button IS pressed (1)
+;     ; JSR ClearSQ1
+;     JSR TriangleOff
+; ReadBDone:          ; handling this button is done
+;
+;     ReadSelect:
+; 	LDA $4016       ; yer 1 - Select
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadSelectDone   ; branch to ReadADone if button is NOT pressed (0)
+; 		        ; add instructions here to do something when button IS pressed (1)
+;     ReadSelectDone:        ; handling this button is done
+;
+;     ReadStart:
+; 	LDA $4016       ; yer 1 - Start
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadStartDone   ; branch to ReadADone if button is NOT pressed (0)
+; 		        ; add instructions here to do something when button IS pressed (1)
+;     ReadStartDone:        ; handling this button is done
+;
+;     ReadUp:
+; 	LDA $4016       ; player 1 - Start
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadUpDone   ; branch to ReadADone if button is NOT pressed (0)
+; 		        ; add instructions here to do something when button IS pressed (1)
+;
+; 	LDX #$01
+; 	JSR MoveBombermanDirection
+;
+; 	LDX #ZERO              ; start at 0
+;
+; YUpMovementInBoundaries:
+; 	LDA FIRST_SPRITE_Y,x
+; 	SEC
+; 	SBC #ONE
+; 	JSR VerifyYUpWallBoundaries
+; 	BEQ ReadUpDone
+; 	INX
+; 	INX
+; 	INX
+; 	INX
+; 	CPX #LAST_SPRITE_END
+; 	BNE YUpMovementInBoundaries
+;
+; 	LoadSpritesLoopUp:
+; 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
+; 	    SEC             ; make sure carry flag is set
+; 	    SBC #ONE        ; A = A + 1
+; 	    STA FIRST_SPRITE_Y,x       ; save sprite X position
+;
+; 	    INX
+; 	    INX
+; 	    INX
+; 	    INX
+;
+; 	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
+; 	    BNE LoadSpritesLoopUp   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
+;
+;
+;
+;
+;     ReadUpDone:        ; handling this button is done
+;
+;
+;     ReadDown:
+; 	LDA $4016       ; player 1 - Start
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadDownDone   ; branch to ReadADone if button is NOT pressed (0)
+; 		        ; add instructions here to do something when button IS pressed (1
+;
+;
+; 	LDX #$02
+; 	JSR MoveBombermanDirection ; move down
+;
+; 	LDX #ZERO              ; start at 0
+;
+; 	YDownMovementInBoundaries:
+; 	LDA FIRST_SPRITE_Y,x
+; 	SEC
+; 	SBC #ONE
+; 	JSR VerifyYDownWallBoundaries
+; 	BEQ ReadDownDone
+; 	INX
+; 	INX
+; 	INX
+; 	INX
+; 	CPX #LAST_SPRITE_END
+; 	BNE YDownMovementInBoundaries
+;
+; 	LoadSpritesLoopDown:
+; 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
+; 	    CLC             ; make sure carry flag is set
+; 	    ADC #ONE        ; A = A + 1
+; 	    STA FIRST_SPRITE_Y,x       ; save sprite X position
+;
+; 	    INX
+; 	    INX
+; 	    INX
+; 	    INX
+;
+; 	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
+; 	    BNE LoadSpritesLoopDown   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
+;
+;     ReadDownDone:        ; handling this button is done
+;
+;
+;
+;     ReadLeft:
+; 	LDA $4016       ; player 1 - Start
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadLeftDone   ; branch to ReadADone if button is NOT pressed (0)
+; 		        ; add instructions here to do something when button IS pressed (1
+;
+; 	LDX #ZERO              ; start at 0
+;
+; XLeftMovementInBoundaries:
+; 	LDA FIRST_SPRITE_X,x
+; 	SEC
+; 	SBC #ONE
+; 	JSR VerifyXLeftWallBoundaries
+; 	BEQ ReadLeftDone
+; 	INX
+; 	INX
+; 	INX
+; 	INX
+; 	CPX #LAST_SPRITE_END
+; 	BNE XLeftMovementInBoundaries
+;
+;
+; 	LoadSpritesLoopLeft:
+; 	    LDA FIRST_SPRITE_X,x       ; load sprite X position
+; 	    SEC             ; make sure carry flag is set
+; 	    SBC #ONE        ; A = A + 1
+; 	    STA FIRST_SPRITE_X,x       ; save sprite X position
+;
+; 	    INX
+; 	    INX
+; 	    INX
+; 	    INX
+;
+; 	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
+; 	    BNE LoadSpritesLoopLeft   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
+;
+;     ReadLeftDone:        ; handling this button is done
+;
+;
+;     ReadRight:
+; 	LDA $4016       ; player 1 - B
+; 	AND #%00000001  ; only look at bit 0
+; 	BEQ ReadRightDone   ; branch to ReadBDone if button is NOT pressed (0)
+; 		        ; add instructions here to do something when button IS pressed (1)
+;
+; 	LDX #ZERO              ; start at 0
+;
+; 	XRightMovementInBoundaries:
+; 	LDA FIRST_SPRITE_X,x
+; 	SEC
+; 	SBC #ONE
+; 	LDY FIRST_SPRITE_Y,x
+; 	JSR VerifyXRightWallBoundaries
+; 	BEQ ReadRightDone
+; 	INX
+; 	INX
+; 	INX
+; 	INX
+; 	CPX #LAST_SPRITE_END
+; 	BNE XRightMovementInBoundaries
+;
+; 	LoadSpritesLoopRight:
+; 	    LDA FIRST_SPRITE_X,x       ; load sprite X position
+; 	    CLC               ; make sure carry flag is set
+; 	    ADC #ONE          ; A = A + 1
+; 	    STA FIRST_SPRITE_X,x       ; save sprite X position
+;
+; 	    INX
+; 	    INX
+; 	    INX
+; 	    INX
+;
+; 	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
+; 	    BNE LoadSpritesLoopRight   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
+;
+;     ReadRightDone:        ; handling this button is done
+;
+;     RTI             ; return from interrupt
+;
+;
+; ;parameter A  = sprite primary verification position (x or Y)
+; ;Y = Sprite secundary verification (x or Y)
+; VerifyXRightWallBoundaries:
+;
+;
+;
+;
+;
+;   CLC
+;   SEC
+;   CMP #RIGHT_LIMIT
+;   BEQ endOfXRightVerification
+;   ;Brick Verification
+;   ;Verify Brick limits
+;   ;first of all i will check which brick is still present
+;
+;   ;Inner Wall Verification
+;   ;if he is nning move to the right, i have to verify possible shock with all left corners
+;   ;of the inner walls
+;
+; ;   TAY
+; ;   LDA #LEFT_LIMIT
+; ;   JSR InnerWallsVerification
+; ;   BNE endOfXRightVerification
+;
+; ;   PLY
+; ;
+;
+; ;   LDA #TOP_LIMIT
+; ;   JSR InnerWallsVerification
+;
+;
+;   endOfXRightVerification:
+; 	PLY
+; 	PLX
+;
+;   	RTS
+;
+; VerifyXLeftWallBoundaries:
+;   CLC
+;   SEC
+;   CMP #LEFT_LIMIT
+;   BEQ endOfXLeftVerification
+;   ;Verify Brick limits
+;   :endOfXLeftVerification
+;   RTS
+;
+; VerifyYUpWallBoundaries:
+;   CLC
+;   SEC
+;   CMP #TOP_LIMIT
+;   BEQ endOfYUpVerification
+;   ;Verify Brick limits
+;   endOfYUpVerification:
+;   RTS
+;
+; VerifyYDownWallBoundaries:
+;   CLC
+;   SEC
+;   CMP #BOT_LIMIT
+;   BEQ endOfYDownVerification
+;   ;Verify Brick limits
+;   endOfYDownVerification:
+;   RTS
 
 ;A will store the bitset
 ;X will store the number of the brick being processed
