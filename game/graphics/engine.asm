@@ -127,12 +127,11 @@ MoveBombermanDirection:
     BEQ BombermanFacingRight
     JMP MoveBombermanDirectionEnd
 
+BombermanFacingRight:       ; Start of bomber facing left, horintally mirrored
+    JSR MirrorSpritesHorizontally
 BombermanFacingLeft:
     LDA #$00                ; Start of bomber facing left sprite
     JMP MoveBombermanDirectionLoadSprite
-
-BombermanFacingRight:
-    JMP MoveBombermanDirectionEnd
 
 BombermanFacingUp:
     LDA #$0c                ; Start of bomber facing up sprite
@@ -183,6 +182,43 @@ MoveXRegisterNextLine:
     RTS
 
 MirrorSpritesHorizontally:
+    LDA #%01000000         ; Value to flip horizontally
+    LDX #$02
+MirrorSpritesHorizontallyLoop:
+    STA FIRST_SPRITE_Y, x  ; Write horizontal flip
+    JSR MoveXRegisterNextLine
+    CPX #$12               ; Until end of bomberman
+    BNE MirrorSpritesHorizontallyLoop
+
+ExchangeTiles:
+    LDX #$03               ; Position of first tile number
+    LDA sprites, x
+    TAY                    ; Save tile number on Y
+
+    LDX #$07
+    LDA sprites, x         ; Get value of next line
+
+    LDX #$03               ; Save value on line before
+    STA FIRST_SPRITE_Y, x
+
+    TYA                    ; Save Y value on second line
+    LDX #$07
+    STA FIRST_SPRITE_Y, x
+
+    LDX #$0B               ; Position of third tile number
+    LDA sprites, x
+    TAY                    ; Save tile number on Y
+
+    LDX #$0F
+    LDA sprites, x         ; Get value of next line
+
+    LDX #$0B               ; Save value on line before
+    STA FIRST_SPRITE_Y, x
+
+    TYA                    ; Save Y value on second line
+    LDX #$0F
+    STA FIRST_SPRITE_Y, x
+
     RTS
 
 ;----------------
