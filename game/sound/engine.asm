@@ -7,6 +7,11 @@ TRI_CTRL = $4008
 TRI_LO = $400A
 TRI_HI = $400B
 
+; Variable
+
+explosionSFX .dsb 1 ;
+bombSFX .dsb 1 ;
+
 ; Sound engine reserved RAM: 76C to 7FF
 ; .enum $#76C
 ;
@@ -41,4 +46,7 @@ TriangleOn:
 TriangleOff:
     LDA #%10000000
     STA TRI_CTRL
+    RTS
+
+soundEngine:
     RTS

@@ -154,7 +154,7 @@ RTI
 
 ; Resets the moveCounter whenever the player moves
 ResetBomberMovDelay:
-    LDA #PLAY_MOV_DELAY
+    LDA #PLAYER_MOV_DELAY
     STA BomberMoveCounter
     RTS
 
