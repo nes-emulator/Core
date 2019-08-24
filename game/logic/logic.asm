@@ -111,23 +111,7 @@ MOB_MOV_INTERVAL = #60
 ;TODO: Move stack functions to game.asm
 ;you need to call these function before every function
 ;in which you dont want to preserve the state of the 3 registers
-pushRegisters:
-    STA stkA
-    PHA 
-    TYA
-    PHA
-    TXA
-    PHA
-    LDA stkA
-    RTS
 
-pullRegisters:
-    PLA
-    TAX
-    PLA
-    TAY
-    PLA
-    RTS
 ;-------------------------------------------------------------------------------------
 ;matrix access subroutines
 
@@ -165,7 +149,16 @@ accessLogicMatrixCoordinate:
 ;if true, cmp flag  = 0
 ;aux subroutine
 coordinateIsWall:
-    JSR pushRegisters
+    
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
     JSR coordinateIsBrick
     BEQ endOfIsWall
     JSR EndOfCoordinateIsBomb ; bombs are also walls
@@ -174,7 +167,13 @@ coordinateIsWall:
     LDA logicMatrix, x
     CMP #MAT_WALL
     endOfIsWall:
-    JSR pullRegisters
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
     RTS
 
 
@@ -182,18 +181,40 @@ coordinateIsWall:
 ;if true, cmp flag  = 0
 ;aux subroutine
 coordinateIsBrick:
-    JSR pushRegisters
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
     TAX
     LDA logicMatrix, x
     CMP #MAT_BRICK
-    JSR pullRegisters
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
     RTS
 
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine
 CordinateIsBomb:
-    JSR pushRegisters
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
     LDA bombIsActive ; if bomb is not active, return
     CMP BOMB_ENABLED
     BNE EndOfCoordinateIsBomb ;not active
@@ -203,21 +224,41 @@ CordinateIsBomb:
     LDA matrixYIndex
     CMP bombY
     EndOfCoordinateIsBomb:
-    JSR pullRegisters
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
     RTS
 
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine    
 CoordinateIsMob:
-    JSR pushRegisters
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
     LDA matrixXIndex
     CMP MobX
     BNE EndOfCoordinateIsMob
     LDA matrixYIndex
     CMP MobY
     EndOfCoordinateIsMob:
-    JSR pullRegisters
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
     RTS    
 ;----------------------------------------------------------------------------------------------------------------
 ;bomber MovementLogic
@@ -228,7 +269,15 @@ CoordinateIsMob:
 ;movement directions is written in .NMI controller event
 ;this function will be called in the .NMI controller event
 MoveBomber_Logic:
-    JSR pushRegisters
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
     ;-----------------------------------------------------------------------------------------
     LDA bomberX
     STA matrixXIndex
@@ -297,7 +346,13 @@ MoveBomber_Logic:
         ;JSR DeathAnimation (EDINHA)        
 
     EndOfBomberMov:
-    JSR pullRegisters
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
     RTS
 
 ;ExplosionIsActive  = 1
@@ -307,11 +362,8 @@ MoveBomber_Logic:
 bombExplosion:
 
 
-;placeBomb
-;tickCuter
-;bombIsActive
 
-;bomba
-
+;tickCounter
+;bombIsActive = 1 
+;center pos -> return
 placeBomb:
-;center pos
