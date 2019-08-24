@@ -1,13 +1,27 @@
 ;----------------------------------------------------------------
 ; constants
 ;----------------------------------------------------------------
+;top = 0x30
+; bot = 0xd6
+;right = 0xCA
+
+;useless after refactoring
+TOP_LIMIT = $2D
+BOT_LIMIT = $D7
+RIGHT_LIMIT = $DA
+LEFT_LIMIT = $0F
+
+
 
 ONE = $01
+FOUR = $04
 ZERO = $00
 
+;useless after refactoring
 FIRST_SPRITE_Y = $0200
 FIRST_SPRITE_X = $0203
 LAST_SPRITE_END = $10 ; LAST_SPRITE_END = 4 * TOTAL_NUM_SPRITES
+
 
 PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
@@ -29,9 +43,13 @@ APUFLAGS = $4015
    attrLow2    .dsb 1
    attrHigh2   .dsb 1
    aux         .dsb 1
+   ;------------------------
+    stkA .dsb 1; A swap variable, only yo be used in stack operations    
+   ;------------------------
 
-   .ende
+  .ende
 
+ 
    ;NOTE: you can also split the variable declarations into individual pages, like this:
 
    ;.enum $0100
@@ -58,6 +76,10 @@ APUFLAGS = $4015
    .base $10000-(PRG_COUNT*$4000)
 
 ; TODO: is it ok to just include here?
+
+Logic:
+    .include "logic/logic.asm"
+
 Sound:
     .include "sound/engine.asm"
 
@@ -105,6 +127,9 @@ palette:
 
 sprites:
     .include "graphics/sprites.asm"
+
+background:
+    .include "graphics/background.asm"
 
 attribute:
     .include "graphics/attributes.asm"
