@@ -6,6 +6,8 @@ MAT_PASS = $01
 MAT_BRICK = $02
 MT_ROWS = $0D ; 13
 MT_COL =  $0F ; 15
+BOMB_BASE_TIMER = #120
+
 
 ;bomber movement constants
 LEFT_MOVEMENT = $00
@@ -14,10 +16,14 @@ DOWN_MOVEMENT = $10
 UP_MOVEMENT = $11
 ALIVE  = $01
 DEAD = $00
+PLAYER_MOV_DELAY = #30
 
 ;bomb constants
 BOMB_ENABLED = $01
 BOMB_DISABLED = $00
+
+;Mob constants
+MOB_MOV_INTERVAL = #60
 
 ;----------------------------------
 ;Variables
@@ -66,7 +72,9 @@ BOMB_DISABLED = $00
     bomberState:
         .db ALIVE;  Game state
     bomberMovDirection .dsb 1 ;left,right,down or up: according the constants defined in this file
-    
+
+    BomberMoveCounter:
+        .db $0;  
     ;----------------------------------
     
     
@@ -78,6 +86,10 @@ BOMB_DISABLED = $00
         .db $00 ; alter
     mobPositionIncrement :
         .db $01 ; 01 for + 1 and 0 for -1 (one direction)
+    mobIsAlive:
+        .db #ALIVE
+    mobMoveCounter:
+        .db #0
     ;----------------------------------
     
     ;bomb manipulation
@@ -287,3 +299,19 @@ MoveBomber_Logic:
     EndOfBomberMov:
     JSR pullRegisters
     RTS
+
+;ExplosionIsActive  = 1
+;expCounter = 0
+;bombCounter = 0
+;when the bomb explodes
+bombExplosion:
+
+
+;placeBomb
+;tickCuter
+;bombIsActive
+
+;bomba
+
+placeBomb:
+;center pos
