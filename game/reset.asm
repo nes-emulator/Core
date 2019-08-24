@@ -85,14 +85,6 @@ LoadSpritesLoop:
 LDA #%00000101 ; enable SQ1 and TRI
 STA APUFLAGS
 
-setupBrickNumbers:
-;bit set to store what bricks are still in the screen
-LDX #$00
-LDA #%00000000
-STA activeBricks,X
-INX
-LDA #%00000000
-STA activeBricks, X
 
 Forever:
   JMP Forever     ;jump back to Forever, infinite loop
