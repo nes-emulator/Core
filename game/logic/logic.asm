@@ -93,6 +93,8 @@ MOB_MOV_INTERVAL = #60
     ;----------------------------------
     
     ;bomb manipulation
+
+    ;BOMB EXPLOSION RANGE IS FIXED IN ONE RANGE CROSS
     ;----------------------------------
     bombIsActive:
         .db BOMB_DISABLED
@@ -326,9 +328,13 @@ MoveBomber_Logic:
     ;-----------------------------------------------------------------------------------------
     JSR accessLogicMatrixCoordinate  ; shift 'A' to cell position of matrixXIndex , matrixXIndex       
 
+    LDX mobIsAlive
+    CMP #ALIVE
+    BNE wallVerificationBomberMov ;if mob isn't alive, there is no need to verify
     JSR CoordinateIsMob ; A is a parameter
     BEQ KilledInMovByMob
 
+    wallVerificationBomberMov:
     JSR coordinateIsWall ; wall also cover bomb case, A and matrixXindex and matrixYIndex are parameters
     BEQ EndOfBomberMov
 
@@ -401,7 +407,9 @@ placeBomb:
 ;expCounter = 0
 ;bombIsActive = 0
 ;center pos -> return
-;when the bomb explodes
+;when the bomb explodes many things can occur:
+;1) bomber can die, bomberState = #Dead
+;2) mob can die, mobSt
 bombExplosion:
   ;--------------------------------------- push all
     STA stkA
