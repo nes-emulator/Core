@@ -103,9 +103,6 @@ palette:
 sprites:
     .include "graphics/sprites.asm"
 
-background:
-    .include "graphics/background.asm"
-
 attribute:
     .include "graphics/attributes.asm"
 
