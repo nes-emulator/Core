@@ -27,11 +27,18 @@ ReadControllerLoop:
   ;bit:       7     6     5     4     3     2     1     0
   ;button:    A     B   select start  up   down  left right
 
+; Enforces a delay of 30 frames in player movement
+MoveDelayControl:
+    LDA BomberMoveCounter
+    CMP #0
+    BNE UpdateMovementDelay
+
 ; We read only one movement per frame
 Right:
     LDA buttons
     AND #%00000001
     BEQ Left
+        JSR ResetBomberMovDelay
         LDA #RIGHT_MOVEMENT
         STA bomberMovDirection
         JSR MoveBomber_Logic
@@ -41,6 +48,7 @@ Left:
     LDA buttons
     AND #%00000010
     BEQ Down
+        JSR ResetBomberMovDelay
         LDA #LEFT_MOVEMENT
         STA bomberMovDirection
         JSR MoveBomber_Logic
@@ -50,6 +58,7 @@ Down:
     LDA buttons
     AND #%00000100
     BEQ Up
+        JSR ResetBomberMovDelay
         LDA #DOWN_MOVEMENT
         STA bomberMovDirection
         JSR MoveBomber_Logic
@@ -59,10 +68,16 @@ Up:
     LDA buttons
     AND #%00001000
     BEQ EndOfButtonMovement
+        JSR ResetBomberMovDelay
         LDA #UP_MOVEMENT
         STA bomberMovDirection
         JSR MoveBomber_Logic
     JMP EndOfButtonMovement
+
+; if moveCounter > 0, decrements it
+UpdateMovementDelay:
+    DEC BomberMoveCounter
+    JMP ReadBombSetup
 
 EndOfButtonMovement:
     JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
@@ -136,6 +151,12 @@ playSoundFrame:
 
 JSR pullRegisters
 RTI
+
+; Resets the moveCounter whenever the player moves
+ResetBomberMovDelay:
+    LDA #PLAY_MOV_DELAY
+    STA BomberMoveCounter
+    RTS
 
 ;;;;;;;;;;;;;;; OLD NMI CODE BELOW
 
