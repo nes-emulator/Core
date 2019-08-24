@@ -19,24 +19,22 @@ MoveBomberman:
     TXA
     PHA                 ; Push all registers to stack
 
-    LDA x_position
+    LDA bomberX         ; Get logic X position
     ASL A
     ASL A
     ASL A
     ASL A               ; Multiply x position by 16
 
-    CLC
-    ADC #$10            ; Add x constant left space to complement
-    STA x_position      ; Save new value in same variable
+    STA x_position      ; Add x constant left space to complement (0)
 
-    LDA y_position
+    LDA bomberY         ; Get logic Y
     ASL A
     ASL A
     ASL A
     ASL A               ; Multiply y position by 16
 
     CLC
-    ADC #$30            ; Add y constant top space to complement
+    ADC #$20            ; Add y constant top space to complement (16)
     STA y_position      ; Save new value in same variable
 
 ManageMoveBomberSprites:
@@ -84,7 +82,7 @@ ManageMoveBomberSprites:
     PLA
     TAY
     PLA
-    PXA
+    TAX
     PLA                 ; Pull all registers from stack
 
     RTS
@@ -101,20 +99,26 @@ MoveXRegisterNextSprite:
 ; Rotate his sprites to better fit screen
 ;----------------
 MoveBombermanDirection:
-    CPX #01            ; Logic for decide which sprite to go for
+    JSR pushRegisters
+
+    LDA bomberMovDirection
+    CMP #UP_MOVEMENT    ; Logic for decide which sprite to go for
     BEQ BombermanFacingUp
 
-    CPX #02
+    CMP #DOWN_MOVEMENT
     BEQ BombermanFacingDown
 
-    CPX #03
+    CMP #LEFT_MOVEMENT
     BEQ BombermanFacingLeft
 
-    CPX #04
+    CMP #RIGHT_MOVEMENT
     BEQ BombermanFacingRight
     JMP MoveBombermanDirectionEnd
 
 BombermanFacingLeft:
+    LDA #$00                ; Start of bomber facing left sprite
+    JMP MoveBombermanDirectionLoadSprite
+
 BombermanFacingRight:
     JMP MoveBombermanDirectionEnd
 
@@ -152,11 +156,19 @@ MoveBombermanDirectionLoadSprite:
     STA FIRST_SPRITE_Y, x   ; Write fourth tile number
 
 MoveBombermanDirectionEnd:
+    JSR pullRegisters       ;
     RTS
 
 MoveXRegisterNextLine:
-    INX             ; Sum four
+    INX                     ; Sum four
     INX
     INX
     INX
+    RTS
+
+
+;----------------
+; Move bomb control to next animation sprite
+;----------------
+BombNextAnimationStage:
     RTS

@@ -170,11 +170,11 @@ ExtractDataFromTile:
   JMP GrayTile          ; Default tile
 
 GrayTile:
-  LDA #$25
+  LDA #$3a
   JMP ContinueExtractDataFromTile
 
 GreenTile:
-  LDA #$08
+  LDA #$64
   JMP ContinueExtractDataFromTile
 
 ContinueExtractDataFromTile:

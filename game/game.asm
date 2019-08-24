@@ -44,12 +44,12 @@ APUFLAGS = $4015
    attrHigh2   .dsb 1
    aux         .dsb 1
    ;------------------------
-    stkA .dsb 1; A swap variable, only yo be used in stack operations    
+    stkA .dsb 1; A swap variable, only yo be used in stack operations
    ;------------------------
 
   .ende
 
- 
+
    ;NOTE: you can also split the variable declarations into individual pages, like this:
 
    ;.enum $0100
@@ -128,12 +128,8 @@ palette:
 sprites:
     .include "graphics/sprites.asm"
 
-background:
-    .include "graphics/background.asm"
-
 attribute:
     .include "graphics/attributes.asm"
-
     .include "graphics/matrix.asm"
 
 ;----------------------------------------------------------------
