@@ -13,7 +13,7 @@ STA $4014       ; set the high byte (02) of the RAM address, start the transfer
 
 
 ReadA:
-    LDA $4016       ; player 1 - A
+    LDA $4016       ; yer 1 - A
 	AND #%00000001  ; only look at bit 0
 	BEQ ReadADone   ; branch to ReadADone if button is NOT pressed (0)
 		            ; add instructions here to do something when button IS pressed (1)
@@ -22,7 +22,7 @@ ReadA:
 ReadADone:          ; handling this button is done
 
 ReadB:
-    LDA $4016       ; player 1 - B
+    LDA $4016       ; yer 1 - B
     AND #%00000001  ; only look at bit 0
     BEQ ReadBDone   ; branch to ReadADone if button is NOT pressed (0)
 	                ; add instructions here to do something when button IS pressed (1)
@@ -31,14 +31,14 @@ ReadB:
 ReadBDone:          ; handling this button is done
 
     ReadSelect:
-	LDA $4016       ; player 1 - Select
+	LDA $4016       ; yer 1 - Select
 	AND #%00000001  ; only look at bit 0
 	BEQ ReadSelectDone   ; branch to ReadADone if button is NOT pressed (0)
 		        ; add instructions here to do something when button IS pressed (1)
     ReadSelectDone:        ; handling this button is done
 
     ReadStart:
-	LDA $4016       ; player 1 - Start
+	LDA $4016       ; yer 1 - Start
 	AND #%00000001  ; only look at bit 0
 	BEQ ReadStartDone   ; branch to ReadADone if button is NOT pressed (0)
 		        ; add instructions here to do something when button IS pressed (1)
@@ -52,6 +52,19 @@ ReadBDone:          ; handling this button is done
 
 	LDX #ZERO              ; start at 0
 
+YUpMovementInBoundaries:
+	LDA FIRST_SPRITE_Y,x
+	SEC
+	SBC #ONE
+	JSR VerifyYUpWallBoundaries
+	BEQ ReadUpDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE YUpMovementInBoundaries
+	
 	LoadSpritesLoopUp:
 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
 	    SEC             ; make sure carry flag is set
@@ -66,8 +79,12 @@ ReadBDone:          ; handling this button is done
 	    CPX #LAST_SPRITE_END              ; Compare X to hex $10, decimal 32
 	    BNE LoadSpritesLoopUp   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
 
+
+	
+
     ReadUpDone:        ; handling this button is done
 
+	
     ReadDown:
 	LDA $4016       ; player 1 - Start
 	AND #%00000001  ; only look at bit 0
@@ -75,6 +92,19 @@ ReadBDone:          ; handling this button is done
 		        ; add instructions here to do something when button IS pressed (1
 
 	LDX #ZERO              ; start at 0
+
+	YDownMovementInBoundaries:
+	LDA FIRST_SPRITE_Y,x
+	SEC
+	SBC #ONE
+	JSR VerifyYDownWallBoundaries
+	BEQ ReadDownDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE YDownMovementInBoundaries
 
 	LoadSpritesLoopDown:
 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
@@ -92,6 +122,8 @@ ReadBDone:          ; handling this button is done
 
     ReadDownDone:        ; handling this button is done
 
+
+	
     ReadLeft:
 	LDA $4016       ; player 1 - Start
 	AND #%00000001  ; only look at bit 0
@@ -99,6 +131,20 @@ ReadBDone:          ; handling this button is done
 		        ; add instructions here to do something when button IS pressed (1
 
 	LDX #ZERO              ; start at 0
+
+XLeftMovementInBoundaries:
+	LDA FIRST_SPRITE_X,x
+	SEC
+	SBC #ONE
+	JSR VerifyXLeftWallBoundaries
+	BEQ ReadLeftDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE XLeftMovementInBoundaries
+
 
 	LoadSpritesLoopLeft:
 	    LDA FIRST_SPRITE_X,x       ; load sprite X position
@@ -125,6 +171,20 @@ ReadBDone:          ; handling this button is done
 
 	LDX #ZERO              ; start at 0
 
+	XRightMovementInBoundaries:
+	LDA FIRST_SPRITE_X,x
+	SEC
+	SBC #ONE
+	LDY FIRST_SPRITE_Y,x
+	JSR VerifyXRightWallBoundaries
+	BEQ ReadRightDone
+	INX
+	INX
+	INX
+	INX
+	CPX #LAST_SPRITE_END
+	BNE XRightMovementInBoundaries
+
 	LoadSpritesLoopRight:
 	    LDA FIRST_SPRITE_X,x       ; load sprite X position
 	    CLC               ; make sure carry flag is set
@@ -142,3 +202,123 @@ ReadBDone:          ; handling this button is done
     ReadRightDone:        ; handling this button is done
 
     RTI             ; return from interrupt
+
+
+;parameter A  = sprite primary verification position (x or Y)
+;Y = Sprite secundary verification (x or Y)
+VerifyXRightWallBoundaries:
+  
+  
+  
+
+
+  CLC
+  SEC
+  CMP #RIGHT_LIMIT
+  BEQ endOfXRightVerification
+  ;Brick Verification
+  ;Verify Brick limits
+  ;first of all i will check which brick is still present
+
+  ;Inner Wall Verification
+  ;if he is nning move to the right, i have to verify possible shock with all left corners
+  ;of the inner walls
+  
+;   TAY
+;   LDA #LEFT_LIMIT
+;   JSR InnerWallsVerification
+;   BNE endOfXRightVerification
+  
+;   PLY
+;   
+  
+;   LDA #TOP_LIMIT
+;   JSR InnerWallsVerification
+ 
+
+  endOfXRightVerification:	
+	PLY
+	PLX
+	
+  	RTS
+
+VerifyXLeftWallBoundaries:
+  CLC
+  SEC
+  CMP #LEFT_LIMIT
+  BEQ endOfXLeftVerification
+  ;Verify Brick limits
+  :endOfXLeftVerification
+  RTS
+
+VerifyYUpWallBoundaries:
+  CLC
+  SEC
+  CMP #TOP_LIMIT
+  BEQ endOfYUpVerification
+  ;Verify Brick limits
+  endOfYUpVerification:	
+  RTS
+
+VerifyYDownWallBoundaries:
+  CLC
+  SEC
+  CMP #BOT_LIMIT
+  BEQ endOfYDownVerification
+  ;Verify Brick limits
+  endOfYDownVerification:
+  RTS
+
+;A will store the bitset
+;X will store the number of the brick being processed
+;requiredBrick is the parameter, a global variable declared in gamw.asm
+;this function will return 0 in flag if the brick is present , otherwise it will return -1 in C
+;   brickIsPresent:
+; 	LDX #$00
+; 	LDA activeBricks
+; 	brickStatusLoop:
+; 		LSR A
+; 		INX
+; 		BEQ currentBrickPresent ; the current brick is present
+		
+; 		;the required brick isnt present
+; 		CPX requiredBrick
+; 		BEQ endOfBrickVerification
+; 		JMP brickStatusLoop
+
+; 		currentBrickPresent:
+; 		CPX requiredBrick
+; 		BEQ endOfBrickVerificationWithFlag:
+
+
+; 	endOfBrickVerification:
+; 		LDA #$1
+; 		CMP #$2
+; 		RTS
+; 	endOfBrickVerificationWithFlag:
+; 		RTS
+
+; ;Y = coordinate Postion Y Or Position X	
+; ;A = Boundary Position (top or Left)
+; ; Return in Carry = 0 if the colision in this axis willl happen 
+  
+; ;   InnerWallsVerification:
+; ; 	
+; ;   	
+; ;   	
+; ; 	InnerWallInnerVerificationLoop:
+; ; 		CLC
+; ; 		ADC #INNER_WALL_SIZE
+; ; 		ADC #INNER_WALL_SIZE
+; ; 		STA currentWallComparison
+; ; 		CPY currentWallComparison
+; ; 		BEQ EndOfVerification
+; ; 		INX  	
+; ; 		CPX #$3 ; change INNER_WALL_LINES later	
+; ; 		BNE InnerWallInnerVerificationLoop
+
+; ; 	EndOfVerification:
+; ; 		PLY
+; ; 		PLX
+; ; 		
+; ; 		RTS
