@@ -59,10 +59,10 @@ BOMB_DISABLED = $00
     ;current bomber coordinates in logic matrix 
     ;----------------------------------
     bomberX:
-        .db $00;alter
+        .db $01;alter -> start pos
     
     bomberY:
-        .db $00;alter
+        .db $01;alter -> start pos
     bomberState:
         .db ALIVE; Game state
     bomberMovDirection .dsb 1 ;left,right,down or up: according the constants defined in this file
@@ -218,6 +218,11 @@ CoordinateIsMob:
 MoveBomber_Logic:
     JSR pushRegisters
     ;-----------------------------------------------------------------------------------------
+    LDA bomberX
+    STA matrixXIndex
+    LDA bomberY
+    STA matrixYIndex
+
     LDA bomberMovDirection
        
     ;First: choose rotate direction
@@ -282,6 +287,3 @@ MoveBomber_Logic:
     EndOfBomberMov:
     JSR pullRegisters
     RTS
-
-
-
