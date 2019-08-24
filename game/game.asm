@@ -43,8 +43,9 @@ APUFLAGS = $4015
    attrLow2    .dsb 1
    attrHigh2   .dsb 1
    aux         .dsb 1
+   buttons     .dsb 1
    ;------------------------
-    stkA .dsb 1; A swap variable, only yo be used in stack operations
+   stkA .dsb 1; A swap variable, only yo be used in stack operations
    ;------------------------
 
   .ende

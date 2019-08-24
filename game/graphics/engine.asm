@@ -21,7 +21,11 @@
 ; Moves all his sprites to screen position
 ;----------------
 MoveBomberman:
-    JSR pushRegisters   ; Push all registers to stack
+    PHA
+    TYA
+    PHA
+    TXA
+    PHA                 ; Push all registers to stack
 
     LDA bomberX         ; Get logic X position
     ASL A
@@ -83,7 +87,11 @@ ManageMoveBomberSprites:
     ADC #$08            ; Write fourth x, 8 bits ahead
     STA FIRST_SPRITE_Y, x
 
-    JSR pullRegisters       ; Pull all registers from stack
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA                 ; Pull all registers from stack
 
     RTS
 
@@ -99,7 +107,11 @@ MoveXRegisterNextSprite:
 ; Rotate his sprites to better fit screen
 ;----------------
 MoveBombermanDirection:
-    JSR pushRegisters
+    PHA
+    TYA
+    PHA
+    TXA
+    PHA                 ; Push registers
 
     LDA bomberMovDirection
     CMP #UP_MOVEMENT    ; Logic for decide which sprite to go for
@@ -131,7 +143,7 @@ BombermanFacingDown:
     JMP MoveBombermanDirectionLoadSprite
 
 MoveBombermanDirectionLoadSprite:
-    STA initial_sprite      ; Nex sprite
+    STA initial_sprite      ; Next sprite
 
     LDX #$01                ; Write on first tile number
     STA FIRST_SPRITE_Y, x
@@ -143,7 +155,7 @@ MoveBombermanDirectionLoadSprite:
     STA FIRST_SPRITE_Y, x   ; Write second tile number
 
     CLC
-    ADC #$09                ; Get down part of bomberman
+    ADC #$0F                ; Get down part of bomberman
     STA initial_sprite
 
     JSR MoveXRegisterNextLine
@@ -156,7 +168,11 @@ MoveBombermanDirectionLoadSprite:
     STA FIRST_SPRITE_Y, x   ; Write fourth tile number
 
 MoveBombermanDirectionEnd:
-    JSR pullRegisters       ;
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA                     ; Return registers
     RTS
 
 MoveXRegisterNextLine:
@@ -166,6 +182,8 @@ MoveXRegisterNextLine:
     INX
     RTS
 
+MirrorSpritesHorizontally:
+    RTS
 
 ;----------------
 ; Move bomb control to next animation sprite

@@ -1,5 +1,9 @@
 ;;;;;;;;;;;;;;; NMI ;;;;;;;;;;;;;;;
-JSR pushRegisters
+PHA
+TYA
+PHA
+TXA
+PHA             ; Push all registers to stack
 
 LDA #$00
 STA $2003       ; set the low byte (00) of the RAM address
@@ -12,8 +16,6 @@ LatchController:
     STA $4016
     LDA #$00
     STA $4016
-
-buttons .dsb 1  ; Colocar no game.asm
 
 ReadController:
   LDX #$08
@@ -80,6 +82,8 @@ UpdateMovementDelay:
     JMP ReadBombSetup
 
 EndOfButtonMovement:
+	LDA #RIGHT_MOVEMENT
+	STA bomberMovDirection
     JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
 
 ReadBombSetup:
@@ -149,7 +153,12 @@ next:
 playSoundFrame:
     JSR soundEngine
 
-JSR pullRegisters
+PLA
+TAX
+PLA
+TAY
+PLA                 ; Pull all registers from stack
+
 RTI
 
 ; Resets the moveCounter whenever the player moves
