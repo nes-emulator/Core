@@ -1,3 +1,4 @@
+;;;;;;;;;;;;;;; NMI ;;;;;;;;;;;;;;;
 JSR pushRegisters
 
 LDA #$00
@@ -119,9 +120,14 @@ MobControl:
     LDA MobIsAlive
     CMP #0
     BEQ next
-
-    ; call mobWalk
-    ; call mob render
+        INC mobMoveCounter
+        LDA mobMoveCounter
+        CMP #MOB_MOV_INTERVAL
+        BNE next
+            ; call mobWalk
+            ; call mob render
+            LDA #0
+            STA mobMoveCounter       ; resets the counter
 
 next:
 
