@@ -355,15 +355,72 @@ MoveBomber_Logic:
     ;-------------------------
     RTS
 
+
+;tickCounter = 0
+;bombIsActive = 1 
+;bombCounter = 0
+;update bomb coordinate
+;place the bomb in the current bomber coordinate position
+placeBomb:
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
+    
+    ;change bomb coordinate to bomberman coordinate
+    LDA bomberX
+    STA bombX
+    LDA bomberY
+    STA bombY
+
+    ;JSR renderBomb (EDINHA), look at bomb coordinates (bombX,bombY)
+
+    ;update flags
+    LDA #BOMB_ENABLED
+    STA bombIsActive
+    LDA #$0
+    STA bombCounter
+    STA tickCounter
+    
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
+    RTS
+
+
 ;ExplosionIsActive  = 1
 ;expCounter = 0
-;bombCounter = 0
+;bombIsActive = 0
+;center pos -> return
 ;when the bomb explodes
 bombExplosion:
+  ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+  ;---------------------------------------
 
 
 
-;tickCounter
-;bombIsActive = 1 
-;center pos -> return
-placeBomb:
+
+  ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+  ;-------------------------
+
