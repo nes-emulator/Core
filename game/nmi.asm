@@ -1,15 +1,128 @@
+JSR pushRegisters
 
 LDA #$00
 STA $2003       ; set the low byte (00) of the RAM address
 LDA #$02
 STA $4014       ; set the high byte (02) of the RAM address, start the transfer
 
+; tell both controllers to latch buttons
+LatchController:
+    LDA #$01
+    STA $4016
+    LDA #$00
+    STA $4016
 
-    LatchController:
-	LDA #$01
-	STA $4016
-	LDA #$00
-	STA $4016       ; tell both the controllers to latch buttons
+buttons .dsb 1  ; Colocar no game.asm
+
+ReadController:
+  LDX #$08
+ReadControllerLoop:
+  LDA $4016
+  LSR A           ; bit0 -> Carry
+  ROL buttons     ; bit0 <- Carry
+  DEX
+  BNE ReadControllerLoop
+
+  ;bit:       7     6     5     4     3     2     1     0
+  ;button:    A     B   select start  up   down  left right
+
+; We read only one movement per frame
+Right:
+    LDA buttons
+    AND #%00000001
+    BEQ Left
+        LDA #RIGHT_MOVEMENT
+        STA bomberMovDirection
+        JSR MoveBomber_Logic
+    JMP EndOfButtonMovement
+
+Left:
+    LDA buttons
+    AND #%00000010
+    BEQ Down
+        LDA #LEFT_MOVEMENT
+        STA bomberMovDirection
+        JSR MoveBomber_Logic
+    JMP EndOfButtonMovement
+
+Down:
+    LDA buttons
+    AND #%00000100
+    BEQ Up
+        LDA #DOWN_MOVEMENT
+        STA bomberMovDirection
+        JSR MoveBomber_Logic
+    JMP EndOfButtonMovement
+
+Up:
+    LDA buttons
+    AND #%00001000
+    BEQ EndOfButtonMovement
+        LDA #UP_MOVEMENT
+        STA bomberMovDirection
+        JSR MoveBomber_Logic
+    JMP EndOfButtonMovement
+
+EndOfButtonMovement:
+    JSR MoveBombermanDirection  ; Changes bomberman facing direction
+
+ReadBombSetup:
+    LDA buttons
+    AND #%10000000          ; Read A button pressed
+    BEQ EndReadBombSetup
+
+    ;; Put bomb logic here
+
+
+EndReadBombSetup:
+
+;;;;;;;;;;;;;;;;;; GAME STATE ;;;;;;;;;;;;;;;;;;
+
+BombControl:
+    LDA bombIsActive
+    CMP #BOMB_DISABLED
+    BEQ ExplosionState            ; Ignore control if there is no active bomb
+
+BombTickControl:
+    INC tickCounter
+    LDA tickCounter
+    CMP #30                 ; Reached full bomb tick cycle on #30
+    BNE BombCounterControl
+    LDA #$00
+    STA tickCounter         ; Reset tick counter for next animation count
+    LDA #1
+    STA bombSFX             ; set Sound Engine flag
+    JSR BombNextAnimationStage
+
+BombCounterControl:
+    DEC bombCounter
+    LDA bombCounter
+    CMP #0
+    BNE ExplosionState
+    ; call explosion logic func
+    LDA #1
+    STA explosionSFX        ; set sound engine flag
+
+
+ExplosionState:
+    LDA ExplosionIsActive
+    CMP #0
+    BEQ next
+        INC expCounter
+        LDA expCounter
+        CMP #60
+        BNE next
+            ; render something
+            ; logic to deactivate explosion (ExplosionIsActive)
+
+
+next:
+
+
+JSR pullRegisters
+RTI
+
+;;;;;;;;;;;;;;; OLD NMI CODE BELOW
 
 
 ReadA:
@@ -67,7 +180,7 @@ YUpMovementInBoundaries:
 	INX
 	CPX #LAST_SPRITE_END
 	BNE YUpMovementInBoundaries
-	
+
 	LoadSpritesLoopUp:
 	    LDA FIRST_SPRITE_Y,x       ; load sprite X position
 	    SEC             ; make sure carry flag is set
@@ -83,11 +196,11 @@ YUpMovementInBoundaries:
 	    BNE LoadSpritesLoopUp   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
 
 
-	
+
 
     ReadUpDone:        ; handling this button is done
 
-	
+
     ReadDown:
 	LDA $4016       ; player 1 - Start
 	AND #%00000001  ; only look at bit 0
@@ -130,7 +243,7 @@ YUpMovementInBoundaries:
     ReadDownDone:        ; handling this button is done
 
 
-	
+
     ReadLeft:
 	LDA $4016       ; player 1 - Start
 	AND #%00000001  ; only look at bit 0
@@ -214,9 +327,9 @@ XLeftMovementInBoundaries:
 ;parameter A  = sprite primary verification position (x or Y)
 ;Y = Sprite secundary verification (x or Y)
 VerifyXRightWallBoundaries:
-  
-  
-  
+
+
+
 
 
   CLC
@@ -230,23 +343,23 @@ VerifyXRightWallBoundaries:
   ;Inner Wall Verification
   ;if he is nning move to the right, i have to verify possible shock with all left corners
   ;of the inner walls
-  
+
 ;   TAY
 ;   LDA #LEFT_LIMIT
 ;   JSR InnerWallsVerification
 ;   BNE endOfXRightVerification
-  
+
 ;   PLY
-;   
-  
+;
+
 ;   LDA #TOP_LIMIT
 ;   JSR InnerWallsVerification
- 
 
-  endOfXRightVerification:	
+
+  endOfXRightVerification:
 	PLY
 	PLX
-	
+
   	RTS
 
 VerifyXLeftWallBoundaries:
@@ -264,7 +377,7 @@ VerifyYUpWallBoundaries:
   CMP #TOP_LIMIT
   BEQ endOfYUpVerification
   ;Verify Brick limits
-  endOfYUpVerification:	
+  endOfYUpVerification:
   RTS
 
 VerifyYDownWallBoundaries:
@@ -287,7 +400,7 @@ VerifyYDownWallBoundaries:
 ; 		LSR A
 ; 		INX
 ; 		BEQ currentBrickPresent ; the current brick is present
-		
+
 ; 		;the required brick isnt present
 ; 		CPX requiredBrick
 ; 		BEQ endOfBrickVerification
@@ -305,14 +418,14 @@ VerifyYDownWallBoundaries:
 ; 	endOfBrickVerificationWithFlag:
 ; 		RTS
 
-; ;Y = coordinate Postion Y Or Position X	
+; ;Y = coordinate Postion Y Or Position X
 ; ;A = Boundary Position (top or Left)
-; ; Return in Carry = 0 if the colision in this axis willl happen 
-  
+; ; Return in Carry = 0 if the colision in this axis willl happen
+
 ; ;   InnerWallsVerification:
-; ; 	
-; ;   	
-; ;   	
+; ;
+; ;
+; ;
 ; ; 	InnerWallInnerVerificationLoop:
 ; ; 		CLC
 ; ; 		ADC #INNER_WALL_SIZE
@@ -320,12 +433,12 @@ VerifyYDownWallBoundaries:
 ; ; 		STA currentWallComparison
 ; ; 		CPY currentWallComparison
 ; ; 		BEQ EndOfVerification
-; ; 		INX  	
-; ; 		CPX #$3 ; change INNER_WALL_LINES later	
+; ; 		INX
+; ; 		CPX #$3 ; change INNER_WALL_LINES later
 ; ; 		BNE InnerWallInnerVerificationLoop
 
 ; ; 	EndOfVerification:
 ; ; 		PLY
 ; ; 		PLX
-; ; 		
+; ;
 ; ; 		RTS
