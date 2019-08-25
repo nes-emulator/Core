@@ -451,12 +451,12 @@ placeBomb:
 ;expCounter = 0
 ;bombIsActive = 0
 ;when the bomb explodes many things can occur:
+;0) explosion can the lmited by walls
 ;1) bomber can die, bomberState = #Dead
 ;2) mob can die, mobIsAlive = #DEAD (Death is instant there is no delay between the explosion and its propagation)
 ;3) a brick can be destroyed, update brick position to MAT_PAS in logic matrix
 ;Output-> 4 flags indicating to the PPU logic if the explosion need to be rendered in the four adjacent squares (explosion boundaries variables)
 ;Output -> 2 arrays of "numberOfBricksExploding" bricks coordinates (explodingBricksXCoor, explodingBricksYCoor)
-;the brick 
 bombExplosion:
   ;--------------------------------------- push all
     STA stkA
@@ -479,6 +479,7 @@ bombExplosion:
   STA expLeftCoor
   STA expRightCoor
   STA expUpCoor
+  STA expDownCoor
   
   ;Verify all four adjacent squares individualy   
   LDA bombX
@@ -491,21 +492,48 @@ bombExplosion:
   LDX matrixXIndex
   INX
   STX matrixXIndex
-  JSR accessLogicMatrixCoordinate
+  JSR accessLogicMatrixCoordinate ;change A to 
   JSR coordinateIsWall
-  BNE ;if the coordinate affected is not a wall
-    
-;---------------------------------------------
+  BNE rightExpMobDeathVer ;if the coordinate affected is not a wall
+  LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
+  STX expRightCoor
+  ;---------------------------------------------------------
+  rightBrickExpVer:
+  JSR coordinateIsBrick
+  BNE rightExpMobDeathVer
+  TAX ; X = cell offset
+  LDA #MAT_PASS
+  STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
+  ;by inspecting numberOfBricksExploding
+  LDX numberOfBricksExploding
+  LDA matrixXIndex
+  STA explodingBricksXCoor, x 
+  INX 
+  STX numberOfBricksExploding
+ ;------------------------------------------------------------
+  rightExpMobDeathVer:
+    JSR CoordinateIsMob
+    BNE bomberDeathRightExp
+    LDA #DEAD
+    STA mobIsAlive
+    ; JSR MOB DEATH ANIMATION (EDINHA)
+ 
+  bomberDeathRightExp:
+    JSR CoordinateIsBomber
+    BNE checkLeftExplosionEffect
+    LDA #DEAD
+    STA bomberState
+    ;JSR BOMBER DEATH ANIMATION (EDINHA)
+     JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
+ ;---------------------------------------------
+ 
  checkLeftExplosionEffect:
 
- checkRightExplosionEffect:
+ checkUpExplosionEffect:
 
  checkDownExplosionEffect:
 
-
-
-
-  ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI  
+  ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI using ticks and expCounter
   
   ;---------------- Pull All
     PLA
@@ -514,4 +542,5 @@ bombExplosion:
     TAY
     PLA
   ;-------------------------
-
+    endOfBombExplosion:
+    RTS
