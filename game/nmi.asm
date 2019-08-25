@@ -158,7 +158,7 @@ MobControl:
             STA mobMoveCounter       ; resets the counter
 
 next:
-	JSR ResetSprites				 ; Reset sprites not on screen anymore
+	JSR BombRender
 
 playSoundFrame:
     JSR soundEngine

@@ -17,11 +17,10 @@ ONE = $01
 FOUR = $04
 ZERO = $00
 
-;useless after refactoring
 FIRST_SPRITE_Y = $0200
+FIRST_SPRITE_TILE = $0201
+FIRST_SPRITE_CONTROL = $0202
 FIRST_SPRITE_X = $0203
-LAST_SPRITE_END = $10 ; LAST_SPRITE_END = 4 * TOTAL_NUM_SPRITES
-
 
 PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
