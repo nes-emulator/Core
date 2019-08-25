@@ -82,8 +82,6 @@ UpdateMovementDelay:
     JMP ReadBombSetup
 
 EndOfButtonMovement:
-	LDA #RIGHT_MOVEMENT
-	STA bomberMovDirection
     JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
 
 ReadBombSetup:

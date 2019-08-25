@@ -50,42 +50,50 @@ ManageMoveBomberSprites:
 
     LDA y_position      ; Write first y position
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position      ; Write first x position
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     INX                 ; Go to next sprite of bomberman
     LDA y_position      ; Write second y position
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position
     CLC
     ADC #$08            ; Write second x, 8 bits ahead
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     INX                 ; Go to next sprite of bomberman
     LDA y_position
     CLC
     ADC #$08            ; Write third y, 8 bits ahead
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position      ; Write third x
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     INX                 ; Go to next sprite of bomberman
     LDA y_position
     CLC
     ADC #$08            ; Write fourth y, 8 bits ahead
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position
     CLC
     ADC #$08            ; Write fourth x, 8 bits ahead
     STA FIRST_SPRITE_Y, x
+    STA sprites, x      ; Make copy to sprites
 
     PLA
     TAX
@@ -128,10 +136,15 @@ MoveBombermanDirection:
     JMP MoveBombermanDirectionEnd
 
 BombermanFacingRight:       ; Start of bomber facing left, horintally mirrored
+    LDA #%01000000          ; Value to flip horizontally
     JSR MirrorSpritesHorizontally
+    JSR ExchangeTilesRightOrder
+    RTS                     ; Already returns on left/right flow
 BombermanFacingLeft:
     LDA #$00                ; Start of bomber facing left sprite
-    JMP MoveBombermanDirectionLoadSprite
+    JSR MirrorSpritesHorizontally
+    JSR ExchangeTilesLeftOrder
+    RTS                     ; Return early on left/right flow
 
 BombermanFacingUp:
     LDA #$0c                ; Start of bomber facing up sprite
@@ -143,6 +156,7 @@ BombermanFacingDown:
 
 MoveBombermanDirectionLoadSprite:
     STA initial_sprite      ; Next sprite
+    JSR MirrorSpritesHorizontally
 
     LDX #$01                ; Write on first tile number
     STA FIRST_SPRITE_Y, x
@@ -181,42 +195,56 @@ MoveXRegisterNextLine:
     INX
     RTS
 
+; Receives Register A as entry for what to write on flip
 MirrorSpritesHorizontally:
-    LDA #%01000000         ; Value to flip horizontally
     LDX #$02
 MirrorSpritesHorizontallyLoop:
     STA FIRST_SPRITE_Y, x  ; Write horizontal flip
     JSR MoveXRegisterNextLine
     CPX #$12               ; Until end of bomberman
     BNE MirrorSpritesHorizontallyLoop
+    RTS
 
-ExchangeTiles:
-    LDX #$03               ; Position of first tile number
-    LDA sprites, x
-    TAY                    ; Save tile number on Y
-
-    LDX #$07
-    LDA sprites, x         ; Get value of next line
-
-    LDX #$03               ; Save value on line before
+ExchangeTilesLeftOrder:
+    LDX #$01               ; First left orientation tile
+    LDA #$00
     STA FIRST_SPRITE_Y, x
 
-    TYA                    ; Save Y value on second line
-    LDX #$07
+    JSR MoveXRegisterNextLine
+    CLC
+    ADC #$01               ; Second left tile
     STA FIRST_SPRITE_Y, x
 
-    LDX #$0B               ; Position of third tile number
-    LDA sprites, x
-    TAY                    ; Save tile number on Y
-
-    LDX #$0F
-    LDA sprites, x         ; Get value of next line
-
-    LDX #$0B               ; Save value on line before
+    CLC
+    ADC #$0F               ; Third left tile
+    JSR MoveXRegisterNextLine
     STA FIRST_SPRITE_Y, x
 
-    TYA                    ; Save Y value on second line
-    LDX #$0F
+    CLC
+    ADC #$01               ; Last left tile
+    JSR MoveXRegisterNextLine
+    STA FIRST_SPRITE_Y, x
+
+    RTS
+
+ExchangeTilesRightOrder:
+    LDX #$01               ; First right orientation tile
+    LDA #$01
+    STA FIRST_SPRITE_Y, x
+
+    JSR MoveXRegisterNextLine
+    SEC
+    SBC #$01               ; Second right tile
+    STA FIRST_SPRITE_Y, x
+
+    CLC
+    ADC #$11               ; Third right tile
+    JSR MoveXRegisterNextLine
+    STA FIRST_SPRITE_Y, x
+
+    SEC
+    SBC #$01               ; Last right tile
+    JSR MoveXRegisterNextLine
     STA FIRST_SPRITE_Y, x
 
     RTS
