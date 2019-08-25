@@ -423,7 +423,7 @@ placeBomb:
     ;---------------------------------------
     
     LDA bombIsActive
-    CMP #Enabled
+    CMP #BOMB_ENABLED
     BEQ endOfPlaceBomb ;if an active bomb already exists, terminate 
 
     ;change bomb coordinate to bomberman coordinate
