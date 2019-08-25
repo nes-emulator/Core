@@ -4,8 +4,8 @@
 MAT_WALL = $00
 MAT_PASS = $01
 MAT_BRICK = $02
-MT_ROWS = $0D ; 13
-MT_COL =  $0F ; 15
+MT_ROWS = #13 ; 13
+MT_COL =  #15 ; 15
 BOMB_BASE_TIMER = #120
 BRICK_EXP_LIMIT = #3 ; the maximum number of bricks exploding at the same time is 3
 
@@ -137,10 +137,10 @@ MOB_MOV_INTERVAL = #60
 ;Result -> change the A position to matrix offset, NOT THE BEGINING OF THE ADDRESS
 ;aux subroutine
 positionAToIndexLine:
-    LDA #$0
-    LDY matrixYIndex
+    LDA #0
+    LDY matrixXIndex
     linePositioningLoop:
-        CPY $0
+        CPY #0
         BEQ linePositioningLoopEnd
         DEY
         CLC
@@ -157,7 +157,7 @@ positionAToIndexLine:
 accessLogicMatrixCoordinate:
     JSR positionAToIndexLine ;sum NLINES*y to index coordinate
     CLC
-    ADC matrixXIndex ;sum x to index
+    ADC matrixYIndex ;sum x to index
     ;Now A is in the specific cell
     RTS
 ;-----------------------------------------------------------------------------------------------------------------
