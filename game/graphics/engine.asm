@@ -3,9 +3,10 @@
    ; Graphics engine variable
    .enum $0700
    x_position       .dsb 1
-   y_position       .dsb 1
-   mirroring        .dsb 1
-   initial_sprite   .dsb 1
+   y_position       .dsb 1      ; Entry for methods
+   initial_sprite   .dsb 1      ; Used for iteration on sprites
+
+   sprites_size     .dsb 1      ; Count of how many active sprites
 
    ExplosionIsActive .dsb 1
    tickCounter .dsb 1
@@ -42,7 +43,7 @@ MoveBomberman:
     ASL A               ; Multiply y position by 16
 
     CLC
-    ADC #$20            ; Add y constant top space to complement (16)
+    ADC #$1F            ; Add y constant top space to complement (16)
     STA y_position      ; Save new value in same variable
 
 ManageMoveBomberSprites:
@@ -50,50 +51,42 @@ ManageMoveBomberSprites:
 
     LDA y_position      ; Write first y position
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position      ; Write first x position
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     INX                 ; Go to next sprite of bomberman
     LDA y_position      ; Write second y position
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position
     CLC
     ADC #$08            ; Write second x, 8 bits ahead
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     INX                 ; Go to next sprite of bomberman
     LDA y_position
     CLC
     ADC #$08            ; Write third y, 8 bits ahead
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position      ; Write third x
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     INX                 ; Go to next sprite of bomberman
     LDA y_position
     CLC
     ADC #$08            ; Write fourth y, 8 bits ahead
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     JSR MoveXRegisterNextSprite
     LDA x_position
     CLC
     ADC #$08            ; Write fourth x, 8 bits ahead
     STA FIRST_SPRITE_Y, x
-    STA sprites, x      ; Make copy to sprites
 
     PLA
     TAX
@@ -141,7 +134,7 @@ BombermanFacingRight:       ; Start of bomber facing left, horintally mirrored
     JSR ExchangeTilesRightOrder
     RTS                     ; Already returns on left/right flow
 BombermanFacingLeft:
-    LDA #$00                ; Start of bomber facing left sprite
+    LDA #$02                ; Start of bomber facing left sprite
     JSR MirrorSpritesHorizontally
     JSR ExchangeTilesLeftOrder
     RTS                     ; Return early on left/right flow
@@ -207,7 +200,7 @@ MirrorSpritesHorizontallyLoop:
 
 ExchangeTilesLeftOrder:
     LDX #$01               ; First left orientation tile
-    LDA #$00
+    LDA #$04               ; Reference to first sprite saved on A
     STA FIRST_SPRITE_Y, x
 
     JSR MoveXRegisterNextLine
@@ -229,7 +222,7 @@ ExchangeTilesLeftOrder:
 
 ExchangeTilesRightOrder:
     LDX #$01               ; First right orientation tile
-    LDA #$01
+    LDA #$05               ; Reference to first sprite saved on A
     STA FIRST_SPRITE_Y, x
 
     JSR MoveXRegisterNextLine
@@ -253,4 +246,18 @@ ExchangeTilesRightOrder:
 ; Move bomb control to next animation sprite
 ;----------------
 BombNextAnimationStage:
+    RTS
+
+;----------------
+; Reset all sprites past sprites_size
+;----------------
+ResetSprites:
+    LDA #$FF
+    LDX sprites_size
+ResetSpritesLoop:
+    STA FIRST_SPRITE_Y, x
+    INX
+    CPX #$00
+    BNE ResetSpritesLoop
+
     RTS

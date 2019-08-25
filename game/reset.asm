@@ -68,10 +68,13 @@ LoadSpritesLoop:
 
   JSR LoadBackground    ; Load background function
 
-  LDA #$01
+  LDA #$03
   STA bomberX
   STA bomberY           ; First reset bomberman position on screen
   JSR MoveBomberman
+
+  LDA #$10              ; Control for sprites on screen
+  STA sprites_size
 
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
   STA $2000

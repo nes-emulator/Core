@@ -30,13 +30,13 @@ MOB_MOV_INTERVAL = #60
 ;----------------------------------
 ;Variables
 ;---------------------------------
- 
- .enum $0200
+
+ .enum $0800
     ;logic matrix to map logic to real positions
     ;15 * 13
-    logicMatrix: 
+    logicMatrix:
         ;      0         1         2         3         4         5         6         7         8         9        10         11       12        13        14
-        .db MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL ; 0 
+        .db MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL ; 0
         .db MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS ; 1
         .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 2
         .db MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS ; 3
@@ -48,27 +48,27 @@ MOB_MOV_INTERVAL = #60
         .db MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS ; 9
         .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 10
         .db MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS ; 11
-        .db MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL ; 12       
-        
-        
-        
-            
-    
+        .db MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL ; 12
+
+
+
+
+
     ;Variables to pass Index as parameter
-    ;---------------------------- 
+    ;----------------------------
         matrixXIndex .dsb 1 ;
         matrixYIndex .dsb 1 ;
     ;----------------------------
 
-    
 
 
 
-    ;current bomber coordinates in logic matrix 
+
+    ;current bomber coordinates in logic matrix
     ;----------------------------------
     bomberX:
         .db $01;alter -> start pos
-    
+
     bomberY:
         .db $01;alter -> start pos
     bomberState:
@@ -76,14 +76,14 @@ MOB_MOV_INTERVAL = #60
     bomberMovDirection .dsb 1 ;left,right,down or up: according the constants defined in this file
 
     BomberMoveCounter:
-        .db $0;  
+        .db $0;
     ;----------------------------------
-    
-    
+
+
     ;----------------------------------
     ;current mob coordinates in logic matrix
     MobX :
-        .db $00 ; alter 
+        .db $00 ; alter
     MobY :
         .db $00 ; alter
     mobPositionIncrement :
@@ -93,7 +93,7 @@ MOB_MOV_INTERVAL = #60
     mobMoveCounter:
         .db #0
     ;----------------------------------
-    
+
     ;bomb manipulation
 
     ;BOMB EXPLOSION RANGE IS FIXED IN ONE RANGE CROSS
@@ -111,14 +111,14 @@ MOB_MOV_INTERVAL = #60
     expUpCoor    .dsb 1
     expDownCoor  .dsb 1
 
-    
+
     numberOfBricksExploding .dsb 1 ;after ethe explosion of all bricks is finished this variable should store $#0 (NMI code)
-    explodingBricksXCoor .dsb #BRICK_EXP_LIMIT 
+    explodingBricksXCoor .dsb #BRICK_EXP_LIMIT
     explodingBricksYCoor .dsb #BRICK_EXP_LIMIT
-    
+
 
     ;-----------------------------------------------
-       
+
 
 .ende
 
@@ -142,13 +142,13 @@ positionAToIndexLine:
     linePositioningLoop:
         CPY $0
         BEQ linePositioningLoopEnd
-        DEY 
+        DEY
         CLC
         ADC #MT_COL
         JMP linePositioningLoop
     linePositioningLoopEnd:
-    RTS 
- 
+    RTS
+
 
 
 ;Parameters: matrixXIndex and matrixYIndex
@@ -169,7 +169,7 @@ accessLogicMatrixCoordinate:
 coordinateIsWall:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -200,7 +200,7 @@ coordinateIsWall:
 coordinateIsBrick:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -225,7 +225,7 @@ coordinateIsBrick:
 CoordinateIsBomb:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -252,11 +252,11 @@ CoordinateIsBomb:
 
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
-;aux subroutine    
+;aux subroutine
 CoordinateIsMob:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -280,11 +280,11 @@ CoordinateIsMob:
 
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
-;aux subroutine    
+;aux subroutine
 CoordinateIsBomber:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -304,7 +304,7 @@ CoordinateIsBomber:
     TAY
     PLA
     ;-------------------------
-    RTS      
+    RTS
 ;----------------------------------------------------------------------------------------------------------------
 ;bomber MovementLogic
 
@@ -317,7 +317,7 @@ CoordinateIsBomber:
 MoveBomber_Logic:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -331,24 +331,24 @@ MoveBomber_Logic:
     STA matrixYIndex
 
     LDA bomberMovDirection
-       
+
     ;First: choose rotate direction
-    ;this code will update the coordinate of the indexed cell acordingly to bomber movement direction 
+    ;this code will update the coordinate of the indexed cell acordingly to bomber movement direction
     ;and call the rotate 'PPU' code.
-    
+
     CMP #LEFT_MOVEMENT
     BNE rightMov
         LDX matrixXIndex
-        DEX 
+        DEX
         STX matrixXIndex
         ;JRS rotateBomberLeft (EDINHA)
     JMP endOfMovementDirVerification
-    
+
     rightMov:
         CMP #RIGHT_MOVEMENT
         BNE downMov
             LDX matrixXIndex
-            INX 
+            INX
             STX matrixXIndex
             ;JRS rotateBomberRight (EDINHA)
         JMP endOfMovementDirVerification
@@ -357,20 +357,20 @@ MoveBomber_Logic:
         CMP #DOWN_MOVEMENT
         BNE upMov
             LDX matrixYIndex
-            INX 
+            INX
             STX matrixYIndex
             ;JRS rotateBomberDown (EDINHA)
         JMP endOfMovementDirVerification
 
     upMov:
         LDX matrixYIndex
-        DEX 
+        DEX
         STX matrixYIndex
         ;JRS rotateBomberUp (EDINHA)
 
     endOfMovementDirVerification:
     ;-----------------------------------------------------------------------------------------
-    JSR accessLogicMatrixCoordinate  ; shift 'A' to cell position of matrixXIndex , matrixXIndex       
+    JSR accessLogicMatrixCoordinate  ; shift 'A' to cell position of matrixXIndex , matrixXIndex
 
     LDX mobIsAlive
     CMP #ALIVE
@@ -380,20 +380,19 @@ MoveBomber_Logic:
 
     wallVerificationBomberMov:
     JSR coordinateIsWall ; wall also cover bomb case, A and matrixXindex and matrixYIndex are parameters
-    BEQ EndOfBomberMov
+    BEQ EndOfBomberMov   ; TODO ANDRIETTA VERIFY
 
     ;update bomber coordinates after validation
     LDA matrixXIndex
     STA bomberX
     LDA matrixYIndex
     STA bomberY
-    ;JSR movBomber_graphic (Edinha)
-    
+    JSR MoveBomberman
 
     KilledInMovByMob:
         LDA DEAD
         STA bomberState
-        ;JSR DeathAnimation (EDINHA)        
+        ;JSR DeathAnimation (EDINHA)
 
     EndOfBomberMov:
     ;---------------- Pull All
@@ -407,24 +406,24 @@ MoveBomber_Logic:
 
 
 ;tickCounter = 0
-;bombIsActive = 1 
+;bombIsActive = 1
 ;bombCounter = 0
 ;update bomb coordinate
 ;place the bomb in the current bomber coordinate position
 placeBomb:
     ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
     PHA
     LDA stkA
     ;---------------------------------------
-    
+
     LDA bombIsActive
     CMP #BOMB_ENABLED
-    BEQ endOfPlaceBomb ;if an active bomb already exists, terminate 
+    BEQ endOfPlaceBomb ;if an active bomb already exists, terminate
 
     ;change bomb coordinate to bomberman coordinate
     LDA bomberX
@@ -440,7 +439,7 @@ placeBomb:
     LDA #$0
     STA bombCounter
     STA tickCounter
-    
+
     endOfPlaceBomb:
     ;---------------- Pull All
     PLA
@@ -466,7 +465,7 @@ placeBomb:
 bombExplosion:
   ;--------------------------------------- push all
     STA stkA
-    PHA 
+    PHA
     TYA
     PHA
     TXA
@@ -476,29 +475,29 @@ bombExplosion:
   ;set explosion flags
   LDA #$00
   STA expCounter   ;reset explosion counter
-  STA bombIsActive ; disable bomb  
+  STA bombIsActive ; disable bomb
   LDA #$01
   STA ExplosionIsActive ;activate explosion
-  
+
   ;all sides of the explosion animation start Enabled, the explosion is only limited by walls
   LDA #AFFECTED
   STA expLeftCoor
   STA expRightCoor
   STA expUpCoor
   STA expDownCoor
-  
-  ;Verify all four adjacent squares individualy   
+
+  ;Verify all four adjacent squares individualy
   LDA bombX
   STA matrixXIndex
   LDA bombY
   STA matrixYIndex
-  
+
   ;RIGHT
-;---------------------------------------  
+;---------------------------------------
   LDX matrixXIndex
   INX
   STX matrixXIndex
-  JSR accessLogicMatrixCoordinate ;change A to 
+  JSR accessLogicMatrixCoordinate ;change A to
   JSR coordinateIsWall
   BNE rightExpMobDeathVer ;if the coordinate affected is not a wall
   LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
@@ -513,10 +512,10 @@ bombExplosion:
   ;by inspecting numberOfBricksExploding
   LDX numberOfBricksExploding
   LDA matrixXIndex
-  STA explodingBricksXCoor, x 
+  STA explodingBricksXCoor, x
   LDA matrixYIndex
   STA explodingBricksYCoor, x
-  INX 
+  INX
   STX numberOfBricksExploding
  ;------------------------------------------------------------
   rightExpMobDeathVer:
@@ -525,7 +524,7 @@ bombExplosion:
     LDA #DEAD
     STA mobIsAlive
     ; JSR MOB DEATH ANIMATION (EDINHA)
- 
+
   bomberDeathRightExp:
     JSR CoordinateIsBomber
     BNE checkLeftExplosionEffect
@@ -534,11 +533,11 @@ bombExplosion:
     ;JSR BOMBER DEATH ANIMATION (EDINHA)
     JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
  ;---------------------------------------------
- 
+
  ;restore parameter coordinates
   LDA bombX
   STA matrixXIndex
- 
+
  ;LEFT
  ;----------------------------------------------------------------
   checkLeftExplosionEffect:
@@ -561,10 +560,10 @@ bombExplosion:
   ;by inspecting numberOfBricksExploding
   LDX numberOfBricksExploding
   LDA matrixXIndex
-  STA explodingBricksXCoor, x 
+  STA explodingBricksXCoor, x
   LDA matrixYIndex
   STA explodingBricksYCoor, x
-  INX 
+  INX
   STX numberOfBricksExploding
  ;------------------------------------------------------------
   leftExpMobDeathVer:
@@ -573,7 +572,7 @@ bombExplosion:
     LDA #DEAD
     STA mobIsAlive
     ; JSR MOB DEATH ANIMATION (EDINHA)
- 
+
   bomberDeathLeftExp:
     JSR CoordinateIsBomber
     BNE checkUpExplosionEffect
@@ -586,14 +585,14 @@ bombExplosion:
 ;restore parameter coordinates
   LDA bombX
   STA matrixXIndex
- 
+
  ;UP
  ;-------------------------------------------
   checkUpExplosionEffect:
     LDX matrixYIndex
     DEX
     STX matrixYIndex
-    JSR accessLogicMatrixCoordinate ;change A to 
+    JSR accessLogicMatrixCoordinate ;change A to
     JSR coordinateIsWall
     BNE UpExpMobDeathVer ;if the coordinate affected is not a wall
     LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
@@ -608,10 +607,10 @@ bombExplosion:
     ;by inspecting numberOfBricksExploding
     LDX numberOfBricksExploding
     LDA matrixXIndex
-    STA explodingBricksXCoor, x 
+    STA explodingBricksXCoor, x
     LDA matrixYIndex
     STA explodingBricksYCoor, x
-    INX 
+    INX
     STX numberOfBricksExploding
     ;------------------------------------------------------------
     UpExpMobDeathVer:
@@ -620,7 +619,7 @@ bombExplosion:
         LDA #DEAD
         STA mobIsAlive
         ; JSR MOB DEATH ANIMATION (EDINHA)
-    
+
     bomberDeathUpExp:
         JSR CoordinateIsBomber
         BNE checkDownExplosionEffect
@@ -633,14 +632,14 @@ bombExplosion:
 ;restore parameter coordinates
   LDA bombY
   STA matrixYIndex
- 
+
  ;DOWN
  ;------------------------------------------
     checkDownExplosionEffect:
     LDX matrixYIndex
     INX
     STX matrixYIndex
-    JSR accessLogicMatrixCoordinate ;change A to 
+    JSR accessLogicMatrixCoordinate ;change A to
     JSR coordinateIsWall
     BNE DownExpMobDeathVer ;if the coordinate affected is not a wall
     LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
@@ -655,10 +654,10 @@ bombExplosion:
     ;by inspecting numberOfBricksExploding
     LDX numberOfBricksExploding
     LDA matrixXIndex
-    STA explodingBricksXCoor, x 
+    STA explodingBricksXCoor, x
     LDA matrixYIndex
     STA explodingBricksYCoor, x
-    INX 
+    INX
     STX numberOfBricksExploding
     ;------------------------------------------------------------
     DownExpMobDeathVer:
@@ -667,7 +666,7 @@ bombExplosion:
         LDA #DEAD
         STA mobIsAlive
         ; JSR MOB DEATH ANIMATION (EDINHA)
-    
+
     bomberDeathDownExp:
         JSR CoordinateIsBomber
         BNE endOfBombExplosion
@@ -678,7 +677,7 @@ bombExplosion:
 ;------------------------------------------
 
   ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI using ticks and expCounter
-  
+
   endOfBombExplosion:
   ;---------------- Pull All
     PLA
@@ -687,5 +686,5 @@ bombExplosion:
     TAY
     PLA
   ;-------------------------
-    
+
     RTS
