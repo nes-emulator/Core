@@ -8,7 +8,7 @@
 ; only a "Game sound" should play
 
 ;TODO handle different stages of brick explosion
-;looking at "numberOfBricksExploding" , "explodingBricksXCoor" and "explodingBricksYCoor" all defined in logic.asm 
+;looking at "numberOfBricksExploding" , "explodingBricksXCoor" and "explodingBricksYCoor" all defined in logic.asm
 
 PHA
 TYA
@@ -158,6 +158,7 @@ MobControl:
             STA mobMoveCounter       ; resets the counter
 
 next:
+	JSR ResetSprites				 ; Reset sprites not on screen anymore
 
 playSoundFrame:
     JSR soundEngine
