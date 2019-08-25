@@ -34,16 +34,11 @@ MoveBomberman:
     PHA                 ; Push all registers to stack
 
     LDA bomberX         ; Get logic X position
-    JSR GetScreenPosition
+    STA x_position
+    LDA bomberY         ; Get logic Y position
+    STA y_position
 
-    STA x_position      ; Add x constant left space to complement (0)
-
-    LDA bomberY         ; Get logic Y
-    JSR GetScreenPosition
-
-    CLC
-    ADC #$1F            ; Add y constant top space to complement (16)
-    STA y_position      ; Save new value in same variable
+    JSR CalculateScreenPosition
 
 ManageMoveBomberSprites:
     LDX #$00            ; Load sprite start position
@@ -51,41 +46,32 @@ ManageMoveBomberSprites:
     LDA y_position      ; Write first y position
     STA FIRST_SPRITE_Y, x
 
-    JSR MoveXRegisterNextSprite
     LDA x_position      ; Write first x position
-    STA FIRST_SPRITE_Y, x
+    STA FIRST_SPRITE_X, x
 
-    INX                 ; Go to next sprite of bomberman
+    JSR MoveXRegisterNextLine
+
     LDA y_position      ; Write second y position
     STA FIRST_SPRITE_Y, x
 
-    JSR MoveXRegisterNextSprite
-    LDA x_position
-    CLC
-    ADC #$08            ; Write second x, 8 bits ahead
+    LDA x_position_fix
+    STA FIRST_SPRITE_X, x
+
+    JSR MoveXRegisterNextLine
+
+    LDA y_position_fix
     STA FIRST_SPRITE_Y, x
 
-    INX                 ; Go to next sprite of bomberman
-    LDA y_position
-    CLC
-    ADC #$08            ; Write third y, 8 bits ahead
-    STA FIRST_SPRITE_Y, x
-
-    JSR MoveXRegisterNextSprite
     LDA x_position      ; Write third x
+    STA FIRST_SPRITE_X, x
+
+    JSR MoveXRegisterNextLine
+
+    LDA y_position_fix  ; Write fourth line
     STA FIRST_SPRITE_Y, x
 
-    INX                 ; Go to next sprite of bomberman
-    LDA y_position
-    CLC
-    ADC #$08            ; Write fourth y, 8 bits ahead
-    STA FIRST_SPRITE_Y, x
-
-    JSR MoveXRegisterNextSprite
-    LDA x_position
-    CLC
-    ADC #$08            ; Write fourth x, 8 bits ahead
-    STA FIRST_SPRITE_Y, x
+    LDA x_position_fix
+    STA FIRST_SPRITE_X, x
 
     PLA
     TAX
@@ -94,13 +80,6 @@ ManageMoveBomberSprites:
     PLA                 ; Pull all registers from stack
 
     RTS
-
-MoveXRegisterNextSprite:
-    INX                 ; Moves x to last part of sprite
-    INX
-    INX
-    RTS
-
 
 ;----------------
 ; Receives bomberman direction as Register X
@@ -242,14 +221,6 @@ ExchangeTilesRightOrder:
     RTS
 
 
-; Receives Register A, returns screen position
-GetScreenPosition:
-    ASL A
-    ASL A
-    ASL A
-    ASL A                 ; Multiply by 16
-    RTS
-
 ; Calculate x and y anchor fix positions
 CalculateScreenPosition:
     LDA #00
@@ -277,29 +248,6 @@ MultiplyBy16Loop:
     RTS
 
 ;----------------
-; Render the sprite on screen based on entry variables
-;
-; X register on the sprite PPU position ($0200 + x)
-; A register is the sprite X position
-; Y register is the sprite Y position
-; control_sprite is the sprite control flags
-; initial_sprite is the tile reference
-;----------------
-RenderSprite:
-    STA FIRST_SPRITE_X, x
-    TYA                 ; Render both X and Y position
-    STA FIRST_SPRITE_Y, x
-
-    LDA initial_sprite
-    STA FIRST_SPRITE_TILE, x
-
-    LDA #$00
-    STA FIRST_SPRITE_CONTROL, x
-
-    RTS
-
-
-;----------------
 ; Move bomb control to next animation sprite
 ;----------------
 BombNextAnimationStage:
@@ -318,7 +266,35 @@ BombRender:
     STA initial_sprite
 
     LDX #BOMB_SPRITE_START_POSITION
+    JSR RenderSpriteGroup
 
+    RTS
+
+;----------------
+; Removes render of bomb sprite
+;----------------
+RemoveBombRender:
+    LDA #BOMB_SPRITE_START_POSITION
+    CLC
+    ADC #$10           ; Go to last bomb sprite
+    TAX
+    LDA #$FF           ; Reset bomb value
+RemoveBombRenderLoop:
+    DEX                ; On loop apply reset
+    STA FIRST_SPRITE_Y, x
+    CPX #BOMB_SPRITE_START_POSITION
+    BNE RemoveBombRenderLoop
+
+    RTS
+
+;----------------
+; Render the sprite group of 4 tiles on screen based on entry variables
+;
+; X register must be set as offset from PPU sprites position start
+; x_position and y_position initial must be set beforehand
+; control_sprite is the sprite control flags
+; initial_sprite is the tile reference
+;----------------
 RenderSpriteGroup:
     JSR CalculateScreenPosition
 
@@ -355,18 +331,23 @@ RenderSpriteGroup:
 
 
 ;----------------
-; Removes render of bomb sprite
+; Render the sprite on screen based on entry variables
+;
+; X register on the sprite PPU position ($0200 + x)
+; A register is the sprite X position
+; Y register is the sprite Y position
+; control_sprite is the sprite control flags
+; initial_sprite is the tile reference
 ;----------------
-RemoveBombRender:
-    LDA #BOMB_SPRITE_START_POSITION
-    CLC
-    ADC #$10           ; Go to last bomb sprite
-    TAX
-    LDA #$FF           ; Reset bomb value
-RemoveBombRenderLoop:
-    DEX                ; On loop apply reset
+RenderSprite:
+    STA FIRST_SPRITE_X, x
+    TYA                 ; Render both X and Y position
     STA FIRST_SPRITE_Y, x
-    CPX #BOMB_SPRITE_START_POSITION
-    BNE RemoveBombRenderLoop
+
+    LDA initial_sprite
+    STA FIRST_SPRITE_TILE, x
+
+    LDA #$00
+    STA FIRST_SPRITE_CONTROL, x
 
     RTS
