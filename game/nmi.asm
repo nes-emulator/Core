@@ -7,7 +7,8 @@
 ; mobs and explosion should stop
 ; only a "Game sound" should play
 
-;TODO handle different stages of a brick explosion
+;TODO handle different stages of brick explosion
+;looking at "numberOfBricksExploding" , "explodingBricksXCoor" and "explodingBricksYCoor" all defined in logic.asm 
 
 PHA
 TYA
