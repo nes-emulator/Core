@@ -7,7 +7,7 @@ MAT_BRICK = $02
 MT_ROWS = $0D ; 13
 MT_COL =  $0F ; 15
 BOMB_BASE_TIMER = #120
-
+BRICK_EXP_LIMIT = #3 ; the maximum number of bricks exploding at the same time is 3
 
 ;bomber movement constants
 LEFT_MOVEMENT = $00
@@ -21,6 +21,8 @@ PLAYER_MOV_DELAY = #30
 ;bomb constants
 BOMB_ENABLED = $01
 BOMB_DISABLED = $00
+NOT_AFFECTED = #0
+AFFECTED = #1
 
 ;Mob constants
 MOB_MOV_INTERVAL = #60
@@ -102,6 +104,20 @@ MOB_MOV_INTERVAL = #60
 
     bombX .dsb 1
     bombY .dsb 1
+
+    ;Explosion Boundaries, these variables are only used as parameters for the explosion render in graphics/* code
+    expRightCoor .dsb 1 ; Possible values #AFFECTED or #NOT_AFFECTED
+    expLeftCoor  .dsb 1
+    expUpCoor    .dsb 1
+    expDownCoor  .dsb 1
+
+    
+    numberOfBricksExploding .dsb 1 ;after ethe explosion of all bricks is finished this variable should store $#0 (NMI code)
+    explodingBricksXCoor .dsb #BRICK_EXP_LIMIT 
+    explodingBricksYCoor .dsb #BRICK_EXP_LIMIT
+    
+
+    ;-----------------------------------------------
        
 
 .ende
@@ -118,10 +134,10 @@ MOB_MOV_INTERVAL = #60
 ;matrix access subroutines
 
 ;Parameters: matrixYIndex
-;Result -> change the A position to the begining of the line
+;Result -> change the A position to matrix offset, NOT THE BEGINING OF THE ADDRESS
 ;aux subroutine
 positionAToIndexLine:
-    LDA logicMatrix
+    LDA #$0
     LDY matrixYIndex
     linePositioningLoop:
         CPY $0
@@ -151,7 +167,6 @@ accessLogicMatrixCoordinate:
 ;if true, cmp flag  = 0
 ;aux subroutine
 coordinateIsWall:
-    
     ;--------------------------------------- push all
     STA stkA
     PHA 
@@ -402,14 +417,17 @@ placeBomb:
     ;-------------------------
     RTS
 
-
+;Flags to set:
 ;ExplosionIsActive  = 1
 ;expCounter = 0
 ;bombIsActive = 0
-;center pos -> return
 ;when the bomb explodes many things can occur:
 ;1) bomber can die, bomberState = #Dead
-;2) mob can die, mobSt
+;2) mob can die, mobIsAlive = #DEAD (Death is instant there is no delay between the explosion and its propagation)
+;3) a brick can be destroyed, update brick position to MAT_PAS in logic matrix
+;Output-> 4 flags indicating to the PPU logic if the explosion need to be rendered in the four adjacent squares (explosion boundaries variables)
+;Output -> 2 arrays of "numberOfBricksExploding" bricks coordinates (explodingBricksXCoor, explodingBricksYCoor)
+;the brick 
 bombExplosion:
   ;--------------------------------------- push all
     STA stkA
@@ -420,10 +438,46 @@ bombExplosion:
     PHA
     LDA stkA
   ;---------------------------------------
+  ;set explosion flags
+  LDA #$00
+  STA expCounter   ;reset explosion counter
+  STA bombIsActive ; disable bomb  
+  LDA #$01
+  STA ExplosionIsActive ;activate explosion
+  
+  ;all sides of the explosion animation start Enabled, the explosion is only limited by walls
+  LDA #AFFECTED
+  STA expLeftCoor
+  STA expRightCoor
+  STA expUpCoor
+  
+  ;Verify all four adjacent squares individualy   
+  LDA bombX
+  STA matrixXIndex
+  LDA bombY
+  STA matrixYIndex
+  
+  ;RIGHT
+;---------------------------------------  
+  LDX matrixXIndex
+  INX
+  STX matrixXIndex
+  JSR accessLogicMatrixCoordinate
+  JSR coordinateIsWall
+  ;BNE ;if the coordinate affected is a wall
+
+;---------------------------------------------
+ checkLeftExplosionEffect:
+
+ checkRightExplosionEffect:
+
+ checkDownExplosionEffect:
 
 
 
 
+  ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI  
+  
   ;---------------- Pull All
     PLA
     TAX
