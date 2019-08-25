@@ -178,7 +178,7 @@ coordinateIsWall:
     ;---------------------------------------
     JSR coordinateIsBrick
     BEQ endOfIsWall
-    JSR EndOfCoordinateIsBomb ; bombs are also walls
+    JSR CoordinateIsBomb ; bombs are also walls
     BEQ endOfIsWall
     TAX
     LDA logicMatrix, x
