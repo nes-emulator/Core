@@ -422,6 +422,10 @@ placeBomb:
     LDA stkA
     ;---------------------------------------
     
+    LDA bombIsActive
+    CMP #Enabled
+    BEQ endOfPlaceBomb ;if an active bomb already exists, terminate 
+
     ;change bomb coordinate to bomberman coordinate
     LDA bomberX
     STA bombX
@@ -437,6 +441,7 @@ placeBomb:
     STA bombCounter
     STA tickCounter
     
+    endOfPlaceBomb:
     ;---------------- Pull All
     PLA
     TAX
