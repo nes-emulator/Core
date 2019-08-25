@@ -222,7 +222,7 @@ coordinateIsBrick:
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine
-CordinateIsBomb:
+CoordinateIsBomb:
     ;--------------------------------------- push all
     STA stkA
     PHA 
