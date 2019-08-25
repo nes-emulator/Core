@@ -431,6 +431,8 @@ placeBomb:
     LDA bomberY
     STA bombY
 
+    JSR BombRender
+
     ;JSR renderBomb (EDINHA), look at bomb coordinates (bombX,bombY)
 
     ;update flags
