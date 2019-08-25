@@ -138,7 +138,7 @@ MOB_MOV_INTERVAL = #60
 ;aux subroutine
 positionAToIndexLine:
     LDA #0
-    LDY matrixXIndex
+    LDY matrixYIndex
     linePositioningLoop:
         CPY #0
         BEQ linePositioningLoopEnd
@@ -157,7 +157,7 @@ positionAToIndexLine:
 accessLogicMatrixCoordinate:
     JSR positionAToIndexLine ;sum NLINES*y to index coordinate
     CLC
-    ADC matrixYIndex ;sum x to index
+    ADC matrixXIndex ;sum x to index
     ;Now A is in the specific cell
     RTS
 ;-----------------------------------------------------------------------------------------------------------------
