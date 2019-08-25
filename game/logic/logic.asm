@@ -276,9 +276,38 @@ CoordinateIsMob:
     TAY
     PLA
     ;-------------------------
-    RTS    
+    RTS
+
+;Parameters: matrixXIndex and matrixYIndex
+;if true, cmp flag  = 0
+;aux subroutine    
+CoordinateIsBomber:
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
+    LDA matrixXIndex
+    CMP bomberX
+    BNE EndOfCoordinateIsBomber
+    LDA matrixYIndex
+    CMP bomberY
+    EndOfCoordinateIsBomber:
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
+    RTS      
 ;----------------------------------------------------------------------------------------------------------------
 ;bomber MovementLogic
+
 
 
 
@@ -464,8 +493,8 @@ bombExplosion:
   STX matrixXIndex
   JSR accessLogicMatrixCoordinate
   JSR coordinateIsWall
-  ;BNE ;if the coordinate affected is a wall
-
+  BNE ;if the coordinate affected is not a wall
+    
 ;---------------------------------------------
  checkLeftExplosionEffect:
 
