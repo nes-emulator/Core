@@ -93,6 +93,8 @@ MOB_MOV_INTERVAL = #60
     ;----------------------------------
     
     ;bomb manipulation
+
+    ;BOMB EXPLOSION RANGE IS FIXED IN ONE RANGE CROSS
     ;----------------------------------
     bombIsActive:
         .db BOMB_DISABLED
@@ -326,9 +328,13 @@ MoveBomber_Logic:
     ;-----------------------------------------------------------------------------------------
     JSR accessLogicMatrixCoordinate  ; shift 'A' to cell position of matrixXIndex , matrixXIndex       
 
+    LDX mobIsAlive
+    CMP #ALIVE
+    BNE wallVerificationBomberMov ;if mob isn't alive, there is no need to verify
     JSR CoordinateIsMob ; A is a parameter
     BEQ KilledInMovByMob
 
+    wallVerificationBomberMov:
     JSR coordinateIsWall ; wall also cover bomb case, A and matrixXindex and matrixYIndex are parameters
     BEQ EndOfBomberMov
 
@@ -355,15 +361,74 @@ MoveBomber_Logic:
     ;-------------------------
     RTS
 
+
+;tickCounter = 0
+;bombIsActive = 1 
+;bombCounter = 0
+;update bomb coordinate
+;place the bomb in the current bomber coordinate position
+placeBomb:
+    ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+    ;---------------------------------------
+    
+    ;change bomb coordinate to bomberman coordinate
+    LDA bomberX
+    STA bombX
+    LDA bomberY
+    STA bombY
+
+    ;JSR renderBomb (EDINHA), look at bomb coordinates (bombX,bombY)
+
+    ;update flags
+    LDA #BOMB_ENABLED
+    STA bombIsActive
+    LDA #$0
+    STA bombCounter
+    STA tickCounter
+    
+    ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+    ;-------------------------
+    RTS
+
+
 ;ExplosionIsActive  = 1
 ;expCounter = 0
-;bombCounter = 0
-;when the bomb explodes
-bombExplosion:
-
-
-
-;tickCounter
-;bombIsActive = 1 
+;bombIsActive = 0
 ;center pos -> return
-placeBomb:
+;when the bomb explodes many things can occur:
+;1) bomber can die, bomberState = #Dead
+;2) mob can die, mobSt
+bombExplosion:
+  ;--------------------------------------- push all
+    STA stkA
+    PHA 
+    TYA
+    PHA
+    TXA
+    PHA
+    LDA stkA
+  ;---------------------------------------
+
+
+
+
+  ;---------------- Pull All
+    PLA
+    TAX
+    PLA
+    TAY
+    PLA
+  ;-------------------------
+

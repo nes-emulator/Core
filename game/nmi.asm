@@ -1,4 +1,14 @@
 ;;;;;;;;;;;;;;; NMI ;;;;;;;;;;;;;;;
+
+
+;TODO handle death of bomber in NMI
+; if bomberState = #DEAD
+; controllers must be locked
+; mobs and explosion should stop
+; only a "Game sound" should play
+
+;TODO handle different stages of a brick explosion
+
 PHA
 TYA
 PHA
