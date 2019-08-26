@@ -341,7 +341,6 @@ MoveBomber_Logic:
         LDX matrixXIndex
         DEX
         STX matrixXIndex
-        ;JRS rotateBomberLeft (EDINHA)
     JMP endOfMovementDirVerification
 
     rightMov:
@@ -350,7 +349,6 @@ MoveBomber_Logic:
             LDX matrixXIndex
             INX
             STX matrixXIndex
-            ;JRS rotateBomberRight (EDINHA)
         JMP endOfMovementDirVerification
 
     downMov:
@@ -359,14 +357,12 @@ MoveBomber_Logic:
             LDX matrixYIndex
             INX
             STX matrixYIndex
-            ;JRS rotateBomberDown (EDINHA)
         JMP endOfMovementDirVerification
 
     upMov:
         LDX matrixYIndex
         DEX
         STX matrixYIndex
-        ;JRS rotateBomberUp (EDINHA)
 
     endOfMovementDirVerification:
     ;-----------------------------------------------------------------------------------------
@@ -388,11 +384,13 @@ MoveBomber_Logic:
     LDA matrixYIndex
     STA bomberY
     JSR MoveBomberman
+    JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
+    JMP EndOfBomberMov
 
     KilledInMovByMob:
-        LDA DEAD
+        LDA #DEAD
         STA bomberState
-        ;JSR DeathAnimation (EDINHA)
+        JSR RenderBombermanDeath
 
     EndOfBomberMov:
     ;---------------- Pull All
