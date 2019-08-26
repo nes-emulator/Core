@@ -481,6 +481,8 @@ bombExplosion:
   LDA #$01
   STA ExplosionIsActive ;activate explosion
 
+  JSR ExplosionRender
+
   ;all sides of the explosion animation start Enabled, the explosion is only limited by walls
   LDA #AFFECTED
   STA expLeftCoor

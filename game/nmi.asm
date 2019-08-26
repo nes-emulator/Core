@@ -143,6 +143,7 @@ ExplosionState:
             ; render something
             LDA #0                  ; Deactivate explosion on screen
             STA ExplosionIsActive
+			JSR RemoveExplosionRender
 
 MobControl:
     LDA MobIsAlive
@@ -158,8 +159,6 @@ MobControl:
             STA mobMoveCounter       ; resets the counter
 
 next:
-	JSR BombRender
-
 playSoundFrame:
     JSR soundEngine
 

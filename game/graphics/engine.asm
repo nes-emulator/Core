@@ -9,8 +9,6 @@
    x_position_fix   .dsb 1
    y_position_fix   .dsb 1      ; Anchors variables
 
-   sprites_size     .dsb 1      ; Count of how many active sprites
-
    ExplosionIsActive .dsb 1
    tickCounter .dsb 1
    expCounter .dsb 1
@@ -20,7 +18,9 @@
    BOMB_BASE_TIMER = $00
    MOB_MOV_INTERVAL = $00
 
-   BOMB_SPRITE_START_POSITION = $10
+   MOB_SPRITE_START_POSITION = $10
+   BOMB_SPRITE_START_POSITION = $20
+   EXPLOSION_SPRITE_START_POSITION = $30
 
 ;----------------
 ; Receives bomberman position as logical x_position and y_postion
@@ -271,19 +271,123 @@ BombRender:
     RTS
 
 ;----------------
-; Removes render of bomb sprite
+; First render of explosion sprite
 ;----------------
-RemoveBombRender:
+ExplosionRender:
+    LDA bombX         ; Copying explosion center position
+    STA x_position
+    LDA bombY
+    STA y_position
+
+    LDA #$4C          ; Sprite center explosion
+    STA initial_sprite
+
+    LDX #BOMB_SPRITE_START_POSITION
+    JSR RenderSpriteGroup
+
+    LDA expRightCoor
+    CMP #AFFECTED
+    BNE ExplosionLeftRender
+
+ExplosionRightRender:
+    LDA bombX         ; Copying explosion center position
+    STA x_position
+    LDA bombY
+    STA y_position
+
+    INC x_position    ; Make explosion to right
+
+    LDA #$4C          ; Sprite center explosion
+    STA initial_sprite
+
+    LDA #BOMB_SPRITE_START_POSITION
+    CLC               ; Calculate next start position
+    ADC #$10
+    TAX
+    JSR RenderSpriteGroup
+
+ExplosionLeftRender:
+    LDA expLeftCoor
+    CMP #AFFECTED
+    BNE ExplosionUpRender
+
+    LDA bombX         ; Copying explosion center position
+    STA x_position
+    LDA bombY
+    STA y_position
+
+    DEC x_position    ; Make explosion to left
+
+    LDA #$4C          ; Sprite center explosion
+    STA initial_sprite
+
+    LDA #BOMB_SPRITE_START_POSITION
+    CLC               ; Calculate next start position
+    ADC #$20
+    TAX
+    JSR RenderSpriteGroup
+
+
+ExplosionUpRender:
+    LDA expUpCoor
+    CMP #AFFECTED
+    BNE ExplosionDownRender
+
+    LDA bombX         ; Copying explosion center position
+    STA x_position
+    LDA bombY
+    STA y_position
+
+    DEC y_position    ; Make explosion to up
+
+    LDA #$4C          ; Sprite center explosion
+    STA initial_sprite
+
+    LDA #BOMB_SPRITE_START_POSITION
+    CLC               ; Calculate next start position
+    ADC #$30
+    TAX
+    JSR RenderSpriteGroup
+
+
+ExplosionDownRender:
+    LDA expDownCoor
+    CMP #AFFECTED
+    BNE ExplosionRenderEnd
+
+    LDA bombX         ; Copying explosion center position
+    STA x_position
+    LDA bombY
+    STA y_position
+
+    INC y_position    ; Make explosion to down
+
+    LDA #$4C          ; Sprite center explosion
+    STA initial_sprite
+
+    LDA #BOMB_SPRITE_START_POSITION
+    CLC               ; Calculate next start position
+    ADC #$40
+    TAX
+    JSR RenderSpriteGroup
+
+ExplosionRenderEnd:
+    RTS
+
+;----------------
+; Removes render of explosion sprites
+;----------------
+RemoveExplosionRender:
     LDA #BOMB_SPRITE_START_POSITION
     CLC
-    ADC #$10           ; Go to last bomb sprite
+    ADC #$4F           ; Go to last explosion sprite
     TAX
     LDA #$FF           ; Reset bomb value
-RemoveBombRenderLoop:
-    DEX                ; On loop apply reset
+RemoveExplosionRenderLoop:
     STA FIRST_SPRITE_Y, x
+    DEX                ; On loop apply reset
     CPX #BOMB_SPRITE_START_POSITION
-    BNE RemoveBombRenderLoop
+    BNE RemoveExplosionRenderLoop
 
     RTS
 
@@ -301,13 +405,11 @@ RenderSpriteGroup:
     LDY y_position
     LDA x_position
     JSR RenderSprite    ; First line sprite draw
-
     JSR MoveXRegisterNextLine
 
     INC initial_sprite  ; Second line sprite draw
     LDA x_position_fix
     JSR RenderSprite
-
     JSR MoveXRegisterNextLine
 
     LDA initial_sprite
@@ -315,12 +417,9 @@ RenderSpriteGroup:
     ADC #$0F            ; Move sprite reference tile to chr line below
     STA initial_sprite
 
-    JSR MoveXRegisterNextLine
-
     LDA x_position      ; Third line sprite draw
     LDY y_position_fix
     JSR RenderSprite
-
     JSR MoveXRegisterNextLine
 
     INC initial_sprite  ; Last line sprite draw
