@@ -270,6 +270,24 @@ BombRender:
 
     RTS
 
+
+;----------------
+; First render of bomberman death animation
+;----------------
+RenderBombermanDeath:
+    LDA bomberX         ; Get logic X position
+    STA x_position
+    LDA bomberY         ; Get logic Y position
+    STA y_position
+
+    LDA #$28            ; Initial death sprite
+    STA initial_sprite
+
+    LDX #$00            ; Bomberman sprite PPU position
+    JSR RenderSpriteGroup
+
+    RTS
+
 ;----------------
 ; First render of explosion sprite
 ;----------------

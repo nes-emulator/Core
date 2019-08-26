@@ -433,8 +433,6 @@ placeBomb:
 
     JSR BombRender
 
-    ;JSR renderBomb (EDINHA), look at bomb coordinates (bombX,bombY)
-
     ;update flags
     LDA #BOMB_ENABLED
     STA bombIsActive
@@ -534,7 +532,7 @@ bombExplosion:
     BNE checkLeftExplosionEffect
     LDA #DEAD
     STA bomberState
-    ;JSR BOMBER DEATH ANIMATION (EDINHA)
+    JSR RenderBombermanDeath
     JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
  ;---------------------------------------------
 
@@ -582,7 +580,7 @@ bombExplosion:
     BNE checkUpExplosionEffect
     LDA #DEAD
     STA bomberState
-    ;JSR BOMBER DEATH ANIMATION (EDINHA)
+    JSR RenderBombermanDeath
     JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
  ;----------------------------------------------------------------
 
@@ -629,7 +627,7 @@ bombExplosion:
         BNE checkDownExplosionEffect
         LDA #DEAD
         STA bomberState
-        ;JSR BOMBER DEATH ANIMATION (EDINHA)
+        JSR RenderBombermanDeath
         JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
  ;--------------------------------------------
 
@@ -676,7 +674,7 @@ bombExplosion:
         BNE endOfBombExplosion
         LDA #DEAD
         STA bomberState
-        ;JSR BOMBER DEATH ANIMATION (EDINHA)
+        JSR RenderBombermanDeath
         ; THE GAME IS OVER, TERMINATE FUNC
 ;------------------------------------------
 
