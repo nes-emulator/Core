@@ -128,27 +128,10 @@ TriangleOff:
 
 sound_play_frame:
 
-    ; tick:
-    ;     LDA sound_flag_tick
-    ;     CMP #1
-    ;     BNE explosion
-    ;         ; play the tick
-    ;         JSR TriangleOn
-    ;         INC sound_frame_counter
-    ;         LDA sound_frame_counter
-    ;         ; CMP #TICK_TEMPO
-    ;         CMP #16
-    ;         BNE explosion
-    ;             ; end SFX
-    ;             LDA #0
-    ;             STA sound_flag_tick
-    ;             STA sound_frame_counter
-    ;             JSR TriangleOff
-
     explosion:
         LDA sound_flag_expl
         CMP #1
-        BNE sound_done
+        BNE tick
             JSR Beep
             INC sound_frame_counter
             LDA sound_frame_counter
@@ -159,6 +142,23 @@ sound_play_frame:
                 STA sound_flag_expl
                 STA sound_frame_counter
                 JSR ClearSQ1
+
+    tick:
+        LDA sound_flag_tick
+        CMP #1
+        BNE sound_done
+            ; play the tick
+            JSR TriangleOn
+            INC sound_frame_counter
+            LDA sound_frame_counter
+            ; CMP #TICK_TEMPO
+            CMP #16
+            BNE sound_done
+                ; end SFX
+                LDA #0
+                STA sound_flag_tick
+                STA sound_frame_counter
+                JSR TriangleOff
 
     sound_done:
         RTS

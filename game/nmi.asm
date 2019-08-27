@@ -115,7 +115,7 @@ BombTickControl:
     BNE BombCounterControl
         LDA #$00
         STA tickCounter         ; Reset tick counter for next animation count
-        ; JSR sound_bomb_tick     ; set Sound Engine flag
+        JSR sound_bomb_tick     ; set Sound Engine flag
         JSR BombNextAnimationStage
 
 BombCounterControl:
