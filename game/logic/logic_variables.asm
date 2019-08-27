@@ -10,8 +10,7 @@
     characterNewX .dsb 1 ;
     characterNewY .dsb 1 ;
     ;----------------------------
-
-
+    
 
     ;current bomber coordinates in logic matrix
     ;----------------------------------
@@ -65,4 +64,3 @@
 
 
     ;-----------------------------------------------
-
