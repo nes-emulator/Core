@@ -571,6 +571,8 @@ bombExplosion:
   LDA #$00
   STA expCounter   ;reset explosion counter
   STA bombIsActive ; disable bomb
+  STA bombCounter
+  
   LDA #$01
   STA ExplosionIsActive ;activate explosion
 
