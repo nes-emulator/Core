@@ -115,8 +115,7 @@ BombTickControl:
     BNE BombCounterControl
     LDA #$00
     STA tickCounter         ; Reset tick counter for next animation count
-    LDA #1
-    STA bombSFX             ; set Sound Engine flag
+    STA sound_bomb_tick     ; set Sound Engine flag
     JSR BombNextAnimationStage
 
 BombCounterControl:
@@ -127,8 +126,7 @@ BombCounterControl:
     ; call explosion logic func, BOMB_BASE_TIMER = #120
     JSR bombExplosion
     ;
-    LDA #1
-    STA explosionSFX        ; set sound engine flag
+    JSR sound_bomb_expl        ; set sound engine flag
 
 ExplosionState:
     LDA ExplosionIsActive
@@ -158,7 +156,7 @@ MobControl:
 
 next:
 playSoundFrame:
-    JSR soundEngine
+    JSR sound_play_frame
 
 PLA
 TAX
