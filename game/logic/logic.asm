@@ -4,17 +4,17 @@
 MAT_WALL = $00
 MAT_PASS = $01
 MAT_BRICK = $02
-MT_ROWS = #13 ; 13
-MT_COL =  #15 ; 15
+MT_ROWS = #13 ; 13 -> was renamed to NUMBER_ROWS in joe's branch
+MT_COL =  #15 ; 15 -> was reanamed to NUMBER_COLUMNS in joe's branch
 BOMB_BASE_TIMER = #120
 BRICK_EXP_LIMIT = #3 ; the maximum number of bricks exploding at the same time is 3
 
-;bomber movement constants
-LEFT_MOVEMENT = $00
-RIGHT_MOVEMENT = $01
-DOWN_MOVEMENT = $10
+;bomber movement constants, 
+LEFT_MOVEMENT = $00 ; constant replaced to _DIRECTION in joe's branch
+RIGHT_MOVEMENT = $01 ; 
+DOWN_MOVEMENT = $10 ; 
 UP_MOVEMENT = $11
-ALIVE  = $01
+ALIVE  = $01 ; 
 DEAD = $00
 PLAYER_MOV_DELAY = #10
 
@@ -136,7 +136,7 @@ MOB_MOV_INTERVAL = #60
 ;Parameters: matrixYIndex
 ;Result -> change the A position to matrix offset, NOT THE BEGINING OF THE ADDRESS
 ;aux subroutine
-positionAToIndexLine:
+positionAToIndexLine: ; this method was refactored by joe in his branch -> AccessLogicMatrixNewCoord
     LDA #0
     LDY matrixYIndex
     linePositioningLoop:
@@ -154,7 +154,7 @@ positionAToIndexLine:
 ;Parameters: matrixXIndex and matrixYIndex
 ;change A to matrixXIndex, matrixYIndex position
 ;aux subroutine
-accessLogicMatrixCoordinate:
+accessLogicMatrixCoordinate: ;this method was refactored by joe in his branch -> AccessLogicMatrixNewCoord
     JSR positionAToIndexLine ;sum NLINES*y to index coordinate
     CLC
     ADC matrixXIndex ;sum x to index
@@ -166,7 +166,7 @@ accessLogicMatrixCoordinate:
 ;Parameters: A = memory address positioned to X,Y coordinate and ; matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine
-coordinateIsWall:
+coordinateIsWall:; joe was removed by joe, and it's in fact no longer needed
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -178,7 +178,7 @@ coordinateIsWall:
     ;---------------------------------------
     JSR coordinateIsBrick
     BEQ endOfIsWall
-    JSR CoordinateIsBomb ; bombs are also walls
+    JSR CoordinateIsBomb ; bombs are also walls; JOE CODE IS NOT COVERING THIS CASE
     BEQ endOfIsWall
     TAX
     LDA logicMatrix, x
@@ -197,7 +197,7 @@ coordinateIsWall:
 ;Parameters: A = memory address positioned to X,Y coordinate
 ;if true, cmp flag  = 0
 ;aux subroutine
-coordinateIsBrick:
+coordinateIsBrick:; Joe removed this method but it's necessary
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -222,7 +222,7 @@ coordinateIsBrick:
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine
-CoordinateIsBomb:
+CoordinateIsBomb: ; joe dont implemented this routine in his code this should be reimplemented
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -253,7 +253,7 @@ CoordinateIsBomb:
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine
-CoordinateIsMob:
+CoordinateIsMob: ; Joe deleted this method, this method should be reimplemented
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -281,7 +281,7 @@ CoordinateIsMob:
 ;Parameters: matrixXIndex and matrixYIndex
 ;if true, cmp flag  = 0
 ;aux subroutine
-CoordinateIsBomber:
+CoordinateIsBomber: ; this method was deleted by joe and should be reimplemented
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -314,7 +314,7 @@ CoordinateIsBomber:
 ;Parameters -> movementDirection (left,right,up,down) (00,01,10,11 = constants defined in this file),
 ;movement directions is written in .NMI controller event
 ;this function will be called in the .NMI controller event
-MoveBomber_Logic:
+MoveBomber_Logic: ; this method was deleted by joe , in his method He isn't covering all death cases
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -408,7 +408,7 @@ MoveBomber_Logic:
 ;bombCounter = 0
 ;update bomb coordinate
 ;place the bomb in the current bomber coordinate position
-placeBomb:
+placeBomb: ; this method wasn't implemented by joe
     ;--------------------------------------- push all
     STA stkA
     PHA
@@ -448,11 +448,62 @@ placeBomb:
     ;-------------------------
     RTS
 
+; this method set the position of the aux index ing variables (matrixXIndex and matrixYIndex) to the bomb coordinate
+setMatIndexToBomb:
+    ;-------------------------------------------------------------------------------
+    ; Push A register
+    ;-------------------------------------------------------------------------------
+    PHA ; store A value
+ 
+    LDA bombX
+    STA matrixXIndex
+    LDA bombY
+    STA matrixYIndex
+
+    ;-------------------------------------------------------------------------------
+    ; Pull A register
+    ;-------------------------------------------------------------------------------
+
+    PLA ; retrieve A value 
+    RTS ;   
+
+
+;   LDA #MAT_PASS
+;   STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
+;   ;by inspecting numberOfBricksExploding
+;   LDX numberOfBricksExploding
+;   LDA matrixXIndex
+;   STA explodingBricksXCoor, x
+;   LDA matrixYIndex
+;   STA explodingBricksYCoor, x
+;   INX
+;   STX numberOfBricksExploding
+
+; X: matrix linear brick position
+; MatrixXIndex: X coordinate of the brick
+; MatrixYIndex: Y coordinate of the brick
+;this method is only called in a controlled environment , so there is no need to preserve the registers
+;using the stack.
+;add the exploding brick to a "control array" of cordinates and change its cell to a PASSAGE in logic matrix
+explodeLogicalBrick:
+    LDA #MAT_PASS
+    STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI, by inspecting numberOfBricksExploding
+    LDX numberOfBricksExploding
+    LDA matrixXIndex
+    STA explodingBricksXCoor, x
+    LDA matrixYIndex
+    STA explodingBricksYCoor, x
+    INX
+    STX numberOfBricksExploding
+    RTS
+
+
 ;TODO: a refactor (function extraction) would be nice, in order to save space
 ;Flags to set:
 ;ExplosionIsActive  = 1
 ;expCounter = 0
 ;bombIsActive = 0
+;render is only activated in the end of the method
 ;when the bomb explodes many things can occur:
 ;0) explosion can the lmited by walls
 ;1) bomber can die, bomberState = #Dead
@@ -471,14 +522,14 @@ bombExplosion:
     LDA stkA
   ;---------------------------------------
   ;set explosion flags
+  
   LDA #$00
   STA expCounter   ;reset explosion counter
   STA bombIsActive ; disable bomb
   LDA #$01
   STA ExplosionIsActive ;activate explosion
 
-  JSR ExplosionRender
-
+  
   ;all sides of the explosion animation start Enabled, the explosion is only limited by walls
   LDA #AFFECTED
   STA expLeftCoor
@@ -487,10 +538,7 @@ bombExplosion:
   STA expDownCoor
 
   ;Verify all four adjacent squares individualy
-  LDA bombX
-  STA matrixXIndex
-  LDA bombY
-  STA matrixYIndex
+   JSR setMatIndexToBomb
 
   ;RIGHT
 ;---------------------------------------
@@ -507,16 +555,7 @@ bombExplosion:
   JSR coordinateIsBrick
   BNE rightExpMobDeathVer
   TAX ; X = cell offset
-  LDA #MAT_PASS
-  STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
-  ;by inspecting numberOfBricksExploding
-  LDX numberOfBricksExploding
-  LDA matrixXIndex
-  STA explodingBricksXCoor, x
-  LDA matrixYIndex
-  STA explodingBricksYCoor, x
-  INX
-  STX numberOfBricksExploding
+  JSR explodeLogicalBrick
  ;------------------------------------------------------------
   rightExpMobDeathVer:
     JSR CoordinateIsMob
@@ -531,12 +570,11 @@ bombExplosion:
     LDA #DEAD
     STA bomberState
     JSR RenderBombermanDeath
-    JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
+    JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;---------------------------------------------
 
  ;restore parameter coordinates
-  LDA bombX
-  STA matrixXIndex
+  JSR setMatIndexToBomb
 
  ;LEFT
  ;----------------------------------------------------------------
@@ -555,16 +593,7 @@ bombExplosion:
   JSR coordinateIsBrick
   BNE leftExpMobDeathVer
   TAX ; X = cell offset
-  LDA #MAT_PASS
-  STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
-  ;by inspecting numberOfBricksExploding
-  LDX numberOfBricksExploding
-  LDA matrixXIndex
-  STA explodingBricksXCoor, x
-  LDA matrixYIndex
-  STA explodingBricksYCoor, x
-  INX
-  STX numberOfBricksExploding
+  JSR explodeLogicalBrick
  ;------------------------------------------------------------
   leftExpMobDeathVer:
     JSR CoordinateIsMob
@@ -579,12 +608,11 @@ bombExplosion:
     LDA #DEAD
     STA bomberState
     JSR RenderBombermanDeath
-    JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
+    JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;----------------------------------------------------------------
 
 ;restore parameter coordinates
-  LDA bombX
-  STA matrixXIndex
+  JSR setMatIndexToBomb
 
  ;UP
  ;-------------------------------------------
@@ -603,15 +631,7 @@ bombExplosion:
     BNE UpExpMobDeathVer
     TAX ; X = cell offset
     LDA #MAT_PASS
-    STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
-    ;by inspecting numberOfBricksExploding
-    LDX numberOfBricksExploding
-    LDA matrixXIndex
-    STA explodingBricksXCoor, x
-    LDA matrixYIndex
-    STA explodingBricksYCoor, x
-    INX
-    STX numberOfBricksExploding
+    JSR explodeLogicalBrick
     ;------------------------------------------------------------
     UpExpMobDeathVer:
         JSR CoordinateIsMob
@@ -626,13 +646,11 @@ bombExplosion:
         LDA #DEAD
         STA bomberState
         JSR RenderBombermanDeath
-        JMP endOfBombExplosion ; THE GAME IS OVER, TERMINATE FUNC
+        JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;--------------------------------------------
 
 ;restore parameter coordinates
-  LDA bombY
-  STA matrixYIndex
-
+  JSR setMatIndexToBomb
  ;DOWN
  ;------------------------------------------
     checkDownExplosionEffect:
@@ -649,16 +667,7 @@ bombExplosion:
     JSR coordinateIsBrick
     BNE DownExpMobDeathVer
     TAX ; X = cell offset
-    LDA #MAT_PASS
-    STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
-    ;by inspecting numberOfBricksExploding
-    LDX numberOfBricksExploding
-    LDA matrixXIndex
-    STA explodingBricksXCoor, x
-    LDA matrixYIndex
-    STA explodingBricksYCoor, x
-    INX
-    STX numberOfBricksExploding
+    JSR explodeLogicalBrick
     ;------------------------------------------------------------
     DownExpMobDeathVer:
         JSR CoordinateIsMob
@@ -669,16 +678,37 @@ bombExplosion:
 
     bomberDeathDownExp:
         JSR CoordinateIsBomber
-        BNE endOfBombExplosion
+        BNE middleExplosionEffect
         LDA #DEAD
         STA bomberState
         JSR RenderBombermanDeath
         ; THE GAME IS OVER, TERMINATE FUNC
 ;------------------------------------------
+    JSR setMatIndexToBomb
+
+;---------------------------------------------- Middle  
+  middleExplosionEffect:
+
+     
+     MiddleExpMobDeathVer:
+        JSR CoordinateIsMob
+        BNE bomberDeathMiddleExp
+        LDA #DEAD
+        STA mobIsAlive
+        ; JSR MOB DEATH ANIMATION (EDINHA)
+
+    bomberDeathMiddleExp:
+        JSR CoordinateIsBomber
+        BNE endOfBombExplosionLogic
+        LDA #DEAD
+        STA bomberState
+        JSR RenderBombermanDeath
+        ; THE GAME IS OVER, TERMINATE FUNC
 
   ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI using ticks and expCounter
 
-  endOfBombExplosion:
+  endOfBombExplosionLogic:
+   JSR ExplosionRender
   ;---------------- Pull All
     PLA
     TAX
