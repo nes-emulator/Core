@@ -85,6 +85,10 @@ LoadSpritesLoop:
   STA $2005
   STA $2005
 
+  LDA #0
+  STA BomberDeathDelay
+  LDA #1
+  STA bomberState
   JSR sound_init    ; APU setup
 
 Forever:

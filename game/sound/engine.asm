@@ -151,8 +151,7 @@ sound_play_frame:
             JSR TriangleOn
             INC sound_frame_counter
             LDA sound_frame_counter
-            ; CMP #TICK_TEMPO
-            CMP #16
+            CMP #TICK_TEMPO
             BMI sound_done
                 ; end SFX
                 LDA #0

@@ -40,6 +40,21 @@ ReadControllerLoop:
   ;bit:       7     6     5     4     3     2     1     0
   ;button:    A     B   select start  up   down  left right
 
+;;;; CHECK GAME STATE BEFORE MOVEMENT
+DeathDelay:
+    LDA bomberState
+    CMP #0
+    BNE MoveDelayControl
+        ; checks a to finish the death animation
+        INC BomberDeathDelay
+        LDA BomberDeathDelay
+        CMP #90
+        BMI BombControl
+            ; finish game here
+            JMP Reset
+
+;;;;;
+
 ; Enforces a delay of 30 frames in player movement
 MoveDelayControl:
     LDA BomberMoveCounter

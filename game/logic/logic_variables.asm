@@ -22,6 +22,8 @@
 
     BomberMoveCounter  .dsb 1,  #$00;
 
+    BomberDeathDelay .dsb 1
+
     mobMoveCounter .dsb 1, #$00
 
     buttons     .dsb 1

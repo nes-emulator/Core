@@ -572,7 +572,7 @@ bombExplosion:
   STA expCounter   ;reset explosion counter
   STA bombIsActive ; disable bomb
   STA bombCounter
-  
+
   LDA #$01
   STA ExplosionIsActive ;activate explosion
 
@@ -614,9 +614,10 @@ bombExplosion:
   bomberDeathRightExp:
     JSR CoordinateIsBomber
     BNE checkLeftExplosionEffect
+    JSR RenderBombermanDeath
     LDA #DEAD
     STA bomberState
-    JSR RenderBombermanDeath
+
     ;JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;---------------------------------------------
 
