@@ -743,7 +743,7 @@ bombExplosion:
         BNE endOfBombExplosionLogic
         LDA #DEAD
         STA bomberState
-        ;JSR RenderBombermanDeath
+        JSR RenderBombermanDeath
         ; THE GAME IS OVER, TERMINATE FUNC
 
   ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI using ticks and expCounter
