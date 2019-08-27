@@ -85,11 +85,7 @@ LoadSpritesLoop:
   STA $2005
   STA $2005
 
-
-; APU setup
-LDA #%00000101 ; enable SQ1 and TRI
-STA APUFLAGS
-
+  JSR sound_init    ; APU setup
 
 Forever:
   JMP Forever     ;jump back to Forever, infinite loop

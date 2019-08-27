@@ -12,7 +12,6 @@ RIGHT_LIMIT = $DA
 LEFT_LIMIT = $0F
 
 
-
 ONE = $01
 FOUR = $04
 ZERO = $00
@@ -24,8 +23,6 @@ FIRST_SPRITE_X = $0203
 
 PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
-
-APUFLAGS = $4015
 
 ;----------------------------------------------------------------
 ; variables
@@ -43,6 +40,10 @@ APUFLAGS = $4015
    attrHigh2   .dsb 1
    aux         .dsb 1
    buttons     .dsb 1
+
+   sound_flag_tick        .dsb 1
+   sound_flag_expl        .dsb 1
+   sound_frame_counter    .dsb 1
    ;------------------------
    stkA .dsb 1; A swap variable, only yo be used in stack operations
    ;------------------------
