@@ -44,7 +44,7 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
    sound_flag_tick        .dsb 1
    sound_flag_expl        .dsb 1
    sound_frame_counter    .dsb 1
-   
+
    ;------------------------
    stkA .dsb 1; A swap variable, only yo be used in stack operations
    ;------------------------

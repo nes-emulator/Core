@@ -156,7 +156,7 @@ MobControl:
 
 next:
 playSoundFrame:
-    ; JSR sound_play_frame
+    JSR sound_play_frame
 
 PLA
 TAX

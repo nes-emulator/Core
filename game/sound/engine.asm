@@ -143,17 +143,17 @@ sound_play_frame:
     explosion:
         LDA sound_flag_expl
         CMP #1
-        BNE done
+        BNE sound_done
             JSR Beep
             INC sound_frame_counter
             LDA sound_frame_counter
             CMP #EXPL_TEMPO
-            BNE done
+            BNE sound_done
                 ; end SFX
                 LDA #0
                 STA sound_flag_expl
                 STA sound_frame_counter
                 JSR ClearSQ1
 
-    done:
+    sound_done:
         RTS
