@@ -38,19 +38,16 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
    attrHigh    .dsb 1
    attrLow2    .dsb 1
    attrHigh2   .dsb 1
-   aux         .dsb 1
+   aux         .dsb 4
 
-   ; SOUND VARIABLES
-   sound_flag_tick        .dsb 1
-   sound_flag_expl        .dsb 1
-   sound_frame_counter    .dsb 1
-
+   ; sound_flag_tick        .dsb 1
+   ; sound_flag_expl        .dsb 1
+   ; sound_frame_counter    .dsb 1
    ;------------------------
    stkA .dsb 1; A swap variable, only yo be used in stack operations
    ;------------------------
 
   .ende
-
 
    ;NOTE: you can also split the variable declarations into individual pages, like this:
 

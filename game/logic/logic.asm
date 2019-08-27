@@ -172,7 +172,7 @@ CoordinateIsBomb: ; joe dont implemented this routine in his code this should be
 ;aux subroutine
 CoordinateIsMob: ; Joe deleted this method, this method should be reimplemented
     ;--------------------------------------- push all
-  
+
     ;---------------------------------------
     LDA characterNewX
     CMP mobX
@@ -189,7 +189,7 @@ CoordinateIsMob: ; Joe deleted this method, this method should be reimplemented
 ;this routine will make register "A" dirty
 CoordinateIsBomber: ; this method was deleted by joe and should be reimplemented
     ;--------------------------------------- push all
-    
+
     ;---------------------------------------
     LDA characterNewX
     CMP bomberX
@@ -200,7 +200,7 @@ CoordinateIsBomber: ; this method was deleted by joe and should be reimplemented
     ;---------------- Pull All
      RTS
     ;-------------------------
-    
+
 ;----------------------------------------------------------------------------------------------------------------
 ;bomber MovementLogic
 
@@ -460,8 +460,8 @@ placeBomb: ; this method wasn't implemented by joe
     LDA stkA
     ;---------------------------------------
 
-    LDA ExplosionIsActive 
-    CMP #$01 
+    LDA ExplosionIsActive
+    CMP #$01
     BEQ endOfPlaceBomb
 
     LDA bombIsActive
@@ -479,7 +479,7 @@ placeBomb: ; this method wasn't implemented by joe
     ;update flags
     LDA #BOMB_ENABLED
     STA bombIsActive
-    LDA #$0
+    LDA #0
     STA bombCounter
     STA tickCounter
 
@@ -499,7 +499,7 @@ setMatIndexToBomb:
     ; Push A register
     ;-------------------------------------------------------------------------------
     PHA ; store A value
- 
+
     LDA bombX
     STA characterNewX
     LDA bombY
@@ -509,8 +509,8 @@ setMatIndexToBomb:
     ; Pull A register
     ;-------------------------------------------------------------------------------
 
-    PLA ; retrieve A value 
-    RTS ;   
+    PLA ; retrieve A value
+    RTS ;
 
 
 ;   LDA #MAT_PASS
@@ -567,21 +567,21 @@ bombExplosion:
     LDA stkA
   ;---------------------------------------
   ;set explosion flags
-  
+
   LDA #$00
   STA expCounter   ;reset explosion counter
   STA bombIsActive ; disable bomb
   LDA #$01
   STA ExplosionIsActive ;activate explosion
 
-  
+
   ;all sides of the explosion animation start Enabled, the explosion is only limited by walls
   LDA #AFFECTED
   STA expLeftCoor
   STA expRightCoor
   STA expUpCoor
   STA expDownCoor
-  
+
 
   ;Verify all four adjacent squares individualy
    JSR setMatIndexToBomb
@@ -589,7 +589,7 @@ bombExplosion:
   ;RIGHT
 ;---------------------------------------
   INC characterNewX
-  
+
   JSR AccessLogicMatrixNewCoordinate ;change A to
   JSR ValidNewCoordinates
   BEQ rightExpMobDeathVer ;if the coordinate affected is not a wall
@@ -619,11 +619,11 @@ bombExplosion:
  ;---------------------------------------------
 
  ;restore parameter coordinates
-  
+
 
  ;LEFT
  ;----------------------------------------------------------------
-  
+
   checkLeftExplosionEffect:
   JSR setMatIndexToBomb
   DEC characterNewX
@@ -656,7 +656,7 @@ bombExplosion:
  ;----------------------------------------------------------------
 
 ;restore parameter coordinates
-  
+
 
  ;UP
  ;-------------------------------------------
@@ -693,7 +693,7 @@ bombExplosion:
  ;--------------------------------------------
 
 ;restore parameter coordinates
-  
+
  ;DOWN
  ;------------------------------------------
     checkDownExplosionEffect:
@@ -726,11 +726,11 @@ bombExplosion:
         JSR RenderBombermanDeath
         ; THE GAME IS OVER, TERMINATE FUNC
 ;------------------------------------------
-    
 
-;---------------------------------------------- Middle  
+
+;---------------------------------------------- Middle
   middleExplosionEffect:
-    JSR setMatIndexToBomb     
+    JSR setMatIndexToBomb
      MiddleExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathMiddleExp

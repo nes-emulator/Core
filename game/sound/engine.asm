@@ -23,6 +23,10 @@
 
 ; Variables
 
+.enum $1800
+   .include "sound/sound_variables.asm"
+.ende
+
     ; A flag that is set when the engine should play a explosion SFX
     ; sound_flag_expl .dsb 1
 
@@ -124,21 +128,22 @@ TriangleOff:
 
 sound_play_frame:
 
-    tick:
-        LDA sound_flag_tick
-        CMP #1
-        BNE explosion
-            ; play the tick
-            JSR TriangleOn
-            INC sound_frame_counter
-            LDA sound_frame_counter
-            CMP #TICK_TEMPO
-            BNE explosion
-                ; end SFX
-                LDA #0
-                STA sound_flag_tick
-                STA sound_frame_counter
-                JSR TriangleOff
+    ; tick:
+    ;     LDA sound_flag_tick
+    ;     CMP #1
+    ;     BNE explosion
+    ;         ; play the tick
+    ;         JSR TriangleOn
+    ;         INC sound_frame_counter
+    ;         LDA sound_frame_counter
+    ;         ; CMP #TICK_TEMPO
+    ;         CMP #16
+    ;         BNE explosion
+    ;             ; end SFX
+    ;             LDA #0
+    ;             STA sound_flag_tick
+    ;             STA sound_frame_counter
+    ;             JSR TriangleOff
 
     explosion:
         LDA sound_flag_expl

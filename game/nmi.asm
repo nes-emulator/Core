@@ -113,20 +113,21 @@ BombTickControl:
     LDA tickCounter
     CMP #30                 ; Reached full bomb tick cycle on #30
     BNE BombCounterControl
-    LDA #$00
-    STA tickCounter         ; Reset tick counter for next animation count
-    ; STA sound_bomb_tick     ; set Sound Engine flag
-    JSR BombNextAnimationStage
+        LDA #$00
+        STA tickCounter         ; Reset tick counter for next animation count
+        ; JSR sound_bomb_tick     ; set Sound Engine flag
+        JSR BombNextAnimationStage
 
 BombCounterControl:
     INC bombCounter
     LDA bombCounter
     CMP #BOMB_BASE_TIMER
     BNE ExplosionState
-    ; call explosion logic func, BOMB_BASE_TIMER = #120
-    JSR bombExplosion
-    ;
-    ; JSR sound_bomb_expl        ; set sound engine flag
+        ; call explosion logic func, BOMB_BASE_TIMER = #120
+        JSR bombExplosion
+        JSR sound_bomb_expl        ; set sound engine flag
+        LDA #0
+        STA bombCounter
 
 ExplosionState:
     LDA ExplosionIsActive
