@@ -93,16 +93,16 @@ MoveBombermanDirection:
     PHA                 ; Push registers
 
     LDA bomberMovDirection
-    CMP #UP_MOVEMENT    ; Logic for decide which sprite to go for
+    CMP #UP_DIRECTION    ; Logic for decide which sprite to go for
     BEQ BombermanFacingUp
 
-    CMP #DOWN_MOVEMENT
+    CMP #DOWN_DIRECTION
     BEQ BombermanFacingDown
 
-    CMP #LEFT_MOVEMENT
+    CMP #LEFT_DIRECTION
     BEQ BombermanFacingLeft
 
-    CMP #RIGHT_MOVEMENT
+    CMP #RIGHT_DIRECTION
     BEQ BombermanFacingRight
     JMP MoveBombermanDirectionEnd
 

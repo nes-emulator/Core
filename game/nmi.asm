@@ -49,42 +49,42 @@ MoveDelayControl:
 ; We read only one movement per frame
 Right:
     LDA buttons
-    AND #%00000001
+    AND #RIGHT_BUTTON
     BEQ Left
         JSR ResetBomberMovDelay
-        LDA #RIGHT_MOVEMENT
+        LDA #RIGHT_DIRECTION
         STA bomberMovDirection
-        JSR MoveBomber_Logic
+        JSR MoveBomberLogic
     JMP EndOfButtonMovement
 
 Left:
     LDA buttons
-    AND #%00000010
+    AND #LEFT_BUTTON
     BEQ Down
         JSR ResetBomberMovDelay
-        LDA #LEFT_MOVEMENT
+        LDA #LEFT_DIRECTION
         STA bomberMovDirection
-        JSR MoveBomber_Logic
+        JSR MoveBomberLogic
     JMP EndOfButtonMovement
 
 Down:
     LDA buttons
-    AND #%00000100
+    AND #DOWN_BUTTON
     BEQ Up
         JSR ResetBomberMovDelay
-        LDA #DOWN_MOVEMENT
+        LDA #DOWN_DIRECTION
         STA bomberMovDirection
-        JSR MoveBomber_Logic
+        JSR MoveBomberLogic
     JMP EndOfButtonMovement
 
 Up:
     LDA buttons
-    AND #%00001000
+    AND #UP_BUTTON
     BEQ EndOfButtonMovement
         JSR ResetBomberMovDelay
-        LDA #UP_MOVEMENT
+        LDA #UP_DIRECTION
         STA bomberMovDirection
-        JSR MoveBomber_Logic
+        JSR MoveBomberLogic
     JMP EndOfButtonMovement
 
 ; if moveCounter > 0, decrements it
@@ -95,7 +95,7 @@ UpdateMovementDelay:
 EndOfButtonMovement:
 ReadBombSetup:
     LDA buttons
-    AND #%10000000          ; Read A button pressed
+    AND #A_BUTTON          ; Read A button pressed
     BEQ EndReadBombSetup
         JSR placeBomb
 
@@ -168,7 +168,7 @@ RTI
 
 ; Resets the moveCounter whenever the player moves
 ResetBomberMovDelay:
-    LDA #PLAYER_MOV_DELAY
+    LDA #BOMBER_MOVE_DELAY
     STA BomberMoveCounter
     RTS
 

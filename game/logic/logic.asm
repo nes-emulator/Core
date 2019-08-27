@@ -1,126 +1,12 @@
-;-----------------------
-;Constants
-;------------------------
-MAT_WALL = $00
-MAT_PASS = $01
-MAT_BRICK = $02
-MT_ROWS = #13 ; 13 -> was renamed to NUMBER_ROWS in joe's branch
-MT_COL =  #15 ; 15 -> was reanamed to NUMBER_COLUMNS in joe's branch
-BOMB_BASE_TIMER = #120
-BRICK_EXP_LIMIT = #3 ; the maximum number of bricks exploding at the same time is 3
-
-;bomber movement constants, 
-LEFT_MOVEMENT = $00 ; constant replaced to _DIRECTION in joe's branch
-RIGHT_MOVEMENT = $01 ; 
-DOWN_MOVEMENT = $10 ; 
-UP_MOVEMENT = $11
-ALIVE  = $01 ; 
-DEAD = $00
-PLAYER_MOV_DELAY = #10
-
-;bomb constants
-BOMB_ENABLED = $01
-BOMB_DISABLED = $00
-NOT_AFFECTED = #0
-AFFECTED = #1
-
-;Mob constants
-MOB_MOV_INTERVAL = #60
-
 ;----------------------------------
 ;Variables
 ;---------------------------------
 
+.include "logic/logic_constants.asm"
+
  .enum $0800
-    ;logic matrix to map logic to real positions
-    ;15 * 13
-    logicMatrix:
-        ;      0         1         2         3         4         5         6         7         8         9        10         11       12        13        14
-        .db MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL ; 0
-        .db MAT_WALL, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_WALL ; 1
-        .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 2
-        .db MAT_WALL, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_WALL ; 3
-        .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 4
-        .db MAT_WALL, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_WALL ; 5
-        .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 6
-        .db MAT_WALL, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_WALL ; 7
-        .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 8
-        .db MAT_WALL, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_WALL ; 9
-        .db MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL, MAT_PASS, MAT_WALL ; 10
-        .db MAT_WALL, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_PASS, MAT_WALL ; 11
-        .db MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL, MAT_WALL ; 12
-
-
-
-
-
-    ;Variables to pass Index as parameter
-    ;----------------------------
-        matrixXIndex .dsb 1 ;
-        matrixYIndex .dsb 1 ;
-    ;----------------------------
-
-
-
-
-
-    ;current bomber coordinates in logic matrix
-    ;----------------------------------
-    bomberX:
-        .db $01;alter -> start pos
-
-    bomberY:
-        .db $01;alter -> start pos
-    bomberState:
-        .db ALIVE;  Game state
-    bomberMovDirection .dsb 1 ;left,right,down or up: according the constants defined in this file
-
-    BomberMoveCounter:
-        .db $0;
-    ;----------------------------------
-
-
-    ;----------------------------------
-    ;current mob coordinates in logic matrix
-    MobX :
-        .db $00 ; alter
-    MobY :
-        .db $00 ; alter
-    mobPositionIncrement :
-        .db $01 ; 01 for + 1 and 0 for -1 (one direction)
-    mobIsAlive:
-        .db #ALIVE
-    mobMoveCounter:
-        .db #0
-    ;----------------------------------
-
-    ;bomb manipulation
-
-    ;BOMB EXPLOSION RANGE IS FIXED IN ONE RANGE CROSS
-    ;----------------------------------
-    bombIsActive:
-        .db BOMB_DISABLED
-    bombCounter  .dsb 1
-
-    bombX .dsb 1
-    bombY .dsb 1
-
-    ;Explosion Boundaries, these variables are only used as parameters for the explosion render in graphics/* code
-    expRightCoor .dsb 1 ; Possible values #AFFECTED or #NOT_AFFECTED
-    expLeftCoor  .dsb 1
-    expUpCoor    .dsb 1
-    expDownCoor  .dsb 1
-
-
-    numberOfBricksExploding .dsb 1 ;after ethe explosion of all bricks is finished this variable should store $#0 (NMI code)
-    explodingBricksXCoor .dsb #BRICK_EXP_LIMIT
-    explodingBricksYCoor .dsb #BRICK_EXP_LIMIT
-
-
-    ;-----------------------------------------------
-
-
-.ende
+    .include "logic/logic_variables.asm"
+ .ende
 
 
 ;-----------------------------------------------------------------
@@ -133,37 +19,68 @@ MOB_MOV_INTERVAL = #60
 ;-------------------------------------------------------------------------------------
 ;matrix access subroutines
 
-;Parameters: matrixYIndex
-;Result -> change the A position to matrix offset, NOT THE BEGINING OF THE ADDRESS
-;aux subroutine
-positionAToIndexLine: ; this method was refactored by joe in his branch -> AccessLogicMatrixNewCoord
-    LDA #0
-    LDY matrixYIndex
-    linePositioningLoop:
-        CPY #0
-        BEQ linePositioningLoopEnd
-        DEY
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;- AccessLogicMatrixNewCoordinate
+;-   This subroutine converts the two dimentional index [characterNewY][characterNewX],
+;-   into one unique index. This one unique index is stored in A register.
+;-   The following formula is used to do this convertion:
+;-
+;-                   A = characterNewX + characterNewY * NUMBER_COLUMNS
+;-
+;-   Obs: this subroutine will dirt the A register
+;-
+;- Parameters:
+;-   'characterNewX' memory variable must be set to the new character (either Bomber or Mob) X position
+;-   'characterNewY' memory variable must be set to the new character (either Bomber or Mob) Y position
+;-
+;- Return:
+;-    'A' register containing the one dimentional index
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+AccessLogicMatrixNewCoordinate:
+    ;-------------------------------------------------------------------------------
+    ; Push all registers (Y) to stack
+    ;-------------------------------------------------------------------------------
+    TYA
+    PHA
+
+    LDA #$0
+    LDY characterNewY
+
+    ; Sets A register to 'characterNewY' * NUMBER_COLUMNS
+    AccessLogicMatrixNewCoordinateLoop:
+        CPY #$0                                ; Verifies if the total number of adds was achieved
+        BEQ AccessLogicMatrixNewCoordinateEnd  ; If achieved, stop the loop
+        DEY                                    ; Otherwise, decrements the total number of remaining adds
+
         CLC
-        ADC #MT_COL
-        JMP linePositioningLoop
-    linePositioningLoopEnd:
-    RTS
+        ADC #NUMBER_COLUMNS                    ; Adds the total number of columns to A register
+
+        JMP AccessLogicMatrixNewCoordinateLoop ; Continues with the addition loop
+
+    AccessLogicMatrixNewCoordinateEnd:
+        CLC
+        ADC characterNewX          ; Adds the current new bomber column (X new position) to the A register
+
+        ;-------------------------------------------------------------------------------
+        ; Pull all registers (Y) from stack
+        ;-------------------------------------------------------------------------------
+        STA stkA    ; Uses stkA as a temporary variable to store current A register value
+
+        PLA
+        TAY
+
+        LDA stkA    ; Recovers the previous A register value from stkA variable
+
+        RTS  ; End of MoveBomberLogic subroutine
 
 
 
-;Parameters: matrixXIndex and matrixYIndex
-;change A to matrixXIndex, matrixYIndex position
-;aux subroutine
-accessLogicMatrixCoordinate: ;this method was refactored by joe in his branch -> AccessLogicMatrixNewCoord
-    JSR positionAToIndexLine ;sum NLINES*y to index coordinate
-    CLC
-    ADC matrixXIndex ;sum x to index
-    ;Now A is in the specific cell
-    RTS
 ;-----------------------------------------------------------------------------------------------------------------
 ;matrix verification subroutines
 
-;Parameters: A = memory address positioned to X,Y coordinate and ; matrixXIndex and matrixYIndex
+;Parameters: A = memory address positioned to X,Y coordinate and ; characterNewX and characterNewY
 ;if true, cmp flag  = 0
 ;aux subroutine
 coordinateIsWall:; joe was removed by joe, and it's in fact no longer needed
@@ -219,7 +136,7 @@ coordinateIsBrick:; Joe removed this method but it's necessary
     ;-------------------------
     RTS
 
-;Parameters: matrixXIndex and matrixYIndex
+;Parameters: characterNewX and characterNewY
 ;if true, cmp flag  = 0
 ;aux subroutine
 CoordinateIsBomb: ; joe dont implemented this routine in his code this should be reimplemented
@@ -235,10 +152,10 @@ CoordinateIsBomb: ; joe dont implemented this routine in his code this should be
     LDA bombIsActive ; if bomb is not active, return
     CMP BOMB_ENABLED
     BNE EndOfCoordinateIsBomb ;not active
-    LDA matrixXIndex
+    LDA characterNewX
     CMP bombX
     BNE EndOfCoordinateIsBomb
-    LDA matrixYIndex
+    LDA characterNewY
     CMP bombY
     EndOfCoordinateIsBomb:
     ;---------------- Pull All
@@ -250,157 +167,281 @@ CoordinateIsBomb: ; joe dont implemented this routine in his code this should be
     ;-------------------------
     RTS
 
-;Parameters: matrixXIndex and matrixYIndex
+;Parameters: characterNewX and characterNewY
 ;if true, cmp flag  = 0
 ;aux subroutine
 CoordinateIsMob: ; Joe deleted this method, this method should be reimplemented
     ;--------------------------------------- push all
-    STA stkA
-    PHA
-    TYA
-    PHA
-    TXA
-    PHA
-    LDA stkA
+  
     ;---------------------------------------
-    LDA matrixXIndex
-    CMP MobX
+    LDA characterNewX
+    CMP mobX
     BNE EndOfCoordinateIsMob
-    LDA matrixYIndex
-    CMP MobY
+    LDA characterNewY
+    CMP mobY
     EndOfCoordinateIsMob:
     ;---------------- Pull All
-    PLA
-    TAX
-    PLA
-    TAY
-    PLA
-    ;-------------------------
     RTS
 
-;Parameters: matrixXIndex and matrixYIndex
+;Parameters: characterNewX and characterNewY
 ;if true, cmp flag  = 0
 ;aux subroutine
+;this routine will make register "A" dirty
 CoordinateIsBomber: ; this method was deleted by joe and should be reimplemented
     ;--------------------------------------- push all
-    STA stkA
-    PHA
-    TYA
-    PHA
-    TXA
-    PHA
-    LDA stkA
+    
     ;---------------------------------------
-    LDA matrixXIndex
+    LDA characterNewX
     CMP bomberX
     BNE EndOfCoordinateIsBomber
-    LDA matrixYIndex
+    LDA characterNewY
     CMP bomberY
     EndOfCoordinateIsBomber:
     ;---------------- Pull All
-    PLA
-    TAX
-    PLA
-    TAY
-    PLA
+     RTS
     ;-------------------------
-    RTS
+    
 ;----------------------------------------------------------------------------------------------------------------
 ;bomber MovementLogic
 
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;- ValidNewCoordinates
+;-   This subroutine verifies if the new coordinates given by characterNewY and characterNewX
+;-   are valid coordinates. That is, if they do not belong to a MAT_BRICK, MAT_WALL
+;-   (from the logic matrix) or have the same new coordinates as the activated BOMB.
+;-   If it is neither MAT_WALL, MAT_BRICK or BOMB, then ZERO flag will be clear. Otherwise,
+;-   it will be set.
+;-
+;-   Obs: this subroutine will dirt the A register
+;-
+;- Parameters:
+;-   'characterNewX' memory variable must be set to the new character (either Bomber or Mob) X position
+;-   'characterNewY' memory variable must be set to the new character (either Bomber or Mob) Y position
+;-
+;- Return:
+;-   ZERO flag cleared if new coordinates are valid, otherwise setted if not valid
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+ValidNewCoordinates:
+    ;-------------------------------------------------------------------------------
+    ; Push all registers (Y) to stack
+    ;-------------------------------------------------------------------------------
+    TYA
+    PHA
+
+    ; Verifies if bomb is active
+    LDA bombIsActive
+    SEC
+    SBC #BOMB_DISABLED
+    BEQ VerifyLogicalMatrixCells
+
+    ; Verifies if the bomb is not an obstacle to the character
+    LDA characterNewX
+    CMP bombX
+    BNE VerifyLogicalMatrixCells ; As long the bombX != characterNewX, the bomb is not an obstacle
+
+    LDA characterNewY
+    CMP bombY
+    BNE VerifyLogicalMatrixCells ; As long the bombY != characterNewY, the bomb is not an obstacle
+
+    ; If reaches here, then both bombY == characterNewY and bombX == characterNewX, therefore here
+    ; the #01 value will indicate that the bomb is an obstacle and therefore the character must not transpass
+    LDA #01
+    JMP ValidNewCoordinatesEnd
+
+    VerifyLogicalMatrixCells:
+        ; Gets the matrix coordinate in the format A = characterNewY * num_columns + characterNewX
+        JSR AccessLogicMatrixNewCoordinate
+
+        ; Verifies if coordinate is valid (the character can transpass)
+        TAY
+        LDA logicMatrix,y
+        SEC
+        SBC #MAT_PASS
+
+    ValidNewCoordinatesEnd:
+        ;-------------------------------------------------------------------------------
+        ; Pull all registers (Y) from stack
+        ;-------------------------------------------------------------------------------
+        STA stkA    ; Uses stkA as a temporary variable to store current A register value
+
+        PLA
+        TAY
+
+        LDA stkA    ; Recovers the previous A register value from stkA variable
+
+        RTS ; End of MoveBomberLogic subroutine
 
 
 
-;Parameters -> movementDirection (left,right,up,down) (00,01,10,11 = constants defined in this file),
-;movement directions is written in .NMI controller event
-;this function will be called in the .NMI controller event
-MoveBomber_Logic: ; this method was deleted by joe , in his method He isn't covering all death cases
-    ;--------------------------------------- push all
-    STA stkA
+
+
+MoveBomberLogic:
+    ;-------------------------------------------------------------------------------
+    ; Push all registers (A, Y and X) to stack
+    ;-------------------------------------------------------------------------------
     PHA
     TYA
     PHA
     TXA
     PHA
-    LDA stkA
-    ;---------------------------------------
-    ;-----------------------------------------------------------------------------------------
+
+    ; Sets the new Bomber Coordinates (X and Y)
     LDA bomberX
-    STA matrixXIndex
+    STA characterNewX
     LDA bomberY
-    STA matrixYIndex
+    STA characterNewY
 
-    LDA bomberMovDirection
+    ;-------------------------------------------------------------------------------
+    ; Start reading Left movement
+    ;-------------------------------------------------------------------------------
+    LeftMovement:
+        ; Gets the current Bomber direction
+        LDA bomberMovDirection
 
-    ;First: choose rotate direction
-    ;this code will update the coordinate of the indexed cell acordingly to bomber movement direction
-    ;and call the rotate 'PPU' code.
+        CMP #LEFT_DIRECTION      ; Verifies if the LEFT direction was chosen
+        BNE RightMovement       ; If not, goes and verifies the next direction
 
-    CMP #LEFT_MOVEMENT
-    BNE rightMov
-        LDX matrixXIndex
-        DEX
-        STX matrixXIndex
-    JMP endOfMovementDirVerification
+        DEC characterNewX
 
-    rightMov:
-        CMP #RIGHT_MOVEMENT
-        BNE downMov
-            LDX matrixXIndex
-            INX
-            STX matrixXIndex
-        JMP endOfMovementDirVerification
+        ;JRS rotateBomberLeft (EDINHA)
 
-    downMov:
-        CMP #DOWN_MOVEMENT
-        BNE upMov
-            LDX matrixYIndex
-            INX
-            STX matrixYIndex
-        JMP endOfMovementDirVerification
+        JMP EndOfMovementDirVerification
+    ;-------------------------------------------------------------------------------
+    ; Finish reading Left movement
+    ;-------------------------------------------------------------------------------
 
-    upMov:
-        LDX matrixYIndex
-        DEX
-        STX matrixYIndex
 
-    endOfMovementDirVerification:
-    ;-----------------------------------------------------------------------------------------
-    JSR accessLogicMatrixCoordinate  ; shift 'A' to cell position of matrixXIndex , matrixXIndex
+    ;-------------------------------------------------------------------------------
+    ; Start reading Right movement
+    ;-------------------------------------------------------------------------------
+    RightMovement:
+        ; Gets the current Bomber direction
+        LDA bomberMovDirection
 
-    LDX mobIsAlive
-    CMP #ALIVE
-    BNE wallVerificationBomberMov ;if mob isn't alive, there is no need to verify
-    JSR CoordinateIsMob ; A is a parameter
-    BEQ KilledInMovByMob
+        CMP #RIGHT_DIRECTION     ; Verifies if the RIGHT direction was chosen
+        BNE DownMovement       ; If not, goes and verifies the next direction
 
-    wallVerificationBomberMov:
-    JSR coordinateIsWall ; wall also cover bomb case, A and matrixXindex and matrixYIndex are parameters
-    BEQ EndOfBomberMov   ; TODO ANDRIETTA VERIFY
+        INC characterNewX
 
-    ;update bomber coordinates after validation
-    LDA matrixXIndex
-    STA bomberX
-    LDA matrixYIndex
-    STA bomberY
-    JSR MoveBomberman
-    JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
-    JMP EndOfBomberMov
+        ;JRS rotateBomberRight (EDINHA)
 
-    KilledInMovByMob:
+        JMP EndOfMovementDirVerification
+    ;-------------------------------------------------------------------------------
+    ; Finish reading Right movement
+    ;-------------------------------------------------------------------------------
+
+
+    ;-------------------------------------------------------------------------------
+    ; Start reading Down movement
+    ;-------------------------------------------------------------------------------
+    DownMovement:
+        ; Gets the current Bomber direction
+        LDA bomberMovDirection
+
+        CMP #DOWN_DIRECTION     ; Verifies if the DOWN direction was chosen
+        BNE UpMovement         ; If not, goes and verifies the next direction
+
+        INC characterNewY
+
+        ;JRS rotateBomberDown (EDINHA)
+
+        JMP EndOfMovementDirVerification
+    ;-------------------------------------------------------------------------------
+    ; Finish reading Down movement
+    ;-------------------------------------------------------------------------------
+
+
+    ;-------------------------------------------------------------------------------
+    ; Start reading Up movement
+    ;-------------------------------------------------------------------------------
+    UpMovement:
+        ; Gets the current Bomber direction
+        LDA bomberMovDirection
+
+        CMP #UP_DIRECTION                ; Verifies if the UP direction was chosen
+        BNE EndOfBomberMovement         ; If not, an invalid movement argument was passed.
+                                        ;    Then, just terminate this subroutine call
+
+        DEC characterNewY
+
+        ;JRS rotateBomberUp (EDINHA)
+    ;-------------------------------------------------------------------------------
+    ; Finish reading Down movement
+    ;-------------------------------------------------------------------------------
+
+
+    EndOfMovementDirVerification:
+        ; Verifies if the new bomber position is a valid one
+
+        JSR ValidNewCoordinates
+        BNE EndOfBomberMovement
+
+        LDA characterNewX
+        STA bomberX         ; Updates the X bomber variable with the new valid bomber position
+        LDA characterNewY
+        STA bomberY         ; Updates the Y bomber variable with the new valid bomber position
+
+        JSR MoveBomberman   ; Updates bomber sprites. This subroutine is located in 'graphics/engine.asm'
+JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
+
+        ;-----------------------------------------------------------------------
+        ; Verifies if the new mob position coincides with the Bomber position
+        ;-----------------------------------------------------------------------
+        JSR IsBomberKilledByMob
+        BNE EndOfBomberMovement     ; If not, just terminates the mob movement without doing anything
+
+        ; Otherwise, the bomber is killed by the mob and the reset
+        ; subroutine is called to reinitiallize the game
         LDA #DEAD
         STA bomberState
         JSR RenderBombermanDeath
+        JMP Reset      ; This subroutine can be found in 'reset.asm'
 
-    EndOfBomberMov:
-    ;---------------- Pull All
+        JMP EndOfBomberMovement
+
+    EndOfBomberMovement:
+
+    ;-------------------------------------------------------------------------------
+    ; Pull all registers (A, Y and X) from stack
+    ;-------------------------------------------------------------------------------
     PLA
     TAX
     PLA
     TAY
     PLA
-    ;-------------------------
-    RTS
+
+    RTS ; End of MoveBomberLogic subroutine
+
+
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;- IsBomberKilledByMob
+;-   This subroutine verifies if both the Mob positions (mobX and mobY) coincides with
+;-   the both bomber position (bomberX and bomberY). If coincides, the ZERO flag will
+;-   be setted. If not, the ZERO flag will be clear.
+;-
+;-   Obs: this subroutine will dirt the A register
+;-
+;- Return:
+;-   ZERO flag setted if mob coordinates coincides with the bomber coordinates, otherwise cleared
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+IsBomberKilledByMob:
+    LDA bomberX
+    CMP mobX
+    BNE IsBomberKilledByMobEnd
+
+    LDA bomberY
+    CMP mobY
+
+    IsBomberKilledByMobEnd:
+        RTS ; End of MoveBomberLogic subroutine
+
+
+
 
 
 ;tickCounter = 0
@@ -418,6 +459,10 @@ placeBomb: ; this method wasn't implemented by joe
     PHA
     LDA stkA
     ;---------------------------------------
+
+    LDA ExplosionIsActive 
+    CMP #$01 
+    BEQ endOfPlaceBomb
 
     LDA bombIsActive
     CMP #BOMB_ENABLED
@@ -448,7 +493,7 @@ placeBomb: ; this method wasn't implemented by joe
     ;-------------------------
     RTS
 
-; this method set the position of the aux index ing variables (matrixXIndex and matrixYIndex) to the bomb coordinate
+; this method set the position of the aux index ing variables (characterNewX and characterNewY) to the bomb coordinate
 setMatIndexToBomb:
     ;-------------------------------------------------------------------------------
     ; Push A register
@@ -456,9 +501,9 @@ setMatIndexToBomb:
     PHA ; store A value
  
     LDA bombX
-    STA matrixXIndex
+    STA characterNewX
     LDA bombY
-    STA matrixYIndex
+    STA characterNewY
 
     ;-------------------------------------------------------------------------------
     ; Pull A register
@@ -472,16 +517,16 @@ setMatIndexToBomb:
 ;   STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI,
 ;   ;by inspecting numberOfBricksExploding
 ;   LDX numberOfBricksExploding
-;   LDA matrixXIndex
+;   LDA characterNewX
 ;   STA explodingBricksXCoor, x
-;   LDA matrixYIndex
+;   LDA characterNewY
 ;   STA explodingBricksYCoor, x
 ;   INX
 ;   STX numberOfBricksExploding
 
 ; X: matrix linear brick position
-; MatrixXIndex: X coordinate of the brick
-; MatrixYIndex: Y coordinate of the brick
+; characterNewX: X coordinate of the brick
+; characterNewY: Y coordinate of the brick
 ;this method is only called in a controlled environment , so there is no need to preserve the registers
 ;using the stack.
 ;add the exploding brick to a "control array" of cordinates and change its cell to a PASSAGE in logic matrix
@@ -489,9 +534,9 @@ explodeLogicalBrick:
     LDA #MAT_PASS
     STA logicMatrix, x ; the position is no longer a logic wall, EDINHA's exploding brick animation will be called in NMI, by inspecting numberOfBricksExploding
     LDX numberOfBricksExploding
-    LDA matrixXIndex
+    LDA characterNewX
     STA explodingBricksXCoor, x
-    LDA matrixYIndex
+    LDA characterNewY
     STA explodingBricksYCoor, x
     INX
     STX numberOfBricksExploding
@@ -536,18 +581,18 @@ bombExplosion:
   STA expRightCoor
   STA expUpCoor
   STA expDownCoor
+  
 
   ;Verify all four adjacent squares individualy
    JSR setMatIndexToBomb
 
   ;RIGHT
 ;---------------------------------------
-  LDX matrixXIndex
-  INX
-  STX matrixXIndex
-  JSR accessLogicMatrixCoordinate ;change A to
-  JSR coordinateIsWall
-  BNE rightExpMobDeathVer ;if the coordinate affected is not a wall
+  INC characterNewX
+  
+  JSR AccessLogicMatrixNewCoordinate ;change A to
+  JSR ValidNewCoordinates
+  BEQ rightExpMobDeathVer ;if the coordinate affected is not a wall
   LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
   STX expRightCoor
   ;---------------------------------------------------------
@@ -570,22 +615,21 @@ bombExplosion:
     LDA #DEAD
     STA bomberState
     JSR RenderBombermanDeath
-    JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
+    ;JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;---------------------------------------------
 
  ;restore parameter coordinates
-  JSR setMatIndexToBomb
+  
 
  ;LEFT
  ;----------------------------------------------------------------
+  
   checkLeftExplosionEffect:
-
-  LDX matrixXIndex
-  DEX
-  STX matrixXIndex
-  JSR accessLogicMatrixCoordinate ;change A to matrixOffset
-  JSR coordinateIsWall
-  BNE leftExpMobDeathVer ;if the coordinate affected is not a wall
+  JSR setMatIndexToBomb
+  DEC characterNewX
+  JSR AccessLogicMatrixNewCoordinate ;change A to matrixOffset
+  JSR ValidNewCoordinates
+  BEQ leftExpMobDeathVer ;if the coordinate affected is not a wall
   LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
   STX expLeftCoor
   ;---------------------------------------------------------
@@ -608,21 +652,20 @@ bombExplosion:
     LDA #DEAD
     STA bomberState
     JSR RenderBombermanDeath
-    JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
+   ; JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;----------------------------------------------------------------
 
 ;restore parameter coordinates
-  JSR setMatIndexToBomb
+  
 
  ;UP
  ;-------------------------------------------
   checkUpExplosionEffect:
-    LDX matrixYIndex
-    DEX
-    STX matrixYIndex
-    JSR accessLogicMatrixCoordinate ;change A to
-    JSR coordinateIsWall
-    BNE UpExpMobDeathVer ;if the coordinate affected is not a wall
+    JSR setMatIndexToBomb
+    DEC characterNewY
+    JSR AccessLogicMatrixNewCoordinate ;change A to
+    JSR ValidNewCoordinates
+    BEQ UpExpMobDeathVer ;if the coordinate affected is not a wall
     LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
     STX expUpCoor
     ;---------------------------------------------------------
@@ -645,21 +688,20 @@ bombExplosion:
         BNE checkDownExplosionEffect
         LDA #DEAD
         STA bomberState
-        JSR RenderBombermanDeath
-        JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
+         JSR RenderBombermanDeath
+        ;JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;--------------------------------------------
 
 ;restore parameter coordinates
-  JSR setMatIndexToBomb
+  
  ;DOWN
  ;------------------------------------------
     checkDownExplosionEffect:
-    LDX matrixYIndex
-    INX
-    STX matrixYIndex
-    JSR accessLogicMatrixCoordinate ;change A to
-    JSR coordinateIsWall
-    BNE DownExpMobDeathVer ;if the coordinate affected is not a wall
+    JSR setMatIndexToBomb
+    INC characterNewY
+    JSR AccessLogicMatrixNewCoordinate ;change A to
+    JSR ValidNewCoordinates
+    BEQ DownExpMobDeathVer ;if the coordinate affected is not a wall
     LDX #NOT_AFFECTED ;the right side wasn't affected by the explosion
     STX expDownCoor
     ;---------------------------------------------------------
@@ -684,12 +726,11 @@ bombExplosion:
         JSR RenderBombermanDeath
         ; THE GAME IS OVER, TERMINATE FUNC
 ;------------------------------------------
-    JSR setMatIndexToBomb
+    
 
 ;---------------------------------------------- Middle  
   middleExplosionEffect:
-
-     
+    JSR setMatIndexToBomb     
      MiddleExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathMiddleExp
@@ -702,7 +743,7 @@ bombExplosion:
         BNE endOfBombExplosionLogic
         LDA #DEAD
         STA bomberState
-        JSR RenderBombermanDeath
+        ;JSR RenderBombermanDeath
         ; THE GAME IS OVER, TERMINATE FUNC
 
   ;JSR ExplosionAnimation (EDINHA) -> this call can be placed here or in NMI using ticks and expCounter

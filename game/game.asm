@@ -39,7 +39,7 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
    attrLow2    .dsb 1
    attrHigh2   .dsb 1
    aux         .dsb 1
-   buttons     .dsb 1
+   
 
    sound_flag_tick        .dsb 1
    sound_flag_expl        .dsb 1
@@ -128,6 +128,9 @@ palette:
 
 sprites:
     .include "graphics/sprites.asm"
+
+logicMatrix:
+    .include "logic/logic_mat.asm"
 
 attribute:
     .include "graphics/attributes.asm"
