@@ -4,23 +4,22 @@
     TICK_TEMPO = #16
     EXPL_TEMPO = #4
 
-    ; ADDRESSESS
+    ; ADDRESSES
+    APUFLAGS = $4015    ; setup the APU
 
-    SQ1_ENV = $4000
+    SQ1_ENV = $4000     ; SQUARE 1
     SQ1_LO = $4002
     SQ1_HI = $4003
 
-    SQ2_ENV = $4004
+    SQ2_ENV = $4004     ; SQUARE 2
     SQ2_LO = $4006
     SQ2_HI = $4007
 
-    TRI_ENV = $4008
+    TRI_ENV = $4008     ; Triangle
     TRI_LO = $400A
     TRI_HI = $400B
 
-    NOISE_ENV = $400C
-
-    APUFLAGS = $4015
+    NOISE_ENV = $400C   ; Noise
 
 ; Variables
 
