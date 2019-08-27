@@ -121,7 +121,8 @@ BombTickControl:
 BombCounterControl:
     INC bombCounter
     LDA bombCounter
-    CMP #BOMB_BASE_TIMER
+    ; CMP #BOMB_BASE_TIMER
+    CMP #120
     BNE ExplosionState
         ; call explosion logic func, BOMB_BASE_TIMER = #120
         JSR bombExplosion

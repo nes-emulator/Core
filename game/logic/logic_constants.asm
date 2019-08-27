@@ -11,16 +11,16 @@ MAT_BRICK = #3
 
 NUMBER_ROWS = #13 ; 13 -> was renamed to NUMBER_ROWS in joe's branch
 NUMBER_COLUMNS =  #15 ; 15 -> was reanamed to NUMBER_COLUMNS in joe's branch
-BOMB_BASE_TIMER = #120
+BOMB_BASE_TIMER = #90
 BRICK_EXP_LIMIT = #3 ; the maximum number of bricks exploding at the same time is 3
 
-;bomber movement constants, 
+;bomber movement constants,
 LEFT_DIRECTION = $00 ; constant replaced to _DIRECTION in joe's branch
-RIGHT_DIRECTION = $01 ; 
-DOWN_DIRECTION = $10 ; 
+RIGHT_DIRECTION = $01 ;
+DOWN_DIRECTION = $10 ;
 UP_DIRECTION = $11
 
-ALIVE  = $01 ; 
+ALIVE  = $01 ;
 DEAD = $00
 
 BOMBER_MOVE_DELAY = #10
