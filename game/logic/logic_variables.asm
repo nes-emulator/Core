@@ -24,8 +24,6 @@
 
     BomberDeathDelay .dsb 1
 
-    mobMoveCounter .dsb 1, #$00
-
     buttons     .dsb 1
 
 
@@ -41,6 +39,8 @@
     mobDirection .dsb 1, #$01 ; left, right, down or up
 
     mobIsAlive .dsb 1, #ALIVE
+
+    mobMoveCounter .dsb 1, #$00
 
     ;----------------------------------
 

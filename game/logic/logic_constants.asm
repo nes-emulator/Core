@@ -33,7 +33,7 @@ AFFECTED = #1
 
 
 ;Mob constants
-MOB_MOV_INTERVAL = #30
+MOB_MOV_DELAY = #10
 
 ;---------------------------------------------------------
 ; bit:       7     6     5     4     3     2     1     0

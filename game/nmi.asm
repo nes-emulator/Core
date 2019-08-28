@@ -118,14 +118,34 @@ ReadBombSetup:
 EndReadBombSetup:
 
 ;;;;;;;;;;;;;;;;;; GAME STATE ;;;;;;;;;;;;;;;;;;
+
+;-------------------------------------------------------------------------------
+; Start mob movement
+;-------------------------------------------------------------------------------
 MobControl:
-    LDA mobMoveCounter              ; Reads the current mob movement counter (used for delay in the movement)
-    CMP #MOB_MOV_DELAY              ; Verifies if the last delay value was achieved
-    BNE BombControl                 ; If not, increments the counter
+    LDA mobMoveCounter          ; Reads the current mob movement counter (used for delay in the movement)
+    CMP #MOB_MOV_DELAY          ; Verifies if the last delay value was achieved
+    BNE ReadUpButtondateMobMovementDelay  ; If not, increments the counter
+
+    JSR MoveMobLogic
+    JSR ResetMobMovDelay
+
+    JMP BombControl
+
+    ReadUpButtondateMobMovementDelay:
         INC mobMoveCounter          ;  Increments mob counter movement
-        JSR MoveMobLogic
-        LDA #0
-        STA mobMoveCounter
+;-------------------------------------------------------------------------------
+; End mob movement
+;-------------------------------------------------------------------------------
+
+;MobControl:
+;    LDA mobMoveCounter              ; Reads the current mob movement counter (used for delay in the movement)
+;    CMP #MOB_MOV_DELAY              ; Verifies if the last delay value was achieved
+;    BNE BombControl                 ; If not, increments the counter
+;        INC mobMoveCounter          ;  Increments mob counter movement
+;        JSR MoveMobLogic
+;        LDA #0
+;        STA mobMoveCounter
 
 BombControl:
     LDA bombIsActive
@@ -167,18 +187,6 @@ ExplosionState:
             STA ExplosionIsActive
 			JSR RemoveExplosionRender
 
-; MobControl:
-;     LDA MobIsAlive
-;     CMP #0
-;     BEQ next
-;         INC mobMoveCounter
-;         LDA mobMoveCounter
-;         CMP #MOB_MOV_INTERVAL
-;         BNE next
-;             ; call mobWalk
-;             ; call mob render
-;             LDA #0
-;             STA mobMoveCounter       ; resets the counter
 
 next:
 playSoundFrame:
@@ -191,6 +199,30 @@ TAY
 PLA                 ; Pull all registers from stack
 
 RTI
+
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;- ResetMobMovDelay
+;-   This subroutine clears the 'MobMoveCounter' variable (set to zeroto zero)
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+ResetMobMovDelay:
+    ;-------------------------------------------------------------------------------
+    ; Push all registers (A) to stack
+    ;-------------------------------------------------------------------------------
+    PHA
+
+    LDA #$0
+    STA mobMoveCounter
+
+    ;-------------------------------------------------------------------------------
+    ; Pull all registers (A) from stack
+    ;-------------------------------------------------------------------------------
+    PLA
+
+    RTS     ; End of 'ResetMobMovDelay' subroutine
+
 
 ; Resets the moveCounter whenever the player moves
 ResetBomberMovDelay:
