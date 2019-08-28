@@ -9,6 +9,9 @@
     FIRST_SPRITE_TILE = $0201
     FIRST_SPRITE_CONTROL = $0202
     FIRST_SPRITE_X = $0203
+    FIRST_MOB_Y = $0210
+    FIRST_MOB_X = $0213
+    LAST_MOB_END = $10 ; LAST_SPRITE_END = 4 * TOTAL_NUM_SPRITES
 
     PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
     MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen

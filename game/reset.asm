@@ -92,7 +92,28 @@ LoadSpritesLoop:
   LDA #1
   STA bomberState
 
-  
+  ; ;;;;;;;;;;
+; ;-----------------------------------------
+; ; Initializes mob position
+; ;-----------------------------------------
+; LDA #11
+; STA mobX
+; LDA #10
+; STA mobY           ; First reset bomberman position on screen
+; JSR MoveMobSprites
+;
+; ; Initializes Mob delay counter
+; LDA #0
+; STA mobMoveCounter
+;
+; ; Sets Mob state
+; LDA #ALIVE
+; STA MobIsAlive
+;
+; LDA #RIGHT_DIRECTION
+; STA mobDirection
+; ;;;;;;;;;;
+
   JSR sound_init    ; APU setup
 
 Forever:

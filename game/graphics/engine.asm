@@ -1,7 +1,4 @@
-
-
-   BOMB_BASE_TIMER = $00
-   MOB_MOV_INTERVAL = $00
+; CONSTANTS
 
    MOB_SPRITE_START_POSITION = $10
    BOMB_SPRITE_START_POSITION = $20
@@ -453,3 +450,70 @@ RenderSprite:
     STA FIRST_SPRITE_CONTROL, x
 
     RTS
+
+    ; ;;;;;;;;;;;;;;;;;;; MOB STUFF
+    ; ;-------------------------------------------------------------------------------
+    ; ;-------------------------------------------------------------------------------
+    ; ; Receives mob position as logical x_position and y_postion
+    ; ; Moves all his sprites to screen position
+    ; ;-------------------------------------------------------------------------------
+    ; ;-------------------------------------------------------------------------------
+    ; MoveMobSprites:
+    ;     ;-------------------------------------------------------------------------------
+    ;     ; Push all registers (A, Y and X) to stack
+    ;     ;-------------------------------------------------------------------------------
+    ;     PHA
+    ;     TYA
+    ;     PHA
+    ;     TXA
+    ;     PHA
+    ;
+    ;     LDA mobX         ; Get logic X position
+    ;     STA x_position
+    ;     LDA mobY         ; Get logic Y position
+    ;     STA y_position
+    ;
+    ;     JSR CalculateScreenPosition
+    ;
+        ; ManageMoveMobSprites:
+           ; LDX #$00            ; Load sprite start position
+    ;
+    ;         LDA y_position      ; Write first y position
+    ;         STA FIRST_MOB_Y, x
+    ;
+    ;         LDA x_position      ; Write first x position
+    ;         STA FIRST_MOB_X, x
+    ;
+    ;         JSR MoveXRegisterNextLine
+    ;
+    ;         LDA y_position      ; Write second y position
+    ;         STA FIRST_MOB_Y, x
+    ;
+    ;         LDA x_position_fix
+    ;         STA FIRST_MOB_X, x
+    ;
+    ;         JSR MoveXRegisterNextLine
+    ;
+    ;         LDA y_position_fix
+    ;         STA FIRST_MOB_Y, x
+    ;
+    ;         LDA x_position      ; Write third x
+    ;         STA FIRST_MOB_X, x
+    ;
+    ;         JSR MoveXRegisterNextLine
+    ;
+    ;         LDA y_position_fix  ; Write fourth line
+    ;         STA FIRST_MOB_Y, x
+    ;
+    ;         LDA x_position_fix
+    ;         STA FIRST_MOB_X, x
+    ;
+    ;     ;-------------------------------------------------------------------------------
+    ;     ; Pull all registers (A, Y and X) from stack
+    ;     ;-------------------------------------------------------------------------------
+    ;     PLA
+    ;     TAX
+    ;     PLA
+    ;     TAY
+    ;     PLA
+    ;     RTS

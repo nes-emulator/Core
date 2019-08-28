@@ -1,21 +1,21 @@
 ;;;;;;;;;;;;;;; NMI ;;;;;;;;;;;;;;;
 
+;;;; Constants
 
-;TODO handle death of bomber in NMI
-; if bomberState = #DEAD
-; controllers must be locked
-; mobs and explosion should stop
-; only a "Game sound" should play
+; MOB_MOV_DELAY = #30
+
 
 ;TODO handle different stages of brick explosion
 ;looking at "numberOfBricksExploding" , "explodingBricksXCoor" and "explodingBricksYCoor" all defined in logic.asm
 
+; Push all registers to stack
 PHA
 TYA
 PHA
 TXA
-PHA             ; Push all registers to stack
+PHA
 
+; RAM Setup
 LDA #$00
 STA $2003       ; set the low byte (00) of the RAM address
 LDA #$02
@@ -28,6 +28,8 @@ LatchController:
     LDA #$00
     STA $4016
 
+;bit:       7     6     5     4     3     2     1     0
+;button:    A     B   select start  up   down  left right
 ReadController:
   LDX #$08
 ReadControllerLoop:
@@ -37,8 +39,6 @@ ReadControllerLoop:
   DEX
   BNE ReadControllerLoop
 
-  ;bit:       7     6     5     4     3     2     1     0
-  ;button:    A     B   select start  up   down  left right
 
 ;;;; CHECK GAME STATE BEFORE MOVEMENT
 DeathDelay:
@@ -117,6 +117,14 @@ ReadBombSetup:
 EndReadBombSetup:
 
 ;;;;;;;;;;;;;;;;;; GAME STATE ;;;;;;;;;;;;;;;;;;
+; MobControl:
+;     LDA mobMoveCounter              ; Reads the current mob movement counter (used for delay in the movement)
+;     CMP #MOB_MOV_DELAY              ; Verifies if the last delay value was achieved
+;     BNE BombControl                 ; If not, increments the counter
+;         INC mobMoveCounter          ;  Increments mob counter movement
+;         JSR MoveMobLogic            ; REVIEW
+;         LDA #0
+;         STA mobMoveCounter
 
 BombControl:
     LDA bombIsActive
