@@ -386,7 +386,7 @@ JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
         LDA #DEAD
         STA bomberState
         JSR RenderBombermanDeath
-        JMP Reset      ; This subroutine can be found in 'reset.asm'
+        
 
         JMP EndOfBomberMovement
 
