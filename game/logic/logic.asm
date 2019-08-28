@@ -747,126 +747,126 @@ bombExplosion:
    PLA
    RTS
 
-    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MOB STUFF
-; MoveMobLogic:
-;     ;-------------------------------------------------------------------------------
-;     ; Push all registers (A, Y and X) to stack
-;     ;-------------------------------------------------------------------------------
-;     PHA
-;     TYA
-;     PHA
-;     TXA
-;     PHA
-;
-;     LDA mobDirection
-;
-;     LeftMobDirection:
-;         LDY #RIGHT_DIRECTION
-;
-;         LDA mobDirection
-;         CMP #LEFT_DIRECTION
-;         BNE RightMobDirection
-;
-;         ; Sets the new Mob Coordinates (X and Y)
-;         LDA mobX
-;         STA characterNewX
-;         LDA mobY
-;         STA characterNewY
-;
-;         DEC characterNewX
-;
-;         JSR ValidNewCoordinates
-;         BNE UpdateMobDirection
-;
-;         JMP UpdateMobCoordinates
-;
-;     RightMobDirection:
-;         LDY #UP_DIRECTION
-;
-;         LDA mobDirection
-;         CMP #RIGHT_DIRECTION
-;         BNE UpMobDirection
-;
-;         ; Sets the new Mob Coordinates (X and Y)
-;         LDA mobX
-;         STA characterNewX
-;         LDA mobY
-;         STA characterNewY
-;
-;         INC characterNewX
-;
-;         JSR ValidNewCoordinates
-;         BNE UpdateMobDirection
-;
-;         JMP UpdateMobCoordinates
-;
-;     UpMobDirection:
-;         LDY #DOWN_DIRECTION
-;
-;         LDA mobDirection
-;         CMP #UP_DIRECTION
-;         BNE DownMobDirection
-;
-;         ; Sets the new Mob Coordinates (X and Y)
-;         LDA mobX
-;         STA characterNewX
-;         LDA mobY
-;         STA characterNewY
-;
-;         DEC characterNewY
-;
-;         JSR ValidNewCoordinates
-;         BNE UpdateMobDirection
-;
-;         JMP UpdateMobCoordinates
-;
-;     DownMobDirection:
-;         LDY #LEFT_DIRECTION
-;
-;         ; Sets the new Mob Coordinates (X and Y)
-;         LDA mobX
-;         STA characterNewX
-;         LDA mobY
-;         STA characterNewY
-;
-;         INC characterNewY
-;
-;         JSR ValidNewCoordinates
-;         BNE UpdateMobDirection
-;
-;         JMP UpdateMobCoordinates
-;
-;     UpdateMobCoordinates:
-;         LDA characterNewX
-;         STA mobX         ; Updates the X bomber variable with the new valid bomber position
-;         LDA characterNewY
-;         STA mobY         ; Updates the Y bomber variable with the new valid bomber position
-;
-;         ; Updates the mob sprites. This subroutine is placed in graphics/engine.asm
-;         JSR MoveMobSprites
-;
-;         ; Verifies if the new mob position coincides with the Bomber position
-;         JSR IsBomberKilledByMob
-;         BNE MoveMobLogicEnd     ; If not, just terminates the mob movement without doing anything
-;         ; Otherwise, the bomber is killed by the mob and the reset
-;         ; subroutine is called to reinitiallize the game
-;         LDA #DEAD
-;         STA bomberState
-;         JSR RenderBombermanDeath
-;
-;         JMP MoveMobLogicEnd
-;
-;     UpdateMobDirection:
-;         STY mobDirection
-;
-;     MoveMobLogicEnd:
-;         ;-------------------------------------------------------------------------------
-;         ; Pull all registers (A, Y and X) from stack
-;         ;-------------------------------------------------------------------------------
-;         PLA
-;         TAX
-;         PLA
-;         TAY
-;         PLA
-;
-;         RTS ; End of MoveBomberLogic subroutine
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MOB STUFF
+MoveMobLogic:
+    ;-------------------------------------------------------------------------------
+    ; Push all registers (A, Y and X) to stack
+    ;-------------------------------------------------------------------------------
+    PHA
+    TYA
+    PHA
+    TXA
+    PHA
+
+    LDA mobDirection
+
+    LeftMobDirection:
+        LDY #RIGHT_DIRECTION
+
+        LDA mobDirection
+        CMP #LEFT_DIRECTION
+        BNE RightMobDirection
+
+        ; Sets the new Mob Coordinates (X and Y)
+        LDA mobX
+        STA characterNewX
+        LDA mobY
+        STA characterNewY
+
+        DEC characterNewX
+
+        JSR ValidNewCoordinates
+        BNE UpdateMobDirection
+
+        JMP UpdateMobCoordinates
+
+    RightMobDirection:
+        LDY #UP_DIRECTION
+
+        LDA mobDirection
+        CMP #RIGHT_DIRECTION
+        BNE UpMobDirection
+
+        ; Sets the new Mob Coordinates (X and Y)
+        LDA mobX
+        STA characterNewX
+        LDA mobY
+        STA characterNewY
+
+        INC characterNewX
+
+        JSR ValidNewCoordinates
+        BNE UpdateMobDirection
+
+        JMP UpdateMobCoordinates
+
+    UpMobDirection:
+        LDY #DOWN_DIRECTION
+
+        LDA mobDirection
+        CMP #UP_DIRECTION
+        BNE DownMobDirection
+
+        ; Sets the new Mob Coordinates (X and Y)
+        LDA mobX
+        STA characterNewX
+        LDA mobY
+        STA characterNewY
+
+        DEC characterNewY
+
+        JSR ValidNewCoordinates
+        BNE UpdateMobDirection
+
+        JMP UpdateMobCoordinates
+
+    DownMobDirection:
+        LDY #LEFT_DIRECTION
+
+        ; Sets the new Mob Coordinates (X and Y)
+        LDA mobX
+        STA characterNewX
+        LDA mobY
+        STA characterNewY
+
+        INC characterNewY
+
+        JSR ValidNewCoordinates
+        BNE UpdateMobDirection
+
+        JMP UpdateMobCoordinates
+
+    UpdateMobCoordinates:
+        LDA characterNewX
+        STA mobX         ; Updates the X bomber variable with the new valid bomber position
+        LDA characterNewY
+        STA mobY         ; Updates the Y bomber variable with the new valid bomber position
+
+        ; Updates the mob sprites. This subroutine is placed in graphics/engine.asm
+        JSR MoveMobSprites
+
+        ; Verifies if the new mob position coincides with the Bomber position
+        JSR IsBomberKilledByMob
+        BNE MoveMobLogicEnd     ; If not, just terminates the mob movement without doing anything
+        ; Otherwise, the bomber is killed by the mob and the reset
+        ; subroutine is called to reinitiallize the game
+        LDA #DEAD
+        STA bomberState
+        JSR RenderBombermanDeath
+
+        JMP MoveMobLogicEnd
+
+    UpdateMobDirection:
+        STY mobDirection
+
+    MoveMobLogicEnd:
+        ;-------------------------------------------------------------------------------
+        ; Pull all registers (A, Y and X) from stack
+        ;-------------------------------------------------------------------------------
+        PLA
+        TAX
+        PLA
+        TAY
+        PLA
+
+        RTS ; End of MoveBomberLogic subroutine

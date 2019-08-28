@@ -2,7 +2,7 @@
 
 ;;;; Constants
 
-; MOB_MOV_DELAY = #30
+MOB_MOV_DELAY = #30
 
 
 ;TODO handle different stages of brick explosion
@@ -49,7 +49,8 @@ DeathDelay:
         INC BomberDeathDelay
         LDA BomberDeathDelay
         CMP #90
-        BMI BombControl
+        ; BMI BombControl
+        BMI MobControl
             ; finish game here
             JMP Reset
 
@@ -117,14 +118,14 @@ ReadBombSetup:
 EndReadBombSetup:
 
 ;;;;;;;;;;;;;;;;;; GAME STATE ;;;;;;;;;;;;;;;;;;
-; MobControl:
-;     LDA mobMoveCounter              ; Reads the current mob movement counter (used for delay in the movement)
-;     CMP #MOB_MOV_DELAY              ; Verifies if the last delay value was achieved
-;     BNE BombControl                 ; If not, increments the counter
-;         INC mobMoveCounter          ;  Increments mob counter movement
-;         JSR MoveMobLogic            ; REVIEW
-;         LDA #0
-;         STA mobMoveCounter
+MobControl:
+    LDA mobMoveCounter              ; Reads the current mob movement counter (used for delay in the movement)
+    CMP #MOB_MOV_DELAY              ; Verifies if the last delay value was achieved
+    BNE BombControl                 ; If not, increments the counter
+        INC mobMoveCounter          ;  Increments mob counter movement
+        JSR MoveMobLogic
+        LDA #0
+        STA mobMoveCounter
 
 BombControl:
     LDA bombIsActive
@@ -160,24 +161,24 @@ ExplosionState:
         INC expCounter
         LDA expCounter
         CMP #60
-        BNE MobControl
+        BNE next
             ; render something
             LDA #0                  ; Deactivate explosion on screen
             STA ExplosionIsActive
 			JSR RemoveExplosionRender
 
-MobControl:
-    LDA MobIsAlive
-    CMP #0
-    BEQ next
-        INC mobMoveCounter
-        LDA mobMoveCounter
-        CMP #MOB_MOV_INTERVAL
-        BNE next
-            ; call mobWalk
-            ; call mob render
-            LDA #0
-            STA mobMoveCounter       ; resets the counter
+; MobControl:
+;     LDA MobIsAlive
+;     CMP #0
+;     BEQ next
+;         INC mobMoveCounter
+;         LDA mobMoveCounter
+;         CMP #MOB_MOV_INTERVAL
+;         BNE next
+;             ; call mobWalk
+;             ; call mob render
+;             LDA #0
+;             STA mobMoveCounter       ; resets the counter
 
 next:
 playSoundFrame:
