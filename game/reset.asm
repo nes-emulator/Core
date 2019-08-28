@@ -61,7 +61,7 @@ LoadSpritesLoop:
   LDA sprites, x        ; load data from address (sprites +  x)
   STA $0200, x          ; store into RAM address ($0200 + x)
   INX                   ; X = X + 1
-  CPX #$10              ; Compare X to hex $10, decimal 16
+  CPX #$20              ;
   BNE LoadSpritesLoop   ; Branch to LoadSpritesLoop if compare was Not Equal to zero
                         ; if compare was equal to 16, keep going down
 
@@ -92,27 +92,25 @@ LoadSpritesLoop:
   LDA #1
   STA bomberState
 
-  ; ;;;;;;;;;;
 ; ;-----------------------------------------
 ; ; Initializes mob position
 ; ;-----------------------------------------
-; LDA #11
-; STA mobX
-; LDA #10
-; STA mobY           ; First reset bomberman position on screen
-; JSR MoveMobSprites
-;
-; ; Initializes Mob delay counter
-; LDA #0
-; STA mobMoveCounter
-;
-; ; Sets Mob state
-; LDA #ALIVE
-; STA MobIsAlive
-;
-; LDA #RIGHT_DIRECTION
-; STA mobDirection
-; ;;;;;;;;;;
+    LDA #11
+    STA mobX
+    LDA #10
+    STA mobY           ; First reset bomberman position on screen
+    JSR MoveMobSprites
+
+    ; ; Initializes Mob delay counter
+    LDA #0
+    STA mobMoveCounter
+    ;
+    ; ; Sets Mob state
+    LDA #ALIVE
+    STA MobIsAlive
+    LDA #RIGHT_DIRECTION
+    STA mobDirection
+
 
   JSR sound_init    ; APU setup
 
