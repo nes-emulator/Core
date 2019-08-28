@@ -1,20 +1,5 @@
 
 
-   ; Graphics engine variable
-   .enum $0700
-   x_position       .dsb 1
-   y_position       .dsb 1      ; Entry for methods
-   initial_sprite   .dsb 1      ; Used for iteration on sprites
-
-   x_position_fix   .dsb 1
-   y_position_fix   .dsb 1      ; Anchors variables
-
-   ExplosionIsActive .dsb 1
-   tickCounter .dsb 1
-   expCounter .dsb 1
-   MobIsAlive .dsb 1
-   .ende
-
    BOMB_BASE_TIMER = $00
    MOB_MOV_INTERVAL = $00
 

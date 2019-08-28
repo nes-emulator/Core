@@ -1,28 +1,22 @@
 ;----------------------------------------------------------------
 ; constants
 ;----------------------------------------------------------------
-;top = 0x30
-; bot = 0xd6
-;right = 0xCA
 
-;useless after refactoring
-TOP_LIMIT = $2D
-BOT_LIMIT = $D7
-RIGHT_LIMIT = $DA
-LEFT_LIMIT = $0F
+    ONE = $01
+    ZERO = $00
 
+    FIRST_SPRITE_Y = $0200
+    FIRST_SPRITE_TILE = $0201
+    FIRST_SPRITE_CONTROL = $0202
+    FIRST_SPRITE_X = $0203
 
-ONE = $01
-FOUR = $04
-ZERO = $00
+    PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
+    MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
-FIRST_SPRITE_Y = $0200
-FIRST_SPRITE_TILE = $0201
-FIRST_SPRITE_CONTROL = $0202
-FIRST_SPRITE_X = $0203
+    ; Include external constants
 
-PRG_COUNT = 1 ; 1 = 16KB, 2 = 32KB
-MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
+    .include "logic/logic_constants.asm"
+
 
 ;----------------------------------------------------------------
 ; variables
@@ -30,9 +24,8 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
    .enum $0000
 
-   ;NOTE: declare variables using the DSB and DSW directives, like this:
-
-   tile        .dsb 1 ; Variables for background
+   ; Variables for background
+   tile        .dsb 1
    tile_count  .dsb 1
    attrLow     .dsb 1
    attrHigh    .dsb 1
@@ -40,23 +33,21 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
    attrHigh2   .dsb 1
    aux         .dsb 4
 
-   ; sound_flag_tick        .dsb 1
-   ; sound_flag_expl        .dsb 1
-   ; sound_frame_counter    .dsb 1
    ;------------------------
-   stkA .dsb 1; A swap variable, only yo be used in stack operations
+   stkA .dsb 1; A swap variable, only to be used in stack operations
    ;------------------------
 
   .ende
 
-   ;NOTE: you can also split the variable declarations into individual pages, like this:
+  ;----------------------------------
+  ; Logic Variables
+  ;---------------------------------
 
-   ;.enum $0100
-   ;.ende
-
-   ;.enum $0200
-   ;.ende
-
+  .enum $0300
+      .include "logic/logic_variables.asm"
+      .include "sound/sound_variables.asm"
+      .include "graphics/graphic_variables.asm"
+  .ende
 
 ;----------------------------------------------------------------
 ; iNES header
@@ -73,8 +64,6 @@ MIRRORING = %0001 ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
 ;----------------------------------------------------------------
 
    .base $10000-(PRG_COUNT*$4000)
-
-; TODO: is it ok to just include here?
 
 Logic:
     .include "logic/logic.asm"

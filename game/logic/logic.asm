@@ -1,14 +1,3 @@
-;----------------------------------
-;Variables
-;---------------------------------
-
-.include "logic/logic_constants.asm"
-
- .enum $0800
-    .include "logic/logic_variables.asm"
- .ende
-
-
 ;-----------------------------------------------------------------
 ;stack functions
 

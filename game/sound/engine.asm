@@ -21,22 +21,6 @@
 
     NOISE_ENV = $400C   ; Noise
 
-; Variables
-
-.enum $1800
-   .include "sound/sound_variables.asm"
-.ende
-
-    ; A flag that is set when the engine should play a explosion SFX
-    ; sound_flag_expl .dsb 1
-
-    ; A flag that is set when the engine should play a tick SFX
-    ; sound_flag_tick .dsb 1
-
-    ; Counter to control the tempo of the notes
-    ; sound_frame_counter .dsb 1
-
-
 ; Sets the bomb tick flag
 sound_bomb_tick:
     PHA

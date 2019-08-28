@@ -1,3 +1,4 @@
+;;;;; RESET SETUP ;;;;;
 
   SEI          ; disable IRQs
   CLD          ; disable decimal mode
@@ -68,9 +69,10 @@ LoadSpritesLoop:
 
   JSR LoadBackground    ; Load background function
 
+  ; First reset bomberman position on screen
   LDA #$03
   STA bomberX
-  STA bomberY           ; First reset bomberman position on screen
+  STA bomberY
   JSR MoveBomberman
 
   LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
@@ -89,6 +91,8 @@ LoadSpritesLoop:
   STA BomberDeathDelay
   LDA #1
   STA bomberState
+
+  
   JSR sound_init    ; APU setup
 
 Forever:
