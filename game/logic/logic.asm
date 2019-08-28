@@ -386,7 +386,7 @@ JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
         LDA #DEAD
         STA bomberState
         JSR RenderBombermanDeath
-        
+
 
         JMP EndOfBomberMovement
 
@@ -598,7 +598,7 @@ bombExplosion:
     BNE bomberDeathRightExp
     LDA #DEAD
     STA mobIsAlive
-    ; JSR MOB DEATH ANIMATION (EDINHA)
+    JSR RenderMobDeath
 
   bomberDeathRightExp:
     JSR CoordinateIsBomber
@@ -636,7 +636,7 @@ bombExplosion:
     BNE bomberDeathLeftExp
     LDA #DEAD
     STA mobIsAlive
-    ; JSR MOB DEATH ANIMATION (EDINHA)
+    JSR RenderMobDeath
 
   bomberDeathLeftExp:
     JSR CoordinateIsBomber
@@ -673,7 +673,7 @@ bombExplosion:
         BNE bomberDeathUpExp
         LDA #DEAD
         STA mobIsAlive
-        ; JSR MOB DEATH ANIMATION (EDINHA)
+        JSR RenderMobDeath
 
     bomberDeathUpExp:
         JSR CoordinateIsBomber
@@ -708,7 +708,7 @@ bombExplosion:
         BNE bomberDeathDownExp
         LDA #DEAD
         STA mobIsAlive
-        ; JSR MOB DEATH ANIMATION (EDINHA)
+        JSR RenderMobDeath
 
     bomberDeathDownExp:
         JSR CoordinateIsBomber
@@ -728,7 +728,7 @@ bombExplosion:
         BNE bomberDeathMiddleExp
         LDA #DEAD
         STA mobIsAlive
-        ; JSR MOB DEATH ANIMATION (EDINHA)
+        JSR RenderMobDeath
 
     bomberDeathMiddleExp:
         JSR CoordinateIsBomber

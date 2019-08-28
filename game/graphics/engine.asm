@@ -476,7 +476,7 @@ MoveMobSprites:
     JSR CalculateScreenPosition
 
     ManageMoveMobSprites:
-       LDX #$00            ; Load sprite start position
+        LDX #$00            ; Load sprite start position
 
         LDA y_position      ; Write first y position
         STA FIRST_MOB_Y, x
@@ -516,4 +516,22 @@ MoveMobSprites:
     PLA
     TAY
     PLA
+    RTS
+
+
+;----------------
+; First render of mob death animation
+;----------------
+RenderMobDeath:
+    LDA mobX            ; Get logic X position
+    STA x_position
+    LDA mobY            ; Get logic Y position
+    STA y_position
+
+    LDA #$48            ; Initial death sprite
+    STA initial_sprite
+
+    LDX #$10            ; Mob sprite PPU position
+    JSR RenderSpriteGroup
+
     RTS
