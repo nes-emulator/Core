@@ -80,7 +80,9 @@ MobControl:
         LDA DelayCounter
         CMP #0
         BNE mobDeathCounter
-            ; JSR mudar bomber pra baixo
+            LDA #DOWN_DIRECTION
+            STA bomberMovDirection
+            JSR MoveBombermanDirection
             JSR RenderMobDeath
         mobDeathCounter:
         CMP #60
