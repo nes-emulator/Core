@@ -597,9 +597,10 @@ bombExplosion:
   rightExpMobDeathVer:
     JSR CoordinateIsMob
     BNE bomberDeathRightExp
+    JSR RenderMobDeath
     LDA #DEAD
     STA mobIsAlive
-    JSR RenderMobDeath
+    
 
   bomberDeathRightExp:
     JSR CoordinateIsBomber
@@ -635,9 +636,10 @@ bombExplosion:
   leftExpMobDeathVer:
     JSR CoordinateIsMob
     BNE bomberDeathLeftExp
+    JSR RenderMobDeath
     LDA #DEAD
     STA mobIsAlive
-    JSR RenderMobDeath
+    
 
   bomberDeathLeftExp:
     JSR CoordinateIsBomber
@@ -672,9 +674,10 @@ bombExplosion:
     UpExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathUpExp
+        JSR RenderMobDeath
         LDA #DEAD
         STA mobIsAlive
-        JSR RenderMobDeath
+        
 
     bomberDeathUpExp:
         JSR CoordinateIsBomber
@@ -707,9 +710,10 @@ bombExplosion:
     DownExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathDownExp
+        JSR RenderMobDeath
         LDA #DEAD
         STA mobIsAlive
-        JSR RenderMobDeath
+        
 
     bomberDeathDownExp:
         JSR CoordinateIsBomber
@@ -727,9 +731,9 @@ bombExplosion:
      MiddleExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathMiddleExp
+        JSR RenderMobDeath
         LDA #DEAD
         STA mobIsAlive
-        JSR RenderMobDeath
 
     bomberDeathMiddleExp:
         JSR CoordinateIsBomber
