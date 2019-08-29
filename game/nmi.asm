@@ -45,7 +45,12 @@ DeathDelay:
     LDA bomberState
     CMP #0
     BNE MoveDelayControl
+        LDA #0
+        CMP BomberDeathDelay   
+        BNE DeathDelayCounter
+        JSR RenderBombermanDeath
         ; checks a to finish the death animation
+        DeathDelayCounter:
         INC BomberDeathDelay
         LDA BomberDeathDelay
         CMP #90

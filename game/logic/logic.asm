@@ -371,21 +371,22 @@ MoveBomberLogic:
         STA bomberX         ; Updates the X bomber variable with the new valid bomber position
         LDA characterNewY
         STA bomberY         ; Updates the Y bomber variable with the new valid bomber position
-
-        JSR MoveBomberman   ; Updates bomber sprites. This subroutine is located in 'graphics/engine.asm'
-JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
-
+        
         ;-----------------------------------------------------------------------
         ; Verifies if the new mob position coincides with the Bomber position
         ;-----------------------------------------------------------------------
         JSR IsBomberKilledByMob
-        BNE EndOfBomberMovement     ; If not, just terminates the mob movement without doing anything
+        BNE PerformMovement     ; If not, just terminates the mob movement without doing anything
 
         ; Otherwise, the bomber is killed by the mob and the reset
         ; subroutine is called to reinitiallize the game
         LDA #DEAD
         STA bomberState
-        JSR RenderBombermanDeath
+        
+
+        PerformMovement:
+            JSR MoveBomberman   ; Updates bomber sprites. This subroutine is located in 'graphics/engine.asm'
+            JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
 
 
         JMP EndOfBomberMovement
@@ -603,7 +604,7 @@ bombExplosion:
   bomberDeathRightExp:
     JSR CoordinateIsBomber
     BNE checkLeftExplosionEffect
-    JSR RenderBombermanDeath
+    
     LDA #DEAD
     STA bomberState
 
@@ -643,7 +644,7 @@ bombExplosion:
     BNE checkUpExplosionEffect
     LDA #DEAD
     STA bomberState
-    JSR RenderBombermanDeath
+    
    ; JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;----------------------------------------------------------------
 
@@ -680,7 +681,7 @@ bombExplosion:
         BNE checkDownExplosionEffect
         LDA #DEAD
         STA bomberState
-         JSR RenderBombermanDeath
+         
         ;JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;--------------------------------------------
 
@@ -715,7 +716,7 @@ bombExplosion:
         BNE middleExplosionEffect
         LDA #DEAD
         STA bomberState
-        JSR RenderBombermanDeath
+        
         ; THE GAME IS OVER, TERMINATE FUNC
 ;------------------------------------------
 
@@ -735,7 +736,7 @@ bombExplosion:
         BNE endOfBombExplosionLogic
         LDA #DEAD
         STA bomberState
-        JSR RenderBombermanDeath
+        
         ; THE GAME IS OVER, TERMINATE FUNC
 
   endOfBombExplosionLogic:
@@ -852,7 +853,7 @@ MoveMobLogic:
         ; subroutine is called to reinitiallize the game
         LDA #DEAD
         STA bomberState
-        JSR RenderBombermanDeath
+        
 
         JMP MoveMobLogicEnd
 
