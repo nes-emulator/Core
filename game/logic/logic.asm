@@ -371,7 +371,7 @@ MoveBomberLogic:
         STA bomberX         ; Updates the X bomber variable with the new valid bomber position
         LDA characterNewY
         STA bomberY         ; Updates the Y bomber variable with the new valid bomber position
-        
+
         ;-----------------------------------------------------------------------
         ; Verifies if the new mob position coincides with the Bomber position
         ;-----------------------------------------------------------------------
@@ -380,9 +380,9 @@ MoveBomberLogic:
 
         ; Otherwise, the bomber is killed by the mob and the reset
         ; subroutine is called to reinitiallize the game
-        LDA #DEAD
+        LDA #0
         STA bomberState
-        
+
 
         PerformMovement:
             JSR MoveBomberman   ; Updates bomber sprites. This subroutine is located in 'graphics/engine.asm'
@@ -597,16 +597,16 @@ bombExplosion:
   rightExpMobDeathVer:
     JSR CoordinateIsMob
     BNE bomberDeathRightExp
-    JSR RenderMobDeath
-    LDA #DEAD
+    ;JSR RenderMobDeath
+    LDA #0
     STA mobIsAlive
-    
+
 
   bomberDeathRightExp:
     JSR CoordinateIsBomber
     BNE checkLeftExplosionEffect
-    
-    LDA #DEAD
+
+    LDA #0
     STA bomberState
 
     ;JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
@@ -636,17 +636,17 @@ bombExplosion:
   leftExpMobDeathVer:
     JSR CoordinateIsMob
     BNE bomberDeathLeftExp
-    JSR RenderMobDeath
-    LDA #DEAD
+    ;JSR RenderMobDeath
+    LDA #0
     STA mobIsAlive
-    
+
 
   bomberDeathLeftExp:
     JSR CoordinateIsBomber
     BNE checkUpExplosionEffect
-    LDA #DEAD
+    LDA #0
     STA bomberState
-    
+
    ; JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;----------------------------------------------------------------
 
@@ -674,17 +674,17 @@ bombExplosion:
     UpExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathUpExp
-        JSR RenderMobDeath
-        LDA #DEAD
+        ;JSR RenderMobDeath
+        LDA #0
         STA mobIsAlive
-        
+
 
     bomberDeathUpExp:
         JSR CoordinateIsBomber
         BNE checkDownExplosionEffect
-        LDA #DEAD
+        LDA #0
         STA bomberState
-         
+
         ;JMP endOfBombExplosionLogic ; THE GAME IS OVER, TERMINATE FUNC
  ;--------------------------------------------
 
@@ -710,17 +710,17 @@ bombExplosion:
     DownExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathDownExp
-        JSR RenderMobDeath
-        LDA #DEAD
+        ;JSR RenderMobDeath
+        LDA #0
         STA mobIsAlive
-        
+
 
     bomberDeathDownExp:
         JSR CoordinateIsBomber
         BNE middleExplosionEffect
-        LDA #DEAD
+        LDA #0
         STA bomberState
-        
+
         ; THE GAME IS OVER, TERMINATE FUNC
 ;------------------------------------------
 
@@ -731,16 +731,16 @@ bombExplosion:
      MiddleExpMobDeathVer:
         JSR CoordinateIsMob
         BNE bomberDeathMiddleExp
-        JSR RenderMobDeath
-        LDA #DEAD
+        ;JSR RenderMobDeath
+        LDA #0
         STA mobIsAlive
 
     bomberDeathMiddleExp:
         JSR CoordinateIsBomber
         BNE endOfBombExplosionLogic
-        LDA #DEAD
+        LDA #0
         STA bomberState
-        
+
         ; THE GAME IS OVER, TERMINATE FUNC
 
   endOfBombExplosionLogic:
@@ -855,9 +855,9 @@ MoveMobLogic:
         BNE MoveMobLogicEnd     ; If not, just terminates the mob movement without doing anything
         ; Otherwise, the bomber is killed by the mob and the reset
         ; subroutine is called to reinitiallize the game
-        LDA #DEAD
+        LDA #0
         STA bomberState
-        
+
 
         JMP MoveMobLogicEnd
 

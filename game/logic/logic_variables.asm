@@ -20,7 +20,7 @@
     bomberState  .dsb 1, #ALIVE ; Game state
     bomberMovDirection .dsb 1 ;left,right,down or up: according the constants defined in this file
 
-    BomberMoveCounter  .dsb 1,  #$00;
+    BomberMoveCounter  .dsb 1,  #$00
 
     BomberDeathDelay .dsb 1
 
@@ -29,6 +29,7 @@
 
     ;----------------------------------
 
+    DelayCounter .dsb 1, #0
 
     ;----------------------------------
     ;current mob coordinates in logic matrix

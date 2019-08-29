@@ -106,13 +106,16 @@ LoadSpritesLoop:
     STA mobMoveCounter
     ;
     ; ; Sets Mob state
-    LDA #ALIVE
-    STA MobIsAlive
+    LDA #1
+    STA mobIsAlive
     LDA #RIGHT_DIRECTION
     STA mobDirection
 
+;
+    LDA #0
+    STA DelayCounter
 
-  JSR sound_init    ; APU setup
+    JSR sound_init    ; APU setup
 
 Forever:
   JMP Forever     ;jump back to Forever, infinite loop

@@ -4,18 +4,25 @@
 
 MOB_MOV_DELAY = #30
 
-
-;TODO handle different stages of brick explosion
-;looking at "numberOfBricksExploding" , "explodingBricksXCoor" and "explodingBricksYCoor" all defined in logic.asm
-
 ; Push all registers to stack
 PHA
 TYA
 PHA
 TXA
 PHA
+JMP RAM
+
+ ; Pull all registers from stack and RTI
+returnFromNMI:
+PLA
+TAX
+PLA
+TAY
+PLA
+RTI
 
 ; RAM Setup
+RAM:
 LDA #$00
 STA $2003       ; set the low byte (00) of the RAM address
 LDA #$02
@@ -31,22 +38,22 @@ LatchController:
 ;bit:       7     6     5     4     3     2     1     0
 ;button:    A     B   select start  up   down  left right
 ReadController:
-  LDX #$08
+    LDX #$08
 ReadControllerLoop:
-  LDA $4016
-  LSR A           ; bit0 -> Carry
-  ROL buttons     ; bit0 <- Carry
-  DEX
-  BNE ReadControllerLoop
+    LDA $4016
+    LSR A           ; bit0 -> Carry
+    ROL buttons     ; bit0 <- Carry
+    DEX
+    BNE ReadControllerLoop
 
 
 ;;;; CHECK GAME STATE BEFORE MOVEMENT
 DeathDelay:
     LDA bomberState
     CMP #0
-    BNE MoveDelayControl
+    BNE MobControl
         LDA #0
-        CMP BomberDeathDelay   
+        CMP BomberDeathDelay
         BNE DeathDelayCounter
         JSR RenderBombermanDeath
         ; checks a to finish the death animation
@@ -59,18 +66,36 @@ DeathDelay:
             ; finish game here
             JMP Reset
             ContinueDeath:
-            JSR playSoundFrame
-            PLA
-            TAX
-            PLA
-            TAY
-            PLA                 ; Pull all registers from stack
+                JSR playSoundFrame
+            JMP returnFromNMI
 
-            RTI
+;-------------------------------------------------------------------------------
+; Start mob movement
+;-------------------------------------------------------------------------------
+MobControl:
+    LDA mobIsAlive
+    CMP #0
+    BNE MoveDelayControl
+    ; death of mob here
+        LDA DelayCounter
+        CMP #0
+        BNE mobDeathCounter
+            ; JSR mudar bomber pra baixo
+            JSR RenderMobDeath
+        mobDeathCounter:
+        CMP #60
+        BNE nextFrame
+            JMP Reset
 
+    nextFrame:
+    INC DelayCounter
+    JMP returnFromNMI
 
+;-------------------------------------------------------------------------------
+; End mob movement
+;-------------------------------------------------------------------------------
 
-;;;;;
+;;;;;; READING CONTROLLERS
 
 ; Enforces a delay of 30 frames in player movement
 MoveDelayControl:
@@ -135,33 +160,18 @@ EndReadBombSetup:
 
 ;;;;;;;;;;;;;;;;;; GAME STATE ;;;;;;;;;;;;;;;;;;
 
-;-------------------------------------------------------------------------------
-; Start mob movement
-;-------------------------------------------------------------------------------
-MobControl:
+MobAlive:
     LDA mobMoveCounter          ; Reads the current mob movement counter (used for delay in the movement)
     CMP #MOB_MOV_DELAY          ; Verifies if the last delay value was achieved
-    BNE ReadUpButtondateMobMovementDelay  ; If not, increments the counter
+    BNE increaseMobMovementDelay  ; If not, increments the counter
 
     JSR MoveMobLogic
     JSR ResetMobMovDelay
 
     JMP BombControl
 
-    ReadUpButtondateMobMovementDelay:
-        INC mobMoveCounter          ;  Increments mob counter movement
-;-------------------------------------------------------------------------------
-; End mob movement
-;-------------------------------------------------------------------------------
-
-;MobControl:
-;    LDA mobMoveCounter              ; Reads the current mob movement counter (used for delay in the movement)
-;    CMP #MOB_MOV_DELAY              ; Verifies if the last delay value was achieved
-;    BNE BombControl                 ; If not, increments the counter
-;        INC mobMoveCounter          ;  Increments mob counter movement
-;        JSR MoveMobLogic
-;        LDA #0
-;        STA mobMoveCounter
+increaseMobMovementDelay:
+    INC mobMoveCounter          ;  Increments mob counter movement
 
 BombControl:
     LDA bombIsActive
@@ -208,13 +218,7 @@ next:
 playSoundFrame:
     JSR sound_play_frame
 
-PLA
-TAX
-PLA
-TAY
-PLA                 ; Pull all registers from stack
-
-RTI
+JMP returnFromNMI
 
 
 ;-------------------------------------------------------------------------------
@@ -224,19 +228,10 @@ RTI
 ;-------------------------------------------------------------------------------
 ;-------------------------------------------------------------------------------
 ResetMobMovDelay:
-    ;-------------------------------------------------------------------------------
-    ; Push all registers (A) to stack
-    ;-------------------------------------------------------------------------------
     PHA
-
     LDA #$0
     STA mobMoveCounter
-
-    ;-------------------------------------------------------------------------------
-    ; Pull all registers (A) from stack
-    ;-------------------------------------------------------------------------------
     PLA
-
     RTS     ; End of 'ResetMobMovDelay' subroutine
 
 
