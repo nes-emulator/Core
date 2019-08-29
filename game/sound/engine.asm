@@ -3,6 +3,7 @@
     ; TEMPO
     TICK_TEMPO = #16
     EXPL_TEMPO = #4
+    STEP_TEMPO = #2
 
     ; ADDRESSES
     APUFLAGS = $4015    ; setup the APU
@@ -38,6 +39,14 @@ sound_bomb_expl:
     LDA #1
     STA sound_flag_expl
 
+    PLA
+    RTS
+
+; Sets the step flag
+sound_step:
+    PHA
+    LDA #1
+    STA sound_flag_step
     PLA
     RTS
 
@@ -111,6 +120,21 @@ TriangleOff:
 ;     RTS
 
 sound_play_frame:
+
+    step:
+        LDA sound_flag_step
+        CMP #1
+        BMI explosion
+            JSR Beep
+            INC sound_frame_counter
+            LDA sound_frame_counter
+            CMP #STEP_TEMPO
+            BMI sound_done
+                ;end SFX
+                LDA #0
+                STA sound_flag_step
+                STA sound_frame_counter
+                JSR ClearSQ1
 
     explosion:
         LDA sound_flag_expl
