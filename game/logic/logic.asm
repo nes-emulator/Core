@@ -385,6 +385,7 @@ MoveBomberLogic:
 
 
         PerformMovement:
+            JSR sound_step
             JSR MoveBomberman   ; Updates bomber sprites. This subroutine is located in 'graphics/engine.asm'
             JSR MoveBombermanDirection  ; Changes bomberman facing direction sprite
 

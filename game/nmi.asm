@@ -113,7 +113,6 @@ Right:
         JSR ResetBomberMovDelay
         LDA #RIGHT_DIRECTION
         STA bomberMovDirection
-        JSR sound_step
         JSR MoveBomberLogic
     JMP EndOfButtonMovement
 
@@ -124,7 +123,6 @@ Left:
         JSR ResetBomberMovDelay
         LDA #LEFT_DIRECTION
         STA bomberMovDirection
-        JSR sound_step
         JSR MoveBomberLogic
     JMP EndOfButtonMovement
 
@@ -136,7 +134,6 @@ Down:
         LDA #DOWN_DIRECTION
         STA bomberMovDirection
         JSR MoveBomberLogic
-        JSR sound_step
     JMP EndOfButtonMovement
 
 Up:
@@ -147,7 +144,6 @@ Up:
         LDA #UP_DIRECTION
         STA bomberMovDirection
         JSR MoveBomberLogic
-        JSR sound_step
     JMP EndOfButtonMovement
 
 ; if moveCounter > 0, decrements it
