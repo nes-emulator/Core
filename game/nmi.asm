@@ -55,9 +55,20 @@ DeathDelay:
         LDA BomberDeathDelay
         CMP #90
         ; BMI BombControl
-        BMI MobControl
+        BMI ContinueDeath
             ; finish game here
             JMP Reset
+            ContinueDeath:
+            JSR playSoundFrame
+            PLA
+            TAX
+            PLA
+            TAY
+            PLA                 ; Pull all registers from stack
+
+            RTI
+
+
 
 ;;;;;
 
