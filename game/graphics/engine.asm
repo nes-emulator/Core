@@ -247,8 +247,14 @@ BombRender:
     LDA #$C8            ; Initial sprite of bomb
     STA initial_sprite
 
+    LDA #$01            ; Change bomb pallet to black
+    STA control_sprite
+
     LDX #BOMB_SPRITE_START_POSITION
     JSR RenderSpriteGroup
+
+    LDA #$00            ; Reset control sprite
+    STA control_sprite
 
     RTS
 
@@ -446,7 +452,7 @@ RenderSprite:
     LDA initial_sprite
     STA FIRST_SPRITE_TILE, x
 
-    LDA #$00
+    LDA control_sprite
     STA FIRST_SPRITE_CONTROL, x
 
     RTS

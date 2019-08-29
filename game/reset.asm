@@ -66,6 +66,7 @@ LoadSpritesLoop:
                         ; if compare was equal to 16, keep going down
 
   LDX #ZERO             ; start out at 0
+  STA control_sprite
 
   JSR LoadBackground    ; Load background function
 

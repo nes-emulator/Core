@@ -3,6 +3,7 @@
 x_position       .dsb 1
 y_position       .dsb 1      ; Entry for methods
 initial_sprite   .dsb 1      ; Used for iteration on sprites
+control_sprite   .dsb 1      ; Control byte for sprite
 
 x_position_fix   .dsb 1
 y_position_fix   .dsb 1      ; Anchors variables
