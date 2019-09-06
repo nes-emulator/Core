@@ -33,3 +33,7 @@ Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 
 ## Other tools
 - https://wiki.nesdev.com/w/index.php/Tools
+
+## Aplicando todos os testes do emulador
+- `python -m unittest discover emulator/ `
+
