@@ -7,3 +7,5 @@ game/patches/
 game/readme-original.txt
 game/readme.txt
 game/test_cases/
+__pycache__
+**/*.pyc

@@ -1,5 +1,8 @@
-from mapper import *
-from cartridge import *
+import sys
+
+from src.mapper import *
+from src.cartridge import *
+
 
 class Emulator():
     def __init__(self, cartridge_path):
@@ -15,4 +18,13 @@ class Emulator():
             print(err.args)
 
 
-emulator = Emulator('/home/joe/Documents/emulator/game/game.nes')
+def main(path):
+    # emulator = Emulator(path)
+    print("BATATA")
+
+
+# ENTRY POINT
+if __name__ == "__main__":
+    if (len(sys.argv) < 2):
+        sys.exit(1)
+    main(sys.argv[1])
