@@ -37,3 +37,5 @@ Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 ## Aplicando todos os testes do emulador
 - `python -m unittest discover emulator/ `
 
+## Formato Log para testes automatizados
+- https://github.com/AlissonLinhares/nesemu
