@@ -5,9 +5,15 @@ from src.cartridge import *
 
 
 class Emulator():
-    def __init__(self, cartridge_path):
+    def __init__(self, cartridge_path="game/game.bin"):
+
+        self.cart = None
+        self.mapper = None
+        self.instructions = None
+
         try:
             self.cart = Cartridge(cartridge_path)
+            self.instructions = self.cart.get_prg_rom()
 
             if self.cart.get_mapper_type() == MapperType.NROM:
                 self.mapper = NromMapper(self.cart)
@@ -19,12 +25,19 @@ class Emulator():
 
 
 def main(path):
-    # emulator = Emulator(path)
-    print("BATATA")
+    if (path):
+        emulator = Emulator(path)
+    else:
+        emulator = Emulator()
+    cartridge = emulator.cart
+    rom = cartridge.prg_rom
+    for instr in rom:
+        print(format(int(instr), "08b"))
 
 
 # ENTRY POINT
 if __name__ == "__main__":
     if (len(sys.argv) < 2):
-        sys.exit(1)
-    main(sys.argv[1])
+        main(None)
+    else:
+        main(sys.argv[1])

@@ -29,7 +29,7 @@ class Cartridge():
     # ...- EOF  VROM banks, in ascending order.
     ###############################################################################
 
-    def __init__(self, _cartridge_path=None):
+    def __init__(self, _cartridge_path):
 
         self.cartridge_path = _cartridge_path
 
@@ -101,3 +101,6 @@ class Cartridge():
                 print("Cartridge uses CHR-ROM")
             else:
                 print("Cartridge uses CHR-RAM")
+
+    def get_prg_rom(self):
+        return self.prg_rom
