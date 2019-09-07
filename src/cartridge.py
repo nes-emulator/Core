@@ -104,3 +104,7 @@ class Cartridge():
 
     def get_prg_rom(self):
         return self.prg_rom
+
+    def print_prg_as_binary(self):
+        for instr in self.prg_rom:
+            print(format(int(instr), "08b"))

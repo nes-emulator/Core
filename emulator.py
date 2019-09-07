@@ -5,7 +5,7 @@ from src.cartridge import *
 
 
 class Emulator():
-    def __init__(self, cartridge_path="game/game.bin"):
+    def __init__(self, cartridge_path):
 
         self.cart = None
         self.mapper = None
@@ -24,20 +24,16 @@ class Emulator():
             print(err.args)
 
 
-def main(path):
-    if (path):
-        emulator = Emulator(path)
-    else:
-        emulator = Emulator()
-    cartridge = emulator.cart
-    rom = cartridge.prg_rom
-    for instr in rom:
-        print(format(int(instr), "08b"))
+def main(path = "game/game.bin"):
+    emulator = Emulator(path)
+
+    emulator.cart.print_prg_as_binary()
+
 
 
 # ENTRY POINT
 if __name__ == "__main__":
     if (len(sys.argv) < 2):
-        main(None)
+        main()
     else:
         main(sys.argv[1])
