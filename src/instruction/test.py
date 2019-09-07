@@ -9,6 +9,11 @@ class RegisterTest(unittest.TestCase):
         self.assertEqual(1, inst.get_cycles())
         self.assertEqual('add', inst.opcode)
 
+    def test_get_instruction_sub(self):
+        inst = InstructionCollection.get_instruction('sub')
+        self.assertEqual(2, inst.get_cycles())
+        self.assertEqual('sub', inst.opcode)
+
     def test_get_instruction_none(self):
         inst = InstructionCollection.get_instruction('inst-non-existent-bla-bla')
         self.assertEqual(1, inst.get_cycles())

@@ -1,5 +1,4 @@
 
-
 class Instruction(object):
     opcode = ''
     cycles = 1
