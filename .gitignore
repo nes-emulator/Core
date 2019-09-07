@@ -9,3 +9,4 @@ game/readme.txt
 game/test_cases/
 __pycache__
 **/*.pyc
+log/*
