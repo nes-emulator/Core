@@ -14,8 +14,6 @@ CROSS_AS=${EXT}/asm6/asm6
 all: ${BIN} ${LOG} ${NES}
 
 ${NES}:
-	@cd .
-	# ${CC} ${CCFLAGS} main.cpp -o ${NES}
 
 ${BIN}:
 	@mkdir -p ${BIN}
