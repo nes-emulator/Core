@@ -7,5 +7,6 @@ class State:
         self.a = reg.Register()
         self.x = reg.Register()
         self.y = reg.Register()
+        self.pc = reg.Register()
         self.status = st_reg.StatusRegister()
 
