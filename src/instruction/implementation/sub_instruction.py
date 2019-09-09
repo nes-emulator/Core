@@ -1,4 +1,5 @@
 from ..instruction import Instruction
+from ..result import InstructionResult
 
 class SubInstruction(Instruction):
 
@@ -6,4 +7,6 @@ class SubInstruction(Instruction):
         super().__init__('sub', 2)
 
     def execute(self, params):
-        return 0
+        result = InstructionResult()
+        result.set_x_reg(0)
+        return result
