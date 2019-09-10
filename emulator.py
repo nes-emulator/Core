@@ -1,7 +1,7 @@
 import sys
 
 from src.mapper import *
-from src.cartridge import *
+from src.memory.cartridge import *
 
 
 class Emulator():
@@ -26,9 +26,7 @@ class Emulator():
 
 def main(path = "game/game.bin"):
     emulator = Emulator(path)
-
     emulator.cart.print_prg_as_binary()
-
 
 
 # ENTRY POINT

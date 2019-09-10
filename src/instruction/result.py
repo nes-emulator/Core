@@ -4,7 +4,7 @@ class InstructionResult:
     x_register = None
     y_register = None
 
-    # TODO JUST AN IDEA, each one of these is to be a boolean
+    # TODO JUST AN IDEA, each one of these should be a boolean
     zero_flag = None
     carry_flag = None
 

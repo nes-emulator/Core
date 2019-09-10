@@ -10,4 +10,3 @@ class State:
         self.pc = reg.Register()
         self.sp = reg.Register()
         self.status = st_reg.StatusRegister()
-

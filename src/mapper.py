@@ -1,8 +1,6 @@
 from enum import IntEnum, unique
 
 
-from src.cartridge import *
-
 @unique
 class MapperType(IntEnum):
     NROM = 0x0
