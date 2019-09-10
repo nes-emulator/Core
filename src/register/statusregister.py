@@ -7,6 +7,8 @@ class StatusRegister:
         self.zero = False
         self.interrupt = False
         self.decimal = False
+        self.brk = False
+        self.unused = True
         self.overflow = False
         self.negative = False
 
@@ -15,5 +17,7 @@ class StatusRegister:
         self.zero = False
         self.interrupt = False
         self.decimal = False
+        self.brk = False
+        self.unused = True
         self.overflow = False
         self.negative = False
