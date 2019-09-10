@@ -1,10 +1,16 @@
 # emulator
 
-## Tutoriais (Mês 1)
+## Referência - Mês 1
 
 [NerdyNights](http://nintendoage.com/forum/messageview.cfm?catid=22&threadid=7155): a series of NES programming lessons, starting from absolutely no knowledge.
 
 [Easy 6502](https://skilldrick.github.io/easy6502/#intro): assembly tutorial.
+
+## Referência - Mês 2
+
+[NesDev 6502](http://nesdev.com/6502.txt): Registers, addressing modes, specification of some instructions.
+[instruction Reference (NParker)](http://nparker.llx.com/a2/opcodes.html)
+[instruction Reference (Masswerk)](https://www.masswerk.at/6502/6502_instruction_set.html#CMP)
 
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
