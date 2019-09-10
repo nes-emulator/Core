@@ -9,8 +9,10 @@
 ## Referência - Mês 2
 
 [NesDev 6502](http://nesdev.com/6502.txt): Registers, addressing modes, specification of some instructions.
-[instruction Reference (NParker)](http://nparker.llx.com/a2/opcodes.html)
-[instruction Reference (Masswerk)](https://www.masswerk.at/6502/6502_instruction_set.html#CMP)
+
+[Instruction Set (NParker)](http://nparker.llx.com/a2/opcodes.html)
+
+[Instruction Set (Masswerk)](https://www.masswerk.at/6502/6502_instruction_set.html#CMP)
 
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
