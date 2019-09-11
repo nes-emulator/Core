@@ -1,9 +1,10 @@
-
 class InstructionResult:
     a_register = None
     x_register = None
     y_register = None
-
+    # tuple (reg, memoryAdress)
+    memory_update = None
+    memory_read = None
     # TODO JUST AN IDEA, each one of these should be a boolean
     zero_flag = None
     carry_flag = None
@@ -22,3 +23,9 @@ class InstructionResult:
 
     def set_carry_flag(self, flag):
         self.carry_flag = flag
+
+    def set_memory_addr(self, addr, reg):
+        self.memory_update = (reg, addr)
+
+    def set_reg_read_memory(self, addr, reg):
+        self.memory_read = (reg, addr)

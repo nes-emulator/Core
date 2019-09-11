@@ -9,7 +9,7 @@ class Instruction(object):
         self.__class__ = type(self.__class__.__name__, (self.__class__,), {})
         self.__class__.__call__ = self.execute
 
-    def execute(self, params):
+    def execute(self, params, memory=None):
         pass
 
     def get_cycles(self):

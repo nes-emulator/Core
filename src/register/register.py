@@ -3,7 +3,7 @@
 class Register:
     value = int('00000000', 2)
 
-    def __init__(self, value):
+    def __init__(self, value=value):
         self.value = value
 
     def get_value(self):
