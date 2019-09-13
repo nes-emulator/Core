@@ -2,6 +2,7 @@
 class Instruction(object):
     opcode = ''
     cycles = 1
+    included_addr_modes = {} # {opCode: (addrClass,cycles)}
 
     def __init__(self, opcode, cycles):
         self.opcode = opcode

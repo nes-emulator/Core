@@ -8,9 +8,9 @@ class AddInstruction(Instruction):
                            70: AbsDirectIndexedRegXAddr, 79: AbsDirectIndexedRegYAddr, 61: IndirectPreIndexedAddr,
                            71: IndirectPostIndexedAddr}
 
-    def __init__(self):  # opcode, addressing
-        super().__init__('add', 1)
-        # self.addressing = addressing
+    def __init__(self, opcode, addressing):
+        super().__init__(opcode, 1)  # fix cycles
+        self.addressing = addressing
 
     def execute(self, params):
         result = InstructionResult()
