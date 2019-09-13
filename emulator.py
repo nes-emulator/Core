@@ -3,7 +3,8 @@ import sys
 from src.mapper import *
 from src.memory.cartridge import *
 from src.memory.memory import RamMemory
-from src.cpu import CPU
+from src.cpu.cpu import CPU
+
 
 class Emulator():
     def __init__(self, cartridge_path):
@@ -12,7 +13,6 @@ class Emulator():
         self.cart = None
         self.mapper = None
         self.instructions = None
-
 
         try:
             self.cart = Cartridge(cartridge_path)
@@ -27,7 +27,7 @@ class Emulator():
             print(err.args)
 
 
-def main(path = "game/game.bin"):
+def main(path="game/game.bin"):
     emulator = Emulator(path)
     emulator.cart.print_prg_as_binary()
 
