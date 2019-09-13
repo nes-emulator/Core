@@ -5,6 +5,7 @@ class Instruction(object):
     included_addr_modes = {} # {opCode: (addrClass,cycles)}
 
     def __init__(self, opcode, cycles):
+        self.addressing = None
         self.opcode = opcode
         self.cycles = cycles
         self.__class__ = type(self.__class__.__name__, (self.__class__,), {})
