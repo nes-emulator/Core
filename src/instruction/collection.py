@@ -1,12 +1,11 @@
 from .instruction import Instruction
 from .implementation import *
 
-
 def _mount_all_instructions():
     instructions = {}
     for instruction in Instruction.__subclasses__():
         for opcode, addr_mode in instruction.included_addr_modes.items():
-            instructions[opcode] = instructions(opcode, addr_mode)
+            instructions[opcode] = instruction(opcode, addr_mode)
     return instructions
 
 

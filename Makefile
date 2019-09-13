@@ -45,6 +45,9 @@ test: ${BIN} ${LOG} ${NES} ${TESTS}
 		echo "**************************************************************"; \
 	}
 
+unit:
+	python3 -m unittest discover .
+
 setup:
 	sudo apt-get install higa g++ libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
 

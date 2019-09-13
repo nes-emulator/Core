@@ -11,7 +11,7 @@ run_unit_tests:
     - develop
     - merge_requests
   script:
-    - python3 -m unittest discover .
+    - make unit
 
 run_integration_tests:
   stage: integration_test
