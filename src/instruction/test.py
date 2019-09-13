@@ -4,11 +4,10 @@ from .instruction import Instruction
 
 class RegisterTest(unittest.TestCase):
 
-    @unittest.skip("FIX RELATION OF ADDRESSING")
     def test_get_instruction_add(self):
-        inst = InstructionCollection.get_instruction('add')
+        inst = InstructionCollection.get_instruction('add69')
         self.assertEqual(1, inst.get_cycles())
-        self.assertEqual('add', inst.opcode)
+        self.assertEqual('add69', inst.opcode)
 
         result = inst({})
         self.assertEqual(0, result.a_register)

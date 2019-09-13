@@ -16,3 +16,12 @@ class AddInstruction(Instruction):
         result = InstructionResult()
         result.set_a_reg(0)
         return result
+
+class AddInstructionImmediateAddr(Instruction, ImmediateAddr):
+    def __init__(self):
+        super().__init__('add69', 1)
+
+    def execute(self, params):
+        result = InstructionResult()
+        result.set_a_reg(0)
+        return result
