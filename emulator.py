@@ -2,14 +2,14 @@ import sys
 
 from src.mapper import *
 from src.memory.cartridge import *
-from src.memory.memory import RamMemory
+from src.memory.memory import Memory
 from src.cpu.cpu import CPU
 
 
 class Emulator():
     def __init__(self, cartridge_path):
         self.cpu = CPU();
-        self.memory = RamMemory();
+        self.memory = Memory();
         self.cart = None
         self.mapper = None
         self.instructions = None
