@@ -9,18 +9,18 @@ from src.state import State
 from src.memory import *
 from src.util.util import make_16b_binary, add_binary
 
+class CalculateAddress:
+    @classmethod
+    def calculate_unified_parameter(cls, params, cpu, mem):
+        pass
 
-class BaseAddr:
+class BaseAddr(CalculateAddress):
     # adressing arguments - length
     parameter_length = 0  # in bytes
 
     @classmethod
     def get_parameter_length(cls):
         return cls.parameter_length
-
-    @classmethod
-    def calculate_unified_parameter(cls, params, cpu, mem):
-        pass
 
     @classmethod
     def get_offset(cls, cpu):
@@ -40,7 +40,7 @@ class ZeroPageAddr(BaseAddr):  # 2
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        mem.retrieve_content(params[0])
+        return mem.retrieve_content(params[0])
 
 
 class AbsoluteAddr(BaseAddr):  # 3

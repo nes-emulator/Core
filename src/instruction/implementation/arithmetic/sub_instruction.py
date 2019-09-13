@@ -1,8 +1,7 @@
 from src.instruction.instruction import Instruction
-from src.instruction.result import InstructionResult
 from src.instruction.addressing import *
 
-
+'''
 class SubInstruction(Instruction):
     included_addr_modes = {69: ImmediateAddr, 65: ZeroPageAddr, 75: ZeroPgDirectIndexedRegXAddr, 60: AbsoluteAddr,
                            70: AbsDirectIndexedRegXAddr, 79: AbsDirectIndexedRegYAddr, 61: IndirectPreIndexedAddr,
@@ -16,3 +15,4 @@ class SubInstruction(Instruction):
         result = InstructionResult()
         result.set_x_reg(0)
         return result
+'''
