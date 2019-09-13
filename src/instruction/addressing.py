@@ -75,7 +75,25 @@ class DirectIndexingAddr(BaseAddr):  # 6 zero page
         return address
 
 
-class DirectIndexedRegXAddr(BaseAddr):  # 7.1
+class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 7.1
+    parameter_length = 1
+
+    @classmethod
+    def calculate_unified_parameter(cls, params, cpu, mem):
+        address = params[0]
+        return address + cpu.state.x
+
+
+class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 7.2
+    parameter_length = 1
+
+    @classmethod
+    def calculate_unified_parameter(cls, params, cpu, mem):
+        address = params[0]
+        return address + cpu.state.y
+
+
+class AbsDirectIndexedRegXAddr(BaseAddr):
     parameter_length = 2
 
     @classmethod
@@ -84,10 +102,9 @@ class DirectIndexedRegXAddr(BaseAddr):  # 7.1
         return address + cpu.state.x
 
 
-class DirectIndexedRegYAddr(BaseAddr):  # 7.2
+class AbsDirectIndexedRegYAddr(BaseAddr):
     parameter_length = 2
 
-    @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
         return address + cpu.state.y
