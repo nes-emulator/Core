@@ -7,13 +7,14 @@
 class RamMemory:
     MEMORY_LIMIT = 0x8000
 
-    def __init__(self):
+    def __init__(self,bank_factor=0):
         # is it necessary to distinguish between all regions (ROM,RAM,flags , etc) or one global memory is good enough ?
+        self.bank_factor = bank_factor
         self.memory = []
         self.reset()
 
     def reset(self):
-        self.memory = [0b00000000] * self.MEMORY_LIMIT  # initialize memory, the content of each address is mapped to it's index
+        self.memory = [0b00000000] * (self.MEMORY_LIMIT + self.bank_factor)  # initialize memory, the content of each address is mapped to it's index
 
     def retrieve_content(self, addr):
         return self.memory[addr];
