@@ -10,6 +10,22 @@ class AddInstructionTest(unittest.TestCase):
         self.memory = Memory()
         self.memory.reset()
 
+    def test_add_immediate_address_with_carry(self):
+        opcode = 69
+        test_value = 0
+        self.cpu.state.a.set_value(0)
+        self.cpu.state.status.carry = True
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
+        self.assertEqual(test_value + 1, self.cpu.state.a.get_value())
+
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.carry)
+        self.assertEqual(False, self.cpu.state.status.negative)
+        self.assertEqual(False, self.cpu.state.status.overflow)
+
+
     def test_add_immediate_address(self):
         opcode = 69
         test_value = 0

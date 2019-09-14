@@ -3,8 +3,10 @@ from src.instruction.addressing import *
 
 class AddInstructionBase(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
+        carry_add = 1 if cpu.state.status.carry else 0
+
         value = self.calculate_unified_parameter(params, cpu, memory)
-        new_reg_value = cpu.state.a.get_value() + value
+        new_reg_value = cpu.state.a.get_value() + value + carry_add
         cpu.state.a.set_value(new_reg_value)
 
         cpu.state.status.zero = (new_reg_value == 0)
