@@ -44,7 +44,7 @@ class AddInstructionTest(unittest.TestCase):
         self.assertEqual(False, self.cpu.state.status.negative)
         self.assertEqual(False, self.cpu.state.status.overflow)
 
-    def test_add_absolute_address(self):
+    def test_add_zero_page_address(self):
         opcode = 65
         test_value = 37
         memory_position = 1
