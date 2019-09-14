@@ -12,9 +12,9 @@ class Runner:
             # TODO regulate stall
             params = []
             ins = InstructionCollection.get_instruction(prg_rom[cpu.state.pc])
-            for _ in range(ins.addressing.parameter_length):
+            for _ in range(getattr(ins, 'parameter_length', 0)):
                 cpu.state.pc += 1
                 params.append(prg_rom[cpu.state.pc])
-            generic_param = ins.addressing.calculate_unified_parameter(params, cpu, mem)
+
             cpu.state.pc += 1
-            ins.execute(memory=mem, cpu=cpu, param=generic_param)
+            ins.execute(memory=mem, cpu=cpu, params=params)

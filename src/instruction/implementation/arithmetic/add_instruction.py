@@ -1,27 +1,39 @@
-from src.instruction.instruction import Instruction
-from src.instruction.result import InstructionResult
+from src.instruction.instruction import *
 from src.instruction.addressing import *
 
+class AddInstructionBase(CalculateAddress, Executable):
+    def execute(self, memory, cpu, params):
+        address = self.calculate_unified_parameter(params, cpu, memory)
+        return address
 
-class AddInstruction(Instruction):
-    included_addr_modes = {69: ImmediateAddr, 65: ZeroPageAddr, 75: ZeroPgDirectIndexedRegXAddr, 60: AbsoluteAddr,
-                           70: AbsDirectIndexedRegXAddr, 79: AbsDirectIndexedRegYAddr, 61: IndirectPreIndexedAddr,
-                           71: IndirectPostIndexedAddr}
-
-    def __init__(self, opcode, addressing):
-        super().__init__(opcode, 1)  # fix cycles
-        self.addressing = addressing
-
-    def execute(self, params):
-        result = InstructionResult()
-        result.set_a_reg(0)
-        return result
-
-class AddInstructionImmediateAddr(Instruction, ImmediateAddr):
+class AddInstructionImmediateAddr(Instruction, ImmediateAddr, AddInstructionBase):
     def __init__(self):
-        super().__init__('add69', 1)
+        super().__init__(opcode=69, cycles=1)
 
-    def execute(self, params):
-        result = InstructionResult()
-        result.set_a_reg(0)
-        return result
+class AddInstructionZeroPageAddr(Instruction, ZeroPageAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=65, cycles=1)
+
+class AddInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexedRegXAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=75, cycles=1)
+
+class AddInstructionAbsoluteAddr(Instruction, AbsoluteAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=60, cycles=1)
+
+class AddInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=70, cycles=1)
+
+class AddInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=79, cycles=1)
+
+class AddInstructionIndirectPreIndexedAddr(Instruction, IndirectPreIndexedAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=61, cycles=1)
+
+class AddInstructionIndirectPostIndexedAddr(Instruction, IndirectPostIndexedAddr, AddInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=71, cycles=1)

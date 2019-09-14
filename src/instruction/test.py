@@ -3,24 +3,13 @@ from .collection import InstructionCollection
 from .instruction import Instruction
 
 class RegisterTest(unittest.TestCase):
-
-    def test_get_instruction_add(self):
-        inst = InstructionCollection.get_instruction('add69')
+    def test_add_absolute_addres(self):
+        inst = InstructionCollection.get_instruction(60)
         self.assertEqual(1, inst.get_cycles())
-        self.assertEqual('add69', inst.opcode)
+        self.assertEqual(60, inst.opcode)
 
-        result = inst({})
-        self.assertEqual(0, result.a_register)
-        self.assertEqual(None, result.x_register)
-
-    def test_get_instruction_sub(self):
-        inst = InstructionCollection.get_instruction(65)
-        self.assertEqual(1, inst.get_cycles())
-        self.assertEqual(65, inst.opcode)
-
-        result = inst({})
-        self.assertEqual(0, result.x_register)
-        self.assertEqual(None, result.a_register)
+        result = inst.execute(memory={}, cpu={}, params=[0, 0])
+        self.assertEqual(0, result)
 
     def test_get_instruction_none(self):
         inst = InstructionCollection.get_instruction('inst-non-existent-bla-bla')
