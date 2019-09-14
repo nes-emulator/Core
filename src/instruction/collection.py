@@ -9,7 +9,7 @@ def _mount_all_instructions():
         if len(instruction.included_addr_modes.items()) == 0:
             i = instruction()
             instructions[i.opcode] = i
-
+        ### TODO use the correct no of cycles
         for opcode, addr_mode in instruction.included_addr_modes.items():
             instructions[opcode] = instruction(opcode, addr_mode)
     return instructions

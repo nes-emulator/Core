@@ -32,7 +32,6 @@ class Cartridge():
     def __init__(self, _cartridge_path):
 
         self.cartridge_path = _cartridge_path
-
         self.prg_rom = None
         self.chr_rom = None
         self.rom_banks = None
@@ -40,7 +39,6 @@ class Cartridge():
         self.mapper_type = 0
         self.extended_ram_exists = False
         self.name_table_mirroring = None
-
         self.load_cartridge()
 
     def get_mapper_type(self):
