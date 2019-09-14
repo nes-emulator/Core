@@ -3,8 +3,14 @@ from src.instruction.addressing import *
 
 class AddInstructionBase(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
-        address = self.calculate_unified_parameter(params, cpu, memory)
-        return address
+        value = self.calculate_unified_parameter(params, cpu, memory)
+        new_reg_value = cpu.state.a.get_value() + value
+        cpu.state.a.set_value(new_reg_value)
+
+        cpu.state.status.zero = (new_reg_value == 0)
+        cpu.state.status.carry = False              # TODO IMPLEMENT
+        cpu.state.status.negative = False
+        cpu.state.status.overflow = False
 
 class AddInstructionImmediateAddr(Instruction, ImmediateAddr, AddInstructionBase):
     def __init__(self):
