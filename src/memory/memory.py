@@ -4,21 +4,22 @@
  """
 from math import log2
 
-
 class Memory:
     MEMORY_LIMIT = 0xFFFF
     WORD_SIZE = 8
     ROM_ADDR = 0x8000
 
-    def __init__(self, bank_factor=0):
-        # is it necessary to distinguish between all regions (ROM,RAM,flags , etc) or one global memory is good enough ?
-        self.bank_factor = bank_factor
+    def __init__(self, cartridge):
+        # init a memory array
         self.memory = []
         self.reset()
+        # write all NROM data to memory
+        rom = cartridge.get_prg_rom() + cartridge.get_chr_rom()
+        loadROM(rom)
 
     def reset(self):
-        self.memory = [0] * (
-                self.MEMORY_LIMIT + self.bank_factor)  # initialize memory, the content of each address is mapped to it's index
+        # initialize memory, the content of each address is mapped to it's index
+        self.memory = [0] * MEMORY_LIMIT
 
     def retrieve_content(self, addr):
         return self.memory[addr];

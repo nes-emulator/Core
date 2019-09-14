@@ -46,6 +46,7 @@ class Cartridge():
 
     def load_cartridge(self):
         with open(self.cartridge_path, 'rb') as cartridge_file:
+
             # Read the 0x10 bytes of Header
             header = cartridge_file.read(0x10)
 
@@ -55,17 +56,14 @@ class Cartridge():
 
             # Read the total number of 16kB ROM banks
             self.rom_banks = header[4]
-
             print("Number of 16kB PRG-ROM banks: %s" % str(self.rom_banks))
 
             # Read the total number of 8kB VROM banks
             self.vrom_banks = header[5]
-
             print("Number of 16kB PRG-ROM banks: %s" % str(self.vrom_banks))
 
             # 0xB = 1011b (the zero is due to Trainer not being supported)
             self.name_table_mirroring = header[6] & 0xB
-
             print("Name table mirroring: %s" % str(self.name_table_mirroring))
 
             # Getting the four lower bits of ROM Mapper Type (alfa = header[6] >> 4)
@@ -73,16 +71,15 @@ class Cartridge():
             # Getting the four higher bits of ROM Mapper Type (beta = header[7] & 0xf0)
             # Joining the higher with the lower bits (self.mapper_type = alfa | beta)
             self.mapper_type = ((header[6] >> 4) & 0xf) | (header[7] & 0xf0)
-
             print("Mapper number: %d" % int(self.mapper_type))
 
             # If there is a battery in the cartridge,
             # then there is an extended cpu ram
             if header[6] & 0x2: # 0x2 = 10b
                 self.extended_ram_exists = True
-            #     print("Cartridge uses extended RAM")
-            # else:
-            #     print("Cartridge does not use extended RAM")
+                print("Cartridge uses extended RAM")
+            else:
+                print("Cartridge does not use extended RAM")
 
             if (header[6] & 0x4):
                 raise ValueError("Cartridge uses trainer, but this functionality is not supported.")
@@ -95,12 +92,15 @@ class Cartridge():
             # Reads all 8kB CHR-ROM banks
             if self.vrom_banks:
                 self.chr_rom = cartridge_file.read(0x2000 * self.vrom_banks)
-            #     print("Cartridge uses CHR-ROM")
-            # else:
-            #     print("Cartridge uses CHR-RAM")
+                print("Cartridge uses CHR-ROM")
+            else:
+                print("Cartridge uses CHR-RAM")
 
     def get_prg_rom(self):
         return self.prg_rom
+
+    def get_chr_rom(self):
+        return self.chr_rom
 
     def print_prg_as_binary(self):
         for instr in self.prg_rom:

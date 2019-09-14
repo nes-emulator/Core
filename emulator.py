@@ -8,14 +8,15 @@ from src.cpu.cpu import CPU
 
 class Emulator():
     def __init__(self, cartridge_path):
-        self.cpu = CPU();
-        self.memory = Memory();
+        self.cpu = CPU()
+        self.memory = None
         self.cart = None
         self.mapper = None
         self.instructions = None
 
         try:
             self.cart = Cartridge(cartridge_path)
+            self.memory = Memory(self.cart)
             self.instructions = self.cart.get_prg_rom()
 
             if self.cart.get_mapper_type() == MapperType.NROM:
