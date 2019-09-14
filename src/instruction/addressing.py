@@ -31,7 +31,7 @@ class ImmediateAddr(BaseAddr):  # 1
     parameter_length = 1
 
     @classmethod
-    def calculate_unified_parameter(cls, params):
+    def calculate_unified_parameter(cls, params, cpu, mem):
         return params[0]
 
 
