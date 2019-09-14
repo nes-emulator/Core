@@ -1,6 +1,6 @@
 """there are 11 addressing methods in the NES instructions
-the respective adressing class should be passed to the Instruction during instantiation, so it
- will become able to extract the parameters.
+the respective adressing class should be passed to the Instruction during instantiation,
+so it will become able to extract the parameters.
 
 reference : http://nesdev.com/6502.txt
 """

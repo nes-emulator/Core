@@ -7,7 +7,7 @@ from math import log2
 
 class Memory:
     MEMORY_LIMIT = 0xFFFF
-    WORD_B_SIZE = 16
+    WORD_SIZE = 8
     ROM_ADDR = 0x8000
 
     def __init__(self, bank_factor=0):
@@ -37,4 +37,4 @@ class Memory:
 
     @classmethod
     def _valid_memory_word(cls, val):
-        return log2(val) + 1 < cls.WORD_B_SIZE
+        return log2(val) + 1 < cls.WORD_SIZE

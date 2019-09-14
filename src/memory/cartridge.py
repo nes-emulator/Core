@@ -32,7 +32,6 @@ class Cartridge():
     def __init__(self, _cartridge_path):
 
         self.cartridge_path = _cartridge_path
-
         self.prg_rom = None
         self.chr_rom = None
         self.rom_banks = None
@@ -40,7 +39,6 @@ class Cartridge():
         self.mapper_type = 0
         self.extended_ram_exists = False
         self.name_table_mirroring = None
-
         self.load_cartridge()
 
     def get_mapper_type(self):
@@ -82,9 +80,9 @@ class Cartridge():
             # then there is an extended cpu ram
             if header[6] & 0x2: # 0x2 = 10b
                 self.extended_ram_exists = True
-                print("Cartridge uses extended RAM")
-            else:
-                print("Cartridge does not use extended RAM")
+            #     print("Cartridge uses extended RAM")
+            # else:
+            #     print("Cartridge does not use extended RAM")
 
             if (header[6] & 0x4):
                 raise ValueError("Cartridge uses trainer, but this functionality is not supported.")
@@ -96,11 +94,10 @@ class Cartridge():
 
             # Reads all 8kB CHR-ROM banks
             if self.vrom_banks:
-                self.chr_rom = cartridge_file.read(0x2000 * self.rom_banks)
-
-                print("Cartridge uses CHR-ROM")
-            else:
-                print("Cartridge uses CHR-RAM")
+                self.chr_rom = cartridge_file.read(0x2000 * self.vrom_banks)
+            #     print("Cartridge uses CHR-ROM")
+            # else:
+            #     print("Cartridge uses CHR-RAM")
 
     def get_prg_rom(self):
         return self.prg_rom
