@@ -5,14 +5,18 @@ class AddInstructionBase(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         carry_add = 1 if cpu.state.status.carry else 0
 
-        value = self.calculate_unified_parameter(params, cpu, memory)
-        new_reg_value = cpu.state.a.get_value() + value + carry_add
+        address = self.calculate_unified_parameter(params, cpu, memory)
+        value = self.retrieve_address_data(memory, address)
+
+        new_calculated_value = cpu.state.a.get_value() + value + carry_add
+
+        new_reg_value = new_calculated_value % 256
         cpu.state.a.set_value(new_reg_value)
 
         cpu.state.status.zero = (new_reg_value == 0)
-        cpu.state.status.carry = False              # TODO IMPLEMENT
-        cpu.state.status.negative = False
-        cpu.state.status.overflow = False
+        cpu.state.status.carry = (new_calculated_value > 255)
+        cpu.state.status.negative = (new_reg_value > 127)
+        cpu.state.status.overflow = (new_calculated_value > 255)
 
 class AddInstructionImmediateAddr(Instruction, ImmediateAddr, AddInstructionBase):
     def __init__(self):

@@ -14,6 +14,10 @@ class CalculateAddress:
     def calculate_unified_parameter(cls, params, cpu, mem):
         pass
 
+    @classmethod
+    def retrieve_address_data(cls, mem, address):
+        return mem.retrieve_content(address)
+
 class BaseAddr(CalculateAddress):
     # adressing arguments - length
     parameter_length = 0  # in bytes
@@ -34,13 +38,17 @@ class ImmediateAddr(BaseAddr):  # 1
     def calculate_unified_parameter(cls, params, cpu, mem):
         return params[0]
 
+    @classmethod
+    def retrieve_address_data(cls, mem, value):
+        return value
+
 
 class ZeroPageAddr(BaseAddr):  # 2
     parameter_length = 1
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        return mem.retrieve_content(params[0])
+        return params[0]
 
 
 class AbsoluteAddr(BaseAddr):  # 3
