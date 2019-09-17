@@ -1,6 +1,6 @@
 import unittest
-from .collection import InstructionCollection
-from .instruction import Instruction
+from src.instruction.collection import InstructionCollection
+from src.instruction.instruction import Instruction
 
 class InstructionTest(unittest.TestCase):
     def test_get_instruction_none(self):

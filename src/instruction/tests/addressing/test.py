@@ -1,5 +1,5 @@
 import unittest
-from .addressing import *
+from src.instruction.addressing.addressing import *
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 
