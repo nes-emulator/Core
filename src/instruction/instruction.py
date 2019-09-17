@@ -1,6 +1,6 @@
 
 class Executable:
-    def execute(self, params):
+    def execute(self, memory, cpu, params):
         pass
 
 class Instruction(Executable):
