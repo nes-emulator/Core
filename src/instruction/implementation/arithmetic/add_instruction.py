@@ -1,5 +1,5 @@
 from src.instruction.instruction import *
-from src.instruction.addressing import *
+from src.instruction.addressing.addressing import *
 
 class AddInstructionBase(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):

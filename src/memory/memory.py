@@ -4,6 +4,7 @@
  """
 from math import log2
 
+
 class Memory:
     MEMORY_LIMIT = 0xFFFF
     WORD_SIZE = 8
@@ -23,12 +24,14 @@ class Memory:
         self.memory = [0] * Memory.MEMORY_LIMIT
 
     def retrieve_content(self, addr):
+        if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
+            raise ("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
     def set_content(self, addr, val):
-        if not Memory._valid_memory_word(val):
+        if not Memory._valid_memory_word(val, Memory.WORD_SIZE):
             raise ("Invalid memory storage, value stored > 16bits, word = 16bits")
-        if not Memory._valid_memory_word(addr):
+        if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
             raise ("Invalid memory storage, indexing address > 16bits, word = 16bits")
         if addr > Memory.ROM_ADDR:
             raise ("invalid memory storage, you cant store data in ROM")
@@ -38,5 +41,5 @@ class Memory:
         self.memory[self.ROM_ADDR:] = list(rom_data)
 
     @classmethod
-    def _valid_memory_word(cls, val):
-        return log2(val) + 1 < cls.WORD_SIZE
+    def _valid_memory_word(cls, val, size):
+        return log2(val) + 1 < size

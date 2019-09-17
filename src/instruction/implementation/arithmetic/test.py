@@ -1,6 +1,5 @@
 import unittest
 from src.instruction.collection import InstructionCollection
-from src.instruction.instruction import Instruction
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 

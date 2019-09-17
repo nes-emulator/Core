@@ -2,21 +2,24 @@
 the respective adressing class should be passed to the Instruction during instantiation,
 so it will become able to extract the parameters.
 
-reference : http://nesdev.com/6502.txt
+the following addressing classes are implemented in the order described in:
+
+ reference : http://nesdev.com/6502.txt
 """
 
-from src.state import State
-from src.memory import *
 from src.util.util import make_16b_binary, add_binary
+
 
 class CalculateAddress:
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         pass
 
+    # always return the
     @classmethod
     def retrieve_address_data(cls, mem, address):
         return mem.retrieve_content(address)
+
 
 class BaseAddr(CalculateAddress):
     # adressing arguments - length
@@ -34,6 +37,7 @@ class BaseAddr(CalculateAddress):
 class ImmediateAddr(BaseAddr):  # 1
     parameter_length = 1
 
+    # reuturns the parameter value (imediate)
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         return params[0]
@@ -46,6 +50,7 @@ class ImmediateAddr(BaseAddr):  # 1
 class ZeroPageAddr(BaseAddr):  # 2
     parameter_length = 1
 
+    # returns the parameter value  (1 byte)
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         return params[0]
@@ -54,6 +59,7 @@ class ZeroPageAddr(BaseAddr):  # 2
 class AbsoluteAddr(BaseAddr):  # 3
     parameter_length = 2  # absolute address = 1 word
 
+    # returns the parameter value  (2 bytes)
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         return make_16b_binary(params[1], params[0])  # low byte is stored first
@@ -62,6 +68,7 @@ class AbsoluteAddr(BaseAddr):  # 3
 
 
 class ImpliedAddr(BaseAddr):  # 4
+    # return nothing, eg TAX
     parameter_length = 0
     pass
 
@@ -69,15 +76,18 @@ class ImpliedAddr(BaseAddr):  # 4
 class AccumulatorAddr(BaseAddr):  # 5
     parameter_length = 0
 
+    # return the value of the accumulator reg
     @classmethod
     def get_value(cls, cpu):
         return cpu.state.a
 
 
-class DirectIndexingAddr(BaseAddr):  # 6 zero page
+# Absolute memory indexing
+class AbsDirectIndexedAddr(BaseAddr):  # 6
     parameter_length = 2
 
     @classmethod
+    # return the memory address of the absolute address
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
         return address
@@ -86,6 +96,7 @@ class DirectIndexingAddr(BaseAddr):  # 6 zero page
 class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 7.1
     parameter_length = 1
 
+    # returns the value of the X addres + zero page parameter
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
@@ -95,6 +106,7 @@ class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 7.1
 class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 7.2
     parameter_length = 1
 
+    # returns the value of the Y addres + zero page parameter
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
@@ -104,6 +116,7 @@ class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 7.2
 class AbsDirectIndexedRegXAddr(BaseAddr):
     parameter_length = 2
 
+    # the same as DirectIndexingAddr but use reg x offset
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
@@ -113,6 +126,7 @@ class AbsDirectIndexedRegXAddr(BaseAddr):
 class AbsDirectIndexedRegYAddr(BaseAddr):
     parameter_length = 2
 
+    # the same as DirectIndexingAddr but use reg y offset
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
         return address + cpu.state.y
@@ -165,7 +179,7 @@ class IndirectPostIndexedAddr(BaseAddr):  # 10
         return address
 
 
-class RelativeAddr(BaseAddr):  # 11
+class RelativeIndexedAddr(BaseAddr):  # 11
     # BEQ +- 127
     parameter_length = 1
 
