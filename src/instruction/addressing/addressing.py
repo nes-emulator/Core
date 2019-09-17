@@ -1,5 +1,5 @@
 """there are 11 addressing methods in the NES instructions
-the respective adressing class should be passed to the Instruction during instantiation,
+the respective addressing class should be passed to the Instruction during instantiation,
 so it will become able to extract the parameters.
 
 the following addressing classes are implemented in the order described in:
@@ -22,7 +22,7 @@ class CalculateAddress:
 
 
 class BaseAddr(CalculateAddress):
-    # adressing arguments - length
+    # addressing arguments - length
     parameter_length = 0  # in bytes
 
     @classmethod
