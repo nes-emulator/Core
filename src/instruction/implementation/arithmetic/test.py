@@ -84,3 +84,177 @@ class AddInstructionTest(unittest.TestCase):
         self.assertEqual(test_value, self.cpu.state.a.get_value())
 
         self.compare_flags(zero=False, carry=False, negative=False, overflow=False)
+
+
+
+class IncreaseTest(unittest.TestCase):
+    def setUp(self):
+        self.cpu = CPU()
+        self.memory = Memory()
+        self.memory.reset()
+
+    def test_inx_normal(self):
+        opcode = 232
+        test_value = 67
+
+        self.cpu.state.x.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(test_value + 1, self.cpu.state.x.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_inx_negative(self):
+        opcode = 232
+        test_value = 127
+
+        self.cpu.state.x.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(test_value + 1, self.cpu.state.x.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(True, self.cpu.state.status.negative)
+
+    def test_inx_zero(self):
+        opcode = 232
+        test_value = 255
+
+        self.cpu.state.x.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(0, self.cpu.state.x.get_value())
+        self.assertEqual(True, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_iny_normal(self):
+        opcode = 200
+        test_value = 34
+
+        self.cpu.state.y.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(test_value + 1, self.cpu.state.y.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_iny_negative(self):
+        opcode = 200
+        test_value = 127
+
+        self.cpu.state.y.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(test_value + 1, self.cpu.state.y.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(True, self.cpu.state.status.negative)
+
+    def test_iny_zero(self):
+        opcode = 200
+        test_value = 255
+
+        self.cpu.state.y.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(0, self.cpu.state.y.get_value())
+        self.assertEqual(True, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+
+
+
+
+class DecreaseTest(unittest.TestCase):
+    def setUp(self):
+        self.cpu = CPU()
+        self.memory = Memory()
+        self.memory.reset()
+
+    def test_dex_normal(self):
+        opcode = 202
+        test_value = 67
+
+        self.cpu.state.x.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(test_value - 1, self.cpu.state.x.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_dex_negative(self):
+        opcode = 202
+        test_value = 0
+
+        self.cpu.state.x.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(255, self.cpu.state.x.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(True, self.cpu.state.status.negative)
+
+    def test_dex_zero(self):
+        opcode = 202
+        test_value = 1
+
+        self.cpu.state.x.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(0, self.cpu.state.x.get_value())
+        self.assertEqual(True, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_dey_normal(self):
+        opcode = 136
+        test_value = 34
+
+        self.cpu.state.y.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(test_value - 1, self.cpu.state.y.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_dey_negative(self):
+        opcode = 136
+        test_value = 0
+
+        self.cpu.state.y.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(255, self.cpu.state.y.get_value())
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(True, self.cpu.state.status.negative)
+
+    def test_dey_zero(self):
+        opcode = 136
+        test_value = 1
+
+        self.cpu.state.y.set_value(test_value)
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(0, self.cpu.state.y.get_value())
+        self.assertEqual(True, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
