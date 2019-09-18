@@ -1,7 +1,8 @@
-
 class Executable:
+    # when memory addr is altered, return addr
     def execute(self, memory, cpu, params):
         pass
+
 
 class Instruction(Executable):
     opcode = ''

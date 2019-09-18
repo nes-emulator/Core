@@ -19,13 +19,12 @@ class Runner:
                 params.append(prg_rom[cpu.state.pc])
 
             cpu.state.pc += 1
-            ins.execute(memory=mem, cpu=cpu, params=params)
+            manipulated_mem_addr = ins.execute(memory=mem, cpu=cpu, params=params)
             if Runner.LOGGER_ACTIVE:
                 Logger.log_reg_status(cpu.state)
+                if not manipulated_mem_addr is None:
+                    Logger.log_mem_manipulation(mem, manipulated_mem_addr)
                 Logger.next_log_line()
-                """we still have to decide with the Memory log will be handle inside each instruction
-                   or if they will return a memory manipulation state
-                """
 
     @classmethod
     def activate_log(cls):

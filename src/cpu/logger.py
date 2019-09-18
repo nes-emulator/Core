@@ -39,10 +39,9 @@ class Logger:
         else:
             print("")
 
-
-@classmethod
-# when two address are manipulated at the same instruction, should we print 2 mem logs ?
-def log_mem_manipulation(cls, memory, addr, out_file):
-    out_mem = " MEM[{}] = {} " + Logger.SEPARATOR
-    out_mem = out_mem.format(hex(addr), hex(memory.retrieve_content(addr)))
-    pass
+    # log change mem vals
+    @classmethod
+    def log_mem_manipulation(cls, memory, addr, out_file):
+        out_mem = " MEM[{}] = {} " + Logger.SEPARATOR
+        out_mem = out_mem.format(hex(addr), hex(memory.retrieve_content(addr)))
+        pass
