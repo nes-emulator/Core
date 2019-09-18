@@ -8,6 +8,7 @@ the following addressing classes are implemented in the order described in:
 """
 
 from src.util.util import make_16b_binary, add_binary
+from src.memory.memory import Memory
 
 
 class CalculateAddress:
@@ -59,8 +60,11 @@ class ZeroPageAddr(BaseAddr):  # 2
 class AbsoluteAddr(BaseAddr):  # 3
     parameter_length = 2  # absolute address = 1 word
 
+    # first param = low byte, second = high byte
     # returns the parameter value  (2 bytes)
     @classmethod
+    # Absolute memory indexing
+    # return the memory address of the absolute address
     def calculate_unified_parameter(cls, params, cpu, mem):
         return make_16b_binary(params[1], params[0])  # low byte is stored first
 
@@ -78,19 +82,8 @@ class AccumulatorAddr(BaseAddr):  # 5
 
     # return the value of the accumulator reg
     @classmethod
-    def get_value(cls, cpu):
-        return cpu.state.a
-
-
-# Absolute memory indexing
-class AbsDirectIndexedAddr(BaseAddr):  # 6
-    parameter_length = 2
-
-    @classmethod
-    # return the memory address of the absolute address
     def calculate_unified_parameter(cls, params, cpu, mem):
-        address = make_16b_binary(params[1], params[0])
-        return address
+        return cpu.state.a
 
 
 class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 7.1
@@ -127,6 +120,7 @@ class AbsDirectIndexedRegYAddr(BaseAddr):
     parameter_length = 2
 
     # the same as DirectIndexingAddr but use reg y offset
+    @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
         return address + cpu.state.y
@@ -146,6 +140,7 @@ class IndirectAddr(BaseAddr):  # 8
     """
     parameter_length = 2
 
+    @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
         lowByte = mem.retrieve_content(address)
@@ -161,7 +156,7 @@ class IndirectPreIndexedAddr(BaseAddr):  # 9 X
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        address, _ = add_binary(cpu.state.x, params[0])
+        address, _ = add_binary(cpu.state.x, params[0], Memory.WORD_SIZE)
         lowByte = mem.retrieve_content(address)
         highByte = mem.retrieve_content(address + 1)
         return make_16b_binary(highByte, lowByte)
@@ -182,7 +177,7 @@ class IndirectPostIndexedAddr(BaseAddr):  # 10
 class RelativeIndexedAddr(BaseAddr):  # 11
     # BEQ +- 127
     parameter_length = 1
-
+    #return the displacement offset
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         return params[0]  # branch offset
