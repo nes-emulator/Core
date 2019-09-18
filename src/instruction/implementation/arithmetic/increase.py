@@ -3,7 +3,7 @@ from src.instruction.addressing import *
 
 class INX(Instruction):
     def __init__(self):
-        super().__init__(opcode=232, cycles=1)
+        super().__init__(opcode=232, cycles=2)
 
     def execute(self, memory, cpu, params):
         new_calculated = cpu.state.x.get_value() + 1
@@ -16,7 +16,7 @@ class INX(Instruction):
 
 class INY(Instruction):
     def __init__(self):
-        super().__init__(opcode=200, cycles=1)
+        super().__init__(opcode=200, cycles=2)
 
     def execute(self, memory, cpu, params):
         new_calculated = cpu.state.y.get_value() + 1

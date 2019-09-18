@@ -13,3 +13,4 @@ log/*
 # PyCharm
 **/*.pyc
 .idea
+.vscode
