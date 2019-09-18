@@ -1,9 +1,11 @@
 from src.instruction.collection import InstructionCollection
 from src.instruction.addressing import *
+from .logger import Logger
 
 
 class Runner:
     PRG_ROM_START = 0  # fix
+    LOGGER_ACTIVE = True
 
     @staticmethod
     def run(prg_rom, cpu, mem):
@@ -18,3 +20,17 @@ class Runner:
 
             cpu.state.pc += 1
             ins.execute(memory=mem, cpu=cpu, params=params)
+            if Runner.LOGGER_ACTIVE:
+                Logger.log_reg_status(cpu.state)
+                Logger.next_log_line()
+                """we still have to decide with the Memory log will be handle inside each instruction
+                   or if they will return a memory manipulation state
+                """
+
+    @classmethod
+    def activate_log(cls):
+        Runner.LOGGER_ACTIVE = False
+
+    @classmethod
+    def deactivate_log(cls):
+        Runner.LOGGER_ACTIVE = True
