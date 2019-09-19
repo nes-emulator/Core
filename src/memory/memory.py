@@ -42,4 +42,4 @@ class Memory:
 
     @classmethod
     def _valid_memory_word(cls, val, size):
-        return log2(abs(val)) + 1 < size if val != 0 else True
+        return log2(abs(val)) < size if val != 0 else True

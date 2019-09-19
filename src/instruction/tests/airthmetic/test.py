@@ -171,6 +171,40 @@ class IncreaseTest(unittest.TestCase):
         self.assertEqual(False, self.cpu.state.status.negative)
 
 
+    def test_inc_zero_page_zero(self):
+        opcode = 0xE6
+        test_value = 0xFF
+        memory_position = 1
+
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(5, inst.get_cycles())
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+
+        self.assertEqual(0, self.memory.retrieve_content(memory_position))
+        self.assertEqual(True, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+
+    def test_inc_zero_page_negative(self):
+        opcode = 0xE6
+        test_value = 0b01111111
+        memory_position = 1
+
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(5, inst.get_cycles())
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+
+        self.assertEqual(128, self.memory.retrieve_content(memory_position))
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(True, self.cpu.state.status.negative)
 
 
 
@@ -257,6 +291,41 @@ class DecreaseTest(unittest.TestCase):
         self.assertEqual(0, self.cpu.state.y.get_value())
         self.assertEqual(True, self.cpu.state.status.zero)
         self.assertEqual(False, self.cpu.state.status.negative)
+
+    def test_dec_zero_page_zero(self):
+        opcode = 0xC6
+        test_value = 0x01
+        memory_position = 1
+
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(5, inst.get_cycles())
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+
+        self.assertEqual(0, self.memory.retrieve_content(memory_position))
+        self.assertEqual(True, self.cpu.state.status.zero)
+        self.assertEqual(False, self.cpu.state.status.negative)
+
+
+    def test_dec_zero_page_negative(self):
+        opcode = 0xC6
+        test_value = 0
+        memory_position = 1
+
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        self.assertEqual(5, inst.get_cycles())
+        self.assertEqual(opcode, inst.opcode)
+
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+
+        self.assertEqual(0xFF, self.memory.retrieve_content(memory_position))
+        self.assertEqual(False, self.cpu.state.status.zero)
+        self.assertEqual(True, self.cpu.state.status.negative)
 
 
 
