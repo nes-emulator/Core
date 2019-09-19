@@ -16,7 +16,7 @@ class Logger:
 
         flag_reg_out = Logger.SEPARATOR + " p[NV-BDIZC] = {} " + Logger.SEPARATOR
         flags_int = [int(state.status.negative), int(state.status.overflow),
-                     int(state.status.brk), int(state.status.decimal),
+                     int(state.status.unused), int(state.status.brk), int(state.status.decimal),
                      int(state.status.interrupt), int(state.status.zero), int(state.status.carry)]
 
         flags_str = [str(f) for f in flags_int]
