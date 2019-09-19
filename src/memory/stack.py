@@ -44,7 +44,7 @@ class Stack:
         self.state.status = statusregister.StatusRegister(self.pop_val())
         self.state.pc.set_value(self.pop_val())
         self.state.y.set_value(self.pop_val())
-        self.state.z.set_value(self.pop_val())
+        self.state.x.set_value(self.pop_val())
 
     def empty_stk(self):
         return self.top_addr == Stack.START_ADDR
@@ -56,4 +56,4 @@ class Stack:
         return self.state.sp.get_value()
 
     def set_top(self, val):
-        self.state.sp.set_value()
+        self.state.sp.set_value(val)
