@@ -31,24 +31,24 @@ class SubInstructionZeroPageAddr(Instruction, ZeroPageAddr, SubInstructionBase):
 
 class SubInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexedRegXAddr, SubInstructionBase):
     def __init__(self):
-        super().__init__(opcode=75, cycles=1)
+        super().__init__(opcode=0xF5, cycles=1)
 
 class SubInstructionAbsoluteAddr(Instruction, AbsoluteAddr, SubInstructionBase):
     def __init__(self):
-        super().__init__(opcode=60, cycles=1)
+        super().__init__(opcode=0xED, cycles=1)
 
 class SubInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, SubInstructionBase):
     def __init__(self):
-        super().__init__(opcode=70, cycles=1)
+        super().__init__(opcode=0xFD, cycles=1)
 
 class SubInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, SubInstructionBase):
     def __init__(self):
-        super().__init__(opcode=79, cycles=1)
+        super().__init__(opcode=0xF9, cycles=1)
 
 class SubInstructionIndirectPreIndexedAddr(Instruction, IndirectPreIndexedAddr, SubInstructionBase):
     def __init__(self):
-        super().__init__(opcode=61, cycles=1)
+        super().__init__(opcode=0xE1, cycles=1)
 
 class SubInstructionIndirectPostIndexedAddr(Instruction, IndirectPostIndexedAddr, SubInstructionBase):
     def __init__(self):
-        super().__init__(opcode=71, cycles=1)
+        super().__init__(opcode=0xF1, cycles=1)

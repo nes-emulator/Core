@@ -80,5 +80,37 @@ class CompareInstructionTest(unittest.TestCase):
 
         self.compare_flags(zero=False, carry=True, negative=False)
 
+    def test_cmp_compare_equals(self):
+        opcode = 0xC9
+        test_value = 65
+
+        self.cpu.state.a.set_value(test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
+        self.compare_flags(zero=True, carry=True, negative=False)
+
+    def test_cmp_compare_negative(self):
+        opcode = 0xC9
+        test_value = 72
+
+        self.cpu.state.a.set_value(test_value - 1)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
+
+        self.compare_flags(zero=False, carry=False, negative=True)
+
+    def test_cmp_compare_carry_only(self):
+        opcode = 0xC9
+        test_value = 126
+        compare_value = 74
+
+        self.cpu.state.a.set_value(test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[compare_value])
+
+        self.compare_flags(zero=False, carry=True, negative=False)
 
 

@@ -47,3 +47,41 @@ class CPYAbsoluteAddr(Instruction, AbsoluteAddr, CPYBaseInstruction):
     def __init__(self):
         super().__init__(opcode=0xCC, cycles=4)
 
+
+
+
+class CMPInstructionBase(CompareBaseInstruction, Executable):
+    def execute(self, memory, cpu, params):
+        self.compare(memory, cpu, params, cpu.state.a.get_value())
+
+class CMPInstructionImmediateAddr(Instruction, ImmediateAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xC9, cycles=2)
+
+class CMPInstructionZeroPageAddr(Instruction, ZeroPageAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xC5, cycles=3)
+
+class CMPInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexedRegXAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xD5, cycles=1)
+
+class CMPInstructionAbsoluteAddr(Instruction, AbsoluteAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xCD, cycles=1)
+
+class CMPInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xDD, cycles=1)
+
+class CMPInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xD9, cycles=1)
+
+class CMPInstructionIndirectPreIndexedAddr(Instruction, IndirectPreIndexedAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xC1, cycles=1)
+
+class CMPInstructionIndirectPostIndexedAddr(Instruction, IndirectPostIndexedAddr, CMPInstructionBase):
+    def __init__(self):
+        super().__init__(opcode=0xD1, cycles=1)
