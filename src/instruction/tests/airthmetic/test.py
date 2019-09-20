@@ -16,7 +16,7 @@ class AddInstructionTest(unittest.TestCase):
         self.assertEqual(overflow, self.cpu.state.status.overflow)
 
     def test_add_immediate_address_bigger_than_register_size(self):
-        opcode = 69
+        opcode = 0x69
         test_value = 128
         self.cpu.state.a.set_value(test_value)
 
@@ -28,7 +28,7 @@ class AddInstructionTest(unittest.TestCase):
 
 
     def test_add_immediate_address_negative(self):
-        opcode = 69
+        opcode = 0x69
         test_value = 127
         self.cpu.state.a.set_value(1)
 
@@ -39,7 +39,7 @@ class AddInstructionTest(unittest.TestCase):
         self.compare_flags(zero=False, carry=False, negative=True, overflow=False)
 
     def test_add_immediate_address_with_carry(self):
-        opcode = 69
+        opcode = 0x69
         test_value = 0
         self.cpu.state.a.set_value(0)
         self.cpu.state.status.carry = True
@@ -51,7 +51,7 @@ class AddInstructionTest(unittest.TestCase):
         self.compare_flags(zero=False, carry=False, negative=False, overflow=False)
 
     def test_add_immediate_address(self):
-        opcode = 69
+        opcode = 0x69
         test_value = 0
 
         self.cpu.state.a.set_value(0)
@@ -66,7 +66,7 @@ class AddInstructionTest(unittest.TestCase):
         self.compare_flags(zero=True, carry=False, negative=False, overflow=False)
 
     def test_add_zero_page_address(self):
-        opcode = 65
+        opcode = 0x65
         test_value = 37
         memory_position = 1
 
