@@ -2,6 +2,12 @@ from math import log2
 from math import ceil
 
 
+def extract_2byteFrom16b(num):
+    highbyte = apply_higher_byte_mask(num)
+    lowebyte = apply_lower_byte_mask(num)
+    return lowebyte, highbyte
+
+
 def make_16b_binary(highByte, lowByte):
     return (highByte << 8) + lowByte
 
@@ -48,3 +54,11 @@ def add_binary(x, y, maxlen):
                 c = 0
 
     return sum([bit * 2 ** (idx) for bit, idx in zip(res, range(0, len(res)))]), c
+
+
+def apply_lower_byte_mask(number):
+    return number & 0xFF
+
+
+def apply_higher_byte_mask(number):
+    return (number >> 8) & 0xFF
