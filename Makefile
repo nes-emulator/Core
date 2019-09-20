@@ -16,6 +16,7 @@ ${BIN}:
 	@mkdir -p ${BIN}
 
 ${BIN}/%: ${TST}/%.s
+	${CROSS_AS} $^ $@
 
 ${LOG}:
 	@mkdir -p ${LOG}
