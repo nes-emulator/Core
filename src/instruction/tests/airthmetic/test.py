@@ -351,6 +351,20 @@ class SubInstructionTest(unittest.TestCase):
         self.assertEqual(negative, self.cpu.state.status.negative)
         self.assertEqual(overflow, self.cpu.state.status.overflow)
 
+    def test_sub_one_goes_from_negative_to_positive_overflow(self):
+        opcode = 0xE9
+        sub_value = 1
+        test_value = 128
+
+        self.cpu.state.a.set_value(test_value)
+        self.cpu.state.status.carry = True
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[sub_value])
+        self.assertEqual(test_value - sub_value, self.cpu.state.a.get_value())
+
+        self.compare_flags(zero=False, carry=True, negative=False, overflow=True)
+
     def test_sub_immediate_address_negative_without_carry(self):
         opcode = 0xE9
         test_value = 127
@@ -360,7 +374,7 @@ class SubInstructionTest(unittest.TestCase):
         inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
         self.assertEqual(255, self.cpu.state.a.get_value())
 
-        self.compare_flags(zero=False, carry=False, negative=True, overflow=True)
+        self.compare_flags(zero=False, carry=False, negative=True, overflow=False)
 
     def test_sub_immediate_address_with_carry(self):
         opcode = 0xE9

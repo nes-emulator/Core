@@ -11,15 +11,16 @@ class SubInstructionBase(CalculateAddress, Executable):
         address = self.calculate_unified_parameter(params, cpu, memory)
         value = self.retrieve_address_data(memory, address)
 
+        old_reg_value = cpu.state.a.get_value()
         new_calculated_value = cpu.state.a.get_value() - value - carry_sub
 
         new_reg_value = new_calculated_value if (new_calculated_value >= 0) else (256 - abs(new_calculated_value))
         cpu.state.a.set_value(new_reg_value)
 
         cpu.state.status.zero = (new_reg_value == 0)
-        cpu.state.status.carry = (new_calculated_value >= 0)
+        cpu.state.status.carry = (old_reg_value > value or (old_reg_value == value and cpu.state.status.carry))
         cpu.state.status.negative = (new_reg_value > 127)
-        cpu.state.status.overflow = (new_calculated_value < 0)
+        cpu.state.status.overflow = (old_reg_value > 127 and new_reg_value < 128)
 
 class SubInstructionImmediateAddr(Instruction, ImmediateAddr, SubInstructionBase):
     def __init__(self):
