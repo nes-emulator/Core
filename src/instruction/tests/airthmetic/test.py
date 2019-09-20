@@ -15,7 +15,7 @@ class AddInstructionTest(unittest.TestCase):
         self.assertEqual(negative, self.cpu.state.status.negative)
         self.assertEqual(overflow, self.cpu.state.status.overflow)
 
-    def test_add_immediate_address_bigger_than_register_size(self):
+    def test_add_overflow_sum_of_negatives_results_in_positive(self):
         opcode = 0x69
         test_value = 128
         self.cpu.state.a.set_value(test_value)
@@ -26,6 +26,16 @@ class AddInstructionTest(unittest.TestCase):
 
         self.compare_flags(zero=True, carry=True, negative=False, overflow=True)
 
+    def test_add_overflow_sum_of_positives_results_in_negative(self):
+        opcode = 0x69
+        test_value = 70
+        self.cpu.state.a.set_value(test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
+        self.assertEqual(2 * test_value, self.cpu.state.a.get_value())
+
+        self.compare_flags(zero=False, carry=False, negative=True, overflow=True)
 
     def test_add_immediate_address_negative(self):
         opcode = 0x69
