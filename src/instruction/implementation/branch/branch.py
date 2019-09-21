@@ -7,7 +7,7 @@ class BranchBaseInstruction(CalculateAddress):
         signed_pos_offset = branch_pos if branch_pos < 128 else (~(255 - branch_pos) + 1)
 
         if branch_flag:
-            cpu.state.pc += signed_pos_offset
+            cpu.state.pc.set_value(cpu.state.pc.get_value() + signed_pos_offset)
 
 class BCC(Instruction, ImmediateAddr, BranchBaseInstruction):
     def __init__(self):
