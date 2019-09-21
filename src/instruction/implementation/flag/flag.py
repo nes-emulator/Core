@@ -1,3 +1,4 @@
+import sys
 from src.instruction.instruction import Instruction
 
 class CLC(Instruction):
@@ -55,3 +56,4 @@ class BRK(Instruction):
 
     def execute(self, memory, cpu, params):
         cpu.state.status.brk = True
+        sys.exit(0)

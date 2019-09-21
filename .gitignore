@@ -9,8 +9,8 @@ game/readme.txt
 game/test_cases/
 ext/asm6/asm6
 __pycache__
+bin/*
 log/*
-
 # PyCharm
 **/*.pyc
 .idea
