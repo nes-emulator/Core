@@ -64,4 +64,3 @@ class BVS(Instruction, ImmediateAddr, BranchBaseInstruction):
 
     def execute(self, memory, cpu, params):
         self.branch(memory, cpu, params, cpu.state.status.overflow)
-
