@@ -1,5 +1,5 @@
-#CC=g++
-#CCFLAGS=-std=gnu++11 -O3
+CC=gcc
+CCFLAGS=-O2
 
 TST=./tst
 RES=./res
@@ -12,7 +12,10 @@ CROSS_AS=${EXT}/asm6/asm6
 
 all: ${BIN} ${LOG}
 
-${BIN}:
+asm6:
+	${CC} ${CFLAGS} -o ${CROSS_AS} ${EXT}/asm6/asm6.c
+
+${BIN}: asm6
 	@mkdir -p ${BIN}
 
 ${BIN}/%: ${TST}/%.s
@@ -21,7 +24,7 @@ ${BIN}/%: ${TST}/%.s
 ${LOG}:
 	@mkdir -p ${LOG}
 
-test: ${BIN} ${LOG} ${TESTS}
+test: ${BIN} ${LOG} ${TESTS} asm6
 	@{  echo "************************* Tests ******************************"; \
 		test_failed=0; \
 		test_passed=0; \
