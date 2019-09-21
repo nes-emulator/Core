@@ -12,6 +12,9 @@ class Register:
     def set_value(self, value):
         self.value = value
 
+    def inc(self):
+        self.value += 1
+
     def shift_left(self, carry):
         pass
 

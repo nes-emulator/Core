@@ -4,6 +4,7 @@ from src.mapper import *
 from src.memory.cartridge import *
 from src.memory.memory import Memory
 from src.cpu.cpu import CPU
+from src.cpu.instruction_runner import Runner
 
 
 class Emulator():
@@ -23,6 +24,9 @@ class Emulator():
                 self.mapper = NromMapper(self.cart)
             else:
                 raise ValueError("Cartridge specifies a mapper type not supported yet")
+
+            Runner.run(self.instructions, self.cpu, self.memory)
+
         except ValueError as err:
             print("ERROR: ", end="")
             print(err.args)
@@ -30,8 +34,6 @@ class Emulator():
 
 def main(path="game/game.bin"):
     emulator = Emulator(path)
-    emulator.cart.print_prg_as_binary()
-
 
 # ENTRY POINT
 if __name__ == "__main__":
