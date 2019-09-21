@@ -79,11 +79,3 @@ class FlagInstructionTest(unittest.TestCase):
 
         self.assertEqual(opcode, inst.opcode)
         self.assertEqual(True, self.cpu.state.status.decimal)
-
-    def test_brk(self):
-        opcode = 0
-        inst = InstructionCollection.get_instruction(opcode)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
-
-        self.assertEqual(opcode, inst.opcode)
-        self.assertEqual(True, self.cpu.state.status.brk)
