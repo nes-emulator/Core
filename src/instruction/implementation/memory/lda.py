@@ -8,7 +8,7 @@ class LoadA(CalculateAddress, Executable):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         # A <- M
         val = memory.retrieve_content(addr)
-        self.reg.set_value(val)
+        cpu.state.a.set_value(val)
 
         # update status register
         cpu.state.status.zero = (val == 0)
