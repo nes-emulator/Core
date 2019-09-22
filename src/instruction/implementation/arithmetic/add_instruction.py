@@ -39,7 +39,7 @@ class AddInstructionAbsoluteAddr(Instruction, AbsoluteAddr, AddInstructionBase):
 
 class AddInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, AddInstructionBase):
     def __init__(self):
-        super().__init__(opcode=0x70, cycles=1)
+        super().__init__(opcode=0x7D, cycles=1)
 
 class AddInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, AddInstructionBase):
     def __init__(self):
