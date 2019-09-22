@@ -87,7 +87,9 @@ class AccumulatorAddr(BaseAddr):  # 5
         return cpu.state.a.get_value()
 
 
-class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 7.1
+# 6: Zero Page Indexed by <register>
+
+class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 6.1
     parameter_length = 1
 
     # returns the value of the X addres + zero page parameter
@@ -97,7 +99,7 @@ class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 7.1
         return address + cpu.state.x.get_value()
 
 
-class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 7.2
+class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 6.2
     parameter_length = 1
 
     # returns the value of the Y addres + zero page parameter
@@ -106,8 +108,9 @@ class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 7.2
         address = params[0]
         return address + cpu.state.y.get_value()
 
+# 7: Absolute Address Indexed by <register>
 
-class AbsDirectIndexedRegXAddr(BaseAddr):
+class AbsDirectIndexedRegXAddr(BaseAddr): # 7.1
     parameter_length = 2
 
     # the same as DirectIndexingAddr but use reg x offset
@@ -117,7 +120,7 @@ class AbsDirectIndexedRegXAddr(BaseAddr):
         return address + cpu.state.x.get_value()
 
 
-class AbsDirectIndexedRegYAddr(BaseAddr):
+class AbsDirectIndexedRegYAddr(BaseAddr): # 7.2
     parameter_length = 2
 
     # the same as DirectIndexingAddr but use reg y offset
