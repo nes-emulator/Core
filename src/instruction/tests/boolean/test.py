@@ -191,3 +191,79 @@ class OraInstructionTest(unittest.TestCase):
         self.assertEqual(test_value, self.memory.retrieve_content(memory_position))
 
         self.compare_flags(zero=False, carry=False, negative=False, overflow=False)
+
+
+class BitInstructionTest(unittest.TestCase):
+    def setUp(self):
+        self.cpu = CPU()
+        self.memory = Memory()
+        self.memory.reset()
+
+    def compare_flags(self, zero, carry, negative, overflow):
+        self.assertEqual(zero, self.cpu.state.status.zero)
+        self.assertEqual(carry, self.cpu.state.status.carry)
+        self.assertEqual(negative, self.cpu.state.status.negative)
+        self.assertEqual(overflow, self.cpu.state.status.overflow)
+
+    def test_bit_zero_page_address_zero_flag(self):
+        opcode = 0x24
+        test_value = 8
+        memory_position = 33
+
+        self.cpu.state.a.set_value(7)
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+        self.assertEqual(7, self.cpu.state.a.get_value())
+        self.assertEqual(test_value, self.memory.retrieve_content(memory_position))
+
+        self.compare_flags(zero=True, carry=False, negative=False, overflow=False)
+
+    def test_bit_zero_page_address_negative_flag(self):
+        opcode = 0x24
+        test_value = 140
+        memory_position = 43
+
+        self.cpu.state.a.set_value(128)
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+        self.assertEqual(128, self.cpu.state.a.get_value())
+        self.assertEqual(test_value, self.memory.retrieve_content(memory_position))
+
+        self.compare_flags(zero=False, carry=False, negative=True, overflow=False)
+
+    def test_bit_zero_page_address_overflow_flag(self):
+        opcode = 0x24
+        test_value = 0x42
+        memory_position = 53
+
+        self.cpu.state.a.set_value(10)
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
+        self.assertEqual(10, self.cpu.state.a.get_value())
+        self.assertEqual(test_value, self.memory.retrieve_content(memory_position))
+
+        self.compare_flags(zero=False, carry=False, negative=False, overflow=True)
+
+    def test_bit_absolute_address_all_flags(self):
+        opcode = 0x2C
+        test_value = 254
+        memory_position = 0b0000100000001010
+
+        low_byte = 0b1010
+        high_byte = 0b1000
+
+        self.cpu.state.a.set_value(1)
+        self.memory.set_content(memory_position, test_value)
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[low_byte, high_byte])
+        self.assertEqual(1, self.cpu.state.a.get_value())
+        self.assertEqual(test_value, self.memory.retrieve_content(memory_position))
+
+        self.compare_flags(zero=True, carry=False, negative=True, overflow=True)
