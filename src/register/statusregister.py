@@ -1,4 +1,3 @@
-# TODO StatusRegister must extend Register if it is necessary to do arithmetic with it
 class StatusRegister:
 
     def __init__(self, val):
