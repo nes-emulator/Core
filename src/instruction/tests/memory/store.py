@@ -13,21 +13,21 @@ class StoreTest(unittest.TestCase):
         self.cpu.state.y.set_value(99)
         self.memory.set_content(100, 55)
 
-    def sta_change_mem(self):
+    def test_sta_change_mem(self):
         opcode = 0x85
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=[100])
 
         self.assertEqual(self.memory.retrieve_content(100), 77)
 
-    def stx_change_mem(self):
+    def test_stx_change_mem(self):
         opcode = 0x86
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=[100])
 
         self.assertEqual(self.memory.retrieve_content(100), 88)
 
-    def sty_change_mem(self):
+    def test_sty_change_mem(self):
         opcode = 0x84
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=[100])

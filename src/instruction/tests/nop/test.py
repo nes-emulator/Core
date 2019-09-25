@@ -8,7 +8,7 @@ class NopTest(unittest.TestCase):
         self.cpu = CPU()
         self.memory = Memory()
 
-    def nop_test(self):
+    def test_nop(self):
         opcode = 0xEA
         inst = InstructionCollection.get_instruction(opcode)
         try:
