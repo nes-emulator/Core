@@ -367,7 +367,7 @@ class SubInstructionTest(unittest.TestCase):
 
     def test_sub_immediate_address_negative_without_carry(self):
         opcode = 0xE9
-        test_value = 127
+        test_value = 0
         self.cpu.state.a.set_value(test_value)
 
         inst = InstructionCollection.get_instruction(opcode)
@@ -405,3 +405,34 @@ class SubInstructionTest(unittest.TestCase):
         self.assertEqual(test_value, self.cpu.state.a.get_value())
 
         self.compare_flags(zero=True, carry=True, negative=False, overflow=False)
+
+    def test_sub_immediate_address_decimal_first_rule_apply(self):
+        opcode = 0xE9
+        sub_value = 7
+        test_value = 0x70
+
+        self.cpu.state.a.set_value(test_value)
+        self.cpu.state.status.carry = True
+        self.cpu.state.status.decimal = True
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[sub_value])
+        self.assertEqual(test_value - sub_value - 6, self.cpu.state.a.get_value())
+
+        self.compare_flags(zero=False, carry=True, negative=False, overflow=False)
+
+
+    def test_sub_immediate_address_decimal_second_rule_apply(self):
+        opcode = 0xE9
+        sub_value = 20
+        test_value = 0xff
+
+        self.cpu.state.a.set_value(test_value)
+        self.cpu.state.status.carry = True
+        self.cpu.state.status.decimal = True
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[sub_value])
+        self.assertEqual(test_value - sub_value - 0x60, self.cpu.state.a.get_value())
+
+        self.compare_flags(zero=False, carry=True, negative=True, overflow=False)
