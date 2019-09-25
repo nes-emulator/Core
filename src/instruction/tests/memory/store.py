@@ -14,7 +14,7 @@ class StoreTest(unittest.TestCase):
         self.memory.set_content(100, 55)
 
     def test_sta_change_mem(self):
-        opcode = 0x85
+        opcode = 0x9D
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=[100])
 

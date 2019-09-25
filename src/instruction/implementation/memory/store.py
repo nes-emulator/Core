@@ -35,7 +35,7 @@ class StaAbsolute(Instruction, AbsoluteAddr, StoreA):
 
 class StaAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, StoreA):
     def __init__(self):
-        super().__init__(opcode = 0x90, cycles = 5)
+        super().__init__(opcode = 0x9D, cycles = 5)
 
 class StaAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, StoreA):
     def __init__(self):
