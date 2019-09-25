@@ -22,6 +22,13 @@ class LoadTest(unittest.TestCase):
 
         self.assertEqual(self.cpu.state.a.get_value(), 77)
 
+    def test_lda_change_a_immediate(self):
+        opcode = 0xA9
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[77])
+
+        self.assertEqual(self.cpu.state.a.get_value(), 77)
+
     def test_lda_change_status(self):
         opcode = 0xAD
         inst = InstructionCollection.get_instruction(opcode)
@@ -40,6 +47,13 @@ class LoadTest(unittest.TestCase):
         opcode = 0xAE
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=[0x64, 0x00])
+
+        self.assertEqual(self.cpu.state.x.get_value(), 77)
+
+    def test_ldx_change_x_immediate(self):
+        opcode = 0xA2
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[77])
 
         self.assertEqual(self.cpu.state.x.get_value(), 77)
 
