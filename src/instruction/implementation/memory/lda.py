@@ -7,7 +7,7 @@ class LoadA(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         # A <- M
-        val = memory.retrieve_content(addr)
+        val = self.retrieve_address_data(memory, addr)
         cpu.state.a.set_value(val)
 
         # update status register

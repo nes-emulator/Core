@@ -5,7 +5,7 @@ class LoadX(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         # X <- M
-        val = memory.retrieve_content(addr)
+        val = self.retrieve_address_data(memory, addr)
         cpu.state.x.set_value(val)
 
         # update status register
@@ -36,7 +36,7 @@ class LoadY(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         # Y <- M
-        val = memory.retrieve_content(addr)
+        val = self.retrieve_address_data(memory, addr)
         cpu.state.y.set_value(val)
 
         # update status register
