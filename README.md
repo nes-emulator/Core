@@ -14,6 +14,8 @@
 
 [Instruction Set (Masswerk)](https://www.masswerk.at/6502/6502_instruction_set.html#CMP)
 
+[Formato dos logs de teste](https://github.com/AlissonLinhares/nesemu)
+
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
 - http://www.obelisk.me.uk/6502/reference.html
@@ -44,6 +46,3 @@ Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 
 ## Aplicando todos os testes do emulador
 - `python3 -m unittest discover .`
-
-## Formato Log para testes automatizados
-- https://github.com/AlissonLinhares/nesemu
