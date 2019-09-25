@@ -12,7 +12,7 @@ class SubInstructionBase(CalculateAddress, Executable):
         value = self.retrieve_address_data(memory, address)
 
         old_reg_value = cpu.state.a.get_value()
-        new_calculated_value = old_reg_value - value - carry_sub
+        new_calculated_value = cpu.state.a.get_value() - value - carry_sub
 
         new_reg_value = new_calculated_value if (new_calculated_value >= 0) else (256 - abs(new_calculated_value))
         cpu.state.status.zero = (new_reg_value == 0)
