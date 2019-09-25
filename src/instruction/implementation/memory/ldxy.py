@@ -16,19 +16,19 @@ class LdxImmediate(Instruction, ImmediateAddr, LoadX):
     def __init__(self):
         super().__init__(opcode = 0xA2, cycles = 2)
 
-class LdxImmediate(Instruction, ZeroPageAddr, LoadX):
+class LdxZeroPage(Instruction, ZeroPageAddr, LoadX):
     def __init__(self):
         super().__init__(opcode = 0xA6, cycles = 3)
 
-class LdxImmediate(Instruction, ZeroPgDirectIndexedRegYAddr, LoadX):
+class LdxZeroPageY(Instruction, ZeroPgDirectIndexedRegYAddr, LoadX):
     def __init__(self):
         super().__init__(opcode = 0xB6, cycles = 4)
 
-class LdxImmediate(Instruction, AbsoluteAddr, LoadX):
+class LdxAbsolute(Instruction, AbsoluteAddr, LoadX):
     def __init__(self):
         super().__init__(opcode = 0xAE, cycles = 4)
 
-class LdxImmediate(Instruction, AbsDirectIndexedRegYAddr, LoadX):
+class LdxAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, LoadX):
     def __init__(self):
         super().__init__(opcode = 0xBE, cycles = 4)
 
