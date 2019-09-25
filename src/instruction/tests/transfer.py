@@ -11,7 +11,7 @@ class TransferTest(unittest.TestCase):
         self.memory = Memory()
 
     def test_zero_and_negative(self, val):
-        if (val < 0):
+        if (val == 0):
             assertTrue(self.cpu.state.status.zero)
         else:
             assertFalse(self.cpu.state.status.zero)
@@ -20,6 +20,10 @@ class TransferTest(unittest.TestCase):
             assertTrue(self.cpu.state.status.negative)
         else:
             assertFalse(self.cpu.state.status.negative)
+
+        if (val > 0 and val < 127):
+            assertFalse(self.cpu.state.status.negative)
+            assertFalse(self.cpu.state.status.zero)
 
     # given source and destionation registers, test the transfer
     def default_from_to(self, opcode, fromreg, toreg):
