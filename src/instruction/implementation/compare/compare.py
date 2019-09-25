@@ -10,7 +10,6 @@ class CompareBaseInstruction(CalculateAddress):
         new_reg_value = new_calculated if (new_calculated >= 0) else (256 - abs(new_calculated))
 
         cpu.state.status.zero = (new_reg_value == 0)
-        # TODO: check the carry
         cpu.state.status.carry = (new_calculated >= 0)
         cpu.state.status.negative = (new_reg_value > 127)
 
