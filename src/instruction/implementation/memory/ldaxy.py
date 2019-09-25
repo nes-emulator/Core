@@ -4,7 +4,7 @@ from src.instruction.addressing.addressing import *
 class LoadX(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
-        # A <- M
+        # X <- M
         val = memory.retrieve_content(addr)
         cpu.state.x.set_value(val)
 
@@ -35,7 +35,7 @@ class LdxImmediate(Instruction, AbsDirectIndexedRegYAddr, LoadX):
 class LoadY(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
-        # A <- M
+        # Y <- M
         val = memory.retrieve_content(addr)
         cpu.state.y.set_value(val)
 
