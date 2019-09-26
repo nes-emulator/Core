@@ -2,6 +2,21 @@ from math import log2
 from math import ceil
 
 
+def extract_bits(number):
+    str_num = bin(number)
+    str_num = str_num.replace("0b", "")
+    bits = [int(x) for x in str_num]
+    bits.reverse()
+    return bits
+
+
+def is_negative(number, n_digits):
+    bits = extract_bits(number)
+    if len(bits) < n_digits:
+        return False
+    return bits[n_digits - 1] == 1  # negative, last bit  == 1
+
+
 def extract_2byteFrom16b(num):
     highbyte = apply_higher_byte_mask(num)
     lowebyte = apply_lower_byte_mask(num)
@@ -14,14 +29,8 @@ def make_16b_binary(highByte, lowByte):
 
 # return the result of x+y and carry in binary ;  with length = maxlen
 def add_binary(x, y, maxlen):
-    strx = bin(x)
-    stry = bin(y)
-    strx = strx.replace("0b", "")
-    stry = stry.replace("0b", "")
-    bitsx = [int(x) for x in strx]
-    bitsy = [int(y) for y in stry]
-    bitsx.reverse()
-    bitsy.reverse()
+    bitsx = extract_bits(x)
+    bitsy = extract_bits(y)
     pos = 0;
     c = 0
     res = []
@@ -54,6 +63,10 @@ def add_binary(x, y, maxlen):
                 c = 0
 
     return sum([bit * 2 ** (idx) for bit, idx in zip(res, range(0, len(res)))]), c
+
+
+def apply_mask(number, mask):
+    return number & mask
 
 
 def apply_lower_byte_mask(number):
