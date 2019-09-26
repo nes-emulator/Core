@@ -26,7 +26,8 @@ class Stack:
 
     def pop_val(self):
         if self.empty_stk():
-            raise ("stack underflow")
+            pass
+            # raise ("stack underflow")
         self.set_top(self.get_top() + 1)
         return self.memory.retrieve_content(self.get_top())
 
@@ -54,7 +55,8 @@ class Stack:
     def push_val(self, val):
 
         if self.full_stk():
-            raise ("stack overflow")
+            pass
+            # raise ("stack overflow")
         self.memory.set_content(self.get_top(), val)
         self.set_top(self.get_top() - 1)  # points to a empty pos
 

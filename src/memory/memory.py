@@ -3,6 +3,7 @@
  in this version the class is not considering expansive memory through the use of banks
  """
 from math import log2
+from .stack import Stack
 
 
 class Memory:
@@ -12,6 +13,7 @@ class Memory:
 
     def __init__(self, cartridge=None):
         # init a memory array
+
         self.memory = []
         self.reset()
         # write all NROM data to memory
@@ -25,16 +27,19 @@ class Memory:
 
     def retrieve_content(self, addr):
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
-            raise ("Invalid memory access, indexing address > 16bits, word = 16bits")
+            print("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
     def set_content(self, addr, val):
         if not Memory._valid_memory_word(val, Memory.WORD_SIZE):
-            raise ("Invalid memory storage, value stored > 16bits, word = 16bits")
+            pass
+            # raise("Invalid memory storage, value stored > 16bits, word = 16bits")
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
-            raise ("Invalid memory storage, indexing address > 16bits, word = 16bits")
+            pass
+            # raise("Invalid memory storage, indexing address > 16bits, word = 16bits")
         if addr > Memory.ROM_ADDR:
-            raise ("invalid memory storage, you cant store data in ROM")
+            pass
+            # raise("invalid memory storage, you cant store data in ROM")
         self.memory[addr] = val
 
     def loadROM(self, rom_data):

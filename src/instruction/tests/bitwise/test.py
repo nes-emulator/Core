@@ -59,16 +59,47 @@ class AslTest(unittest.TestCase):
 
     def test_asl_accumulator_flags(self):
         inst = InstructionCollection.get_instruction(0x0A)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        ret = inst.execute(memory=self.memory, cpu=self.cpu, params=[])
         self.assertEqual(self.cpu.state.status.negative, True)
         self.assertEqual(self.cpu.state.status.zero, False)
         self.assertEqual(self.cpu.state.status.carry, True)
         self.assertEqual(self.cpu.state.a.get_value(), 0b10000000)
+        self.assertEqual(ret, None)
 
     def test_asl_memory_ZeroPg_flags(self):
         inst = InstructionCollection.get_instruction(0x06)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[0])
+        addr = inst.execute(memory=self.memory, cpu=self.cpu, params=[0])
         self.assertEqual(self.cpu.state.status.negative, False)
         self.assertEqual(self.cpu.state.status.zero, True)
         self.assertEqual(self.cpu.state.status.carry, True)
         self.assertEqual(self.memory.retrieve_content(0), 0)
+        self.assertEqual(addr, 0)
+
+
+class RolTest(unittest.TestCase):
+    def setUp(self):
+        self.cpu = CPU()
+        self.memory = Memory()
+        self.memory.set_content(0xA000, 0b11000000)
+        self.cpu.state.a.set_value(0b01000000)
+
+    def test_rol_accumulator_flags(self):
+        self.cpu.state.status.carry = True
+        inst = InstructionCollection.get_instruction(0x2A)
+        ret = inst.execute(self.memory, self.cpu, [])
+        self.assertEqual(self.cpu.state.a.get_value(), 0b10000001)
+        self.assertEqual(self.cpu.state.status.negative, True)
+        self.assertEqual(self.cpu.state.status.zero, False)
+        self.assertEqual(self.cpu.state.status.carry, False)
+        self.assertEqual(ret, None)
+
+    def test_rol_abs_flags(self):
+        params = [0, 0xA0]
+        self.cpu.state.status.carry = False
+        inst = InstructionCollection.get_instruction(0x2E)
+        ret = inst.execute(self.memory, self.cpu, params)
+        self.assertEqual(0xA000, ret)
+        self.assertEqual(self.memory.retrieve_content(0XA000), 0b10000000)
+        self.assertEqual(self.cpu.state.status.negative, True)
+        self.assertEqual(self.cpu.state.status.zero, False)
+        self.assertEqual(self.cpu.state.status.carry, True)
