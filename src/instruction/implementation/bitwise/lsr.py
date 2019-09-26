@@ -24,6 +24,7 @@ class LSR(CalculateAddress, Executable):
         # update memory
         val = reg.get_value()
         memory.set_content(addr, val)
+        return addr
 
 class LsrAccumulator(Instruction, AccumulatorAddr, LSR):
     def __init__(self):
