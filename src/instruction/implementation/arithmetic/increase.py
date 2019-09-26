@@ -40,6 +40,7 @@ class INCBaseInstruction(CalculateAddress, Executable):
         cpu.state.status.zero = (memory_value == 0)
         cpu.state.status.negative = (memory_value > 127)
 
+        return address
 
 class INCZeroPageAddr(Instruction, ZeroPageAddr, INCBaseInstruction):
     def __init__(self):

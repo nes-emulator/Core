@@ -40,6 +40,8 @@ class DECBaseInstruction(CalculateAddress, Executable):
         cpu.state.status.zero = (memory_value == 0)
         cpu.state.status.negative = (memory_value > 127)
 
+        return address
+
 
 class DECZeroPageAddr(Instruction, ZeroPageAddr, DECBaseInstruction):
     def __init__(self):

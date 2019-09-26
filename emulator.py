@@ -5,7 +5,7 @@ from src.memory.cartridge import *
 from src.memory.memory import Memory
 from src.cpu.cpu import CPU
 from src.cpu.instruction_runner import Runner
-
+from src.instruction.collection import InstructionCollection
 
 class Emulator():
     def __init__(self, cartridge_path):
@@ -25,6 +25,7 @@ class Emulator():
             else:
                 raise ValueError("Cartridge specifies a mapper type not supported yet")
 
+            InstructionCollection.initialize()
             Runner.run(self.instructions, self.cpu, self.memory)
 
         except ValueError as err:
