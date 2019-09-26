@@ -1,4 +1,5 @@
 from src.cpu.cpu import state
+from src.register import *
 from src.register import statusregister
 from src.util.util import apply_higher_byte_mask, apply_lower_byte_mask, make_16b_binary
 
@@ -63,10 +64,10 @@ class Stack:
     # retrieve state
 
     def empty_stk(self):
-        return self.top_addr == Stack.START_ADDR
+        return self.get_top() == Stack.START_ADDR
 
     def full_stk(self):
-        return self.top_addr == Stack.END_ADDR
+        return self.get_top() == Stack.END_ADDR
 
     def get_top(self):
         return self.state.sp.get_value()
