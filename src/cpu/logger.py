@@ -46,8 +46,8 @@ class Logger:
     # log change mem vals
     @classmethod
     def log_mem_manipulation(cls, mem, addr, out_file=None):
-        out_mem = " MEM[{}] = {} " + Logger.SEPARATOR
-        out_mem = out_mem.format(hex(addr), hex(mem.retrieve_content(addr)))
+        out_mem = " MEM[0x{:04x}] = 0x{:02x} " + Logger.SEPARATOR
+        out_mem = out_mem.format(addr, mem.retrieve_content(addr))
         if out_file is not None:
             with open(out_file, "w+") as f:
                 f.write(out_mem)
