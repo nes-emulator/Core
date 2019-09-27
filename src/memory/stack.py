@@ -1,4 +1,4 @@
-from src.cpu.cpu import state
+
 from src.register import *
 from src.register import statusregister
 from src.util.util import apply_higher_byte_mask, apply_lower_byte_mask, make_16b_binary

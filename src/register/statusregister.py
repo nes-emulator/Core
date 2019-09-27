@@ -1,5 +1,4 @@
 class StatusRegister:
-
     def __init__(self, val=None):
         self.carry = False
         self.zero = False
@@ -13,7 +12,10 @@ class StatusRegister:
             str_val = bin(val)
             str_val = str_val.replace("0b", "")
             val = [bool(int(b)) for b in str_val]
-            # format NV-BDIZC
+            qtd_flags = len(val)
+            if qtd_flags < 8:
+                val = [False] * (8 - qtd_flags) + val
+            # format NV-BDIZC/
             self.negative = val[0]
             self.overflow = val[1]
             self.unused = val[2]
