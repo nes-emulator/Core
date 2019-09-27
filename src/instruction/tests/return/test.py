@@ -32,7 +32,7 @@ class ReturnTests(unittest.TestCase):
         self.memory.stack.push_val(status_reg.to_val())
         self.cpu.state.status.clear()
         self.cpu.state.pc.set_value(0)
-        ins = InstructionCollection.get_instruction(0x4D)
+        ins = InstructionCollection.get_instruction(0x40)
         ins.execute(self.memory, self.cpu, [])
         self.assertEqual(self.cpu.state.status.to_val(), 0b11110001)
         self.assertEqual(self.cpu.state.pc.get_value(), 0xAA01)

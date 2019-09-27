@@ -50,7 +50,7 @@ class AddInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexed
 
 class AddInstructionAbsoluteAddr(Instruction, AbsoluteAddr, AddInstructionBase):
     def __init__(self):
-        super().__init__(opcode=0x60, cycles=1)
+        super().__init__(opcode=0x6D, cycles=1)
 
 class AddInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, AddInstructionBase):
     def __init__(self):

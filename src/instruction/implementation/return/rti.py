@@ -11,4 +11,4 @@ class Rti(Instruction, ImpliedAddr):
         memory.stack.pop_pc()
 
     def __init__(self):
-        super().__init__(opcode=0x4D, cycles=6)
+        super().__init__(opcode=0x40, cycles=6)
