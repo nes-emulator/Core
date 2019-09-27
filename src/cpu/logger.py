@@ -7,9 +7,9 @@ class Logger:
 
     # if file is not provided the log will be printed in the standard output
     @classmethod
-    def log_reg_status(cls, state, out_file=None):
+    def log_reg_status(cls, state, pc, out_file=None):
         hex_regs = [
-            " pc = 0x{:04x} ".format(state.pc.get_value()),
+            " pc = 0x{:04x} ".format(pc),
             " a = 0x{:02x} ".format(state.a.get_value()),
             " x = 0x{:02x} ".format(state.x.get_value()),
             " y = 0x{:02x} ".format(state.y.get_value()),

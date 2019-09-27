@@ -15,6 +15,7 @@ class Runner:
         while cpu.state.pc.get_value() < len(prg_rom):
             # TODO regulate stall
             params = []
+            pc_initial_position = cpu.state.pc.get_value()
             ins = InstructionCollection.get_instruction(prg_rom[cpu.state.pc.get_value()])
             for _ in range(getattr(ins, 'parameter_length', 0)):
                 cpu.state.pc.inc()
@@ -24,7 +25,7 @@ class Runner:
             # start_time = datetime.now()
             manipulated_mem_addr = ins.execute(memory=mem, cpu=cpu, params=params)
             if Runner.LOGGER_ACTIVE:
-                Logger.log_reg_status(cpu.state)
+                Logger.log_reg_status(cpu.state, pc_initial_position)
                 if not manipulated_mem_addr is None:
                     Logger.log_mem_manipulation(mem, manipulated_mem_addr)
                 Logger.next_log_line()
