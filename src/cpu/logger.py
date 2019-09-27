@@ -8,9 +8,13 @@ class Logger:
     # if file is not provided the log will be printed in the standard output
     @classmethod
     def log_reg_status(cls, state, out_file=None):
-        hex_regs = [" pc = {} ".format(hex(state.pc.get_value())), " a = {} ".format(hex(state.a.get_value())),
-                    " x = {} ".format(hex(state.x.get_value())), " y = {} ".format(hex(state.y.get_value())),
-                    " sp = {} ".format(hex(state.sp.get_value()))]
+        hex_regs = [
+            " pc = 0x{:04x} ".format(state.pc.get_value()),
+            " a = 0x{:02x} ".format(state.a.get_value()),
+            " x = 0x{:02x} ".format(state.x.get_value()),
+            " y = 0x{:02x} ".format(state.y.get_value()),
+            " sp = 0x{:04x} ".format(state.sp.get_value())
+        ]
 
         output = Logger.SEPARATOR + Logger.SEPARATOR.join(hex_regs)
 
