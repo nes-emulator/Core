@@ -27,7 +27,8 @@ class Memory:
 
     def retrieve_content(self, addr):
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
-            print("Invalid memory access, indexing address > 16bits, word = 16bits")
+            pass
+        # print("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
     def set_content(self, addr, val):
