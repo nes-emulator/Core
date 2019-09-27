@@ -27,7 +27,8 @@ class Memory:
 
     def retrieve_content(self, addr):
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
-            print("Invalid memory access, indexing address > 16bits, word = 16bits")
+            pass
+        # print("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
     def set_content(self, addr, val):
@@ -43,7 +44,8 @@ class Memory:
         self.memory[addr] = val
 
     def loadROM(self, rom_data):
-        self.memory[self.ROM_ADDR:] = list(rom_data)
+        lst_rom = list(rom_data)
+        self.memory[self.ROM_ADDR:self.ROM_ADDR + len(lst_rom)] = lst_rom
 
     @classmethod
     def _valid_memory_word(cls, val, size):
