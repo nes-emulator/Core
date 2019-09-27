@@ -4,7 +4,7 @@ from src.instruction.addressing.addressing import *
 class BranchBaseInstruction(CalculateAddress):
     def branch(self, memory, cpu, params, branch_flag):
         branch_pos = params[0]
-        signed_pos_offset = branch_pos if branch_pos < 128 else (~(255 - branch_pos) + 1)
+        signed_pos_offset = branch_pos if branch_pos < 128 else (~(255 - branch_pos))
 
         if branch_flag:
             cpu.state.pc.set_value(cpu.state.pc.get_value() + signed_pos_offset)
