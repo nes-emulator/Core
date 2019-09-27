@@ -188,6 +188,17 @@ class BranchInstructionTest(unittest.TestCase):
         inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
         self.assertEqual(old_value, self.cpu.state.pc.get_value())
 
+    def test_branch_negative_value(self):
+        opcode = 0x70
+        old_value = self.cpu.state.pc.get_value()
+        test_value = 255
+
+        self.cpu.state.status.overflow = True
+
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
+        self.assertEqual(old_value - 1, self.cpu.state.pc.get_value())
+
     def test_jump_absolute(self):
         opcode = 0x4C
         test_value = 74
