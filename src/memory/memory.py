@@ -44,7 +44,8 @@ class Memory:
         self.memory[addr] = val
 
     def loadROM(self, rom_data):
-        self.memory[self.ROM_ADDR:] = list(rom_data)
+        lst_rom = list(rom_data)
+        self.memory[self.ROM_ADDR:self.ROM_ADDR + len(lst_rom)] = lst_rom
 
     @classmethod
     def _valid_memory_word(cls, val, size):
