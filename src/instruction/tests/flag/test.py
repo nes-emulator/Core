@@ -4,10 +4,11 @@ from src.instruction.instruction import Instruction
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 
+
 class FlagInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def test_clc(self):

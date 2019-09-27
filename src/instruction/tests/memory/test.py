@@ -2,11 +2,13 @@ import unittest
 from src.instruction.collection import InstructionCollection
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
+from src.register.statusregister import StatusRegister
+
 
 class LoadTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         # mock state
         self.memory.set_content(100, 77)
         self.memory.set_content(101, 0)
@@ -92,10 +94,11 @@ class LoadTest(unittest.TestCase):
         self.assertFalse(self.cpu.state.status.zero)
         self.assertTrue(self.cpu.state.status.negative)
 
+
 class StoreTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         # mock state
         self.cpu.state.a.set_value(77)
         self.cpu.state.x.set_value(88)
@@ -122,3 +125,48 @@ class StoreTest(unittest.TestCase):
         inst.execute(memory=self.memory, cpu=self.cpu, params=[100])
 
         self.assertEqual(self.memory.retrieve_content(100), 99)
+
+
+class StackInstTest(unittest.TestCase):
+    def setUp(self):
+        self.cpu = CPU()
+        self.memory = Memory(self.cpu)
+        self.top = self.memory.stack.get_top()
+
+    def test_pha(self):
+        self.cpu.state.a.set_value(0xA)
+        opcode = 0x48
+        inst = InstructionCollection.get_instruction(opcode)
+        addr = inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(addr, self.top)
+        self.assertEqual(self.memory.stack.get_top(), self.top - 1)
+        self.assertEqual(0xA, self.memory.retrieve_content(self.top))
+
+    def test_pla(self):
+        self.cpu.state.a.set_value(0xA)
+        self.cpu.state.a.set_value(0)
+        self.test_pha()
+        opcode = 0x68
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(self.memory.stack.get_top(), self.top)
+        self.assertEqual(0xA, self.cpu.state.a.get_value())
+
+    def test_php(self):
+        sts = StatusRegister(0b10101010)
+        self.cpu.state.status = sts
+        opcode = 0x8
+        inst = InstructionCollection.get_instruction(opcode)
+        addr = inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(addr, self.top)
+        self.assertEqual(self.memory.stack.get_top(), self.top - 1)
+        self.assertEqual(0b10101010, self.memory.retrieve_content(self.top))
+
+    def test_plp(self):
+        self.test_php()
+        self.cpu.state.status.clear()
+        opcode = 0x28
+        inst = InstructionCollection.get_instruction(opcode)
+        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+        self.assertEqual(self.memory.stack.get_top(), self.top)
+        self.assertEqual(self.cpu.state.status.to_val(), 0b10101010)

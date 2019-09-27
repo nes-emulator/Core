@@ -5,8 +5,8 @@ from src.memory.memory import Memory
 
 class StackTest(unittest.TestCase):
     def setUp(self):
-        self.memory = Memory()
         self.cpu = CPU()
+        self.memory = Memory(self.cpu)
         self.stack = Stack(self.memory, self.cpu.state)
 
     def test_push(self):

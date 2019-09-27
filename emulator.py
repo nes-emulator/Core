@@ -7,6 +7,7 @@ from src.cpu.cpu import CPU
 from src.cpu.instruction_runner import Runner
 from src.instruction.collection import InstructionCollection
 
+
 class Emulator():
     def __init__(self, cartridge_path):
         self.cpu = CPU()
@@ -17,7 +18,7 @@ class Emulator():
 
         try:
             self.cart = Cartridge(cartridge_path)
-            self.memory = Memory(self.cart)
+            self.memory = Memory(self.cpu, self.cart)
             self.instructions = self.cart.get_prg_rom()
 
             if self.cart.get_mapper_type() == MapperType.NROM:
@@ -35,6 +36,7 @@ class Emulator():
 
 def main(path="game/game.bin"):
     emulator = Emulator(path)
+
 
 # ENTRY POINT
 if __name__ == "__main__":

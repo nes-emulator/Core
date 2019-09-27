@@ -11,9 +11,9 @@ class Memory:
     WORD_SIZE = 8
     ROM_ADDR = 0x8000
 
-    def __init__(self, cartridge=None):
+    def __init__(self, cpu, cartridge=None):
         # init a memory array
-
+        self.stack = Stack(self, cpu.state)
         self.memory = []
         self.reset()
         # write all NROM data to memory

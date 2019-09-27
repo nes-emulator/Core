@@ -3,10 +3,11 @@ from src.instruction.collection import InstructionCollection
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 
+
 class AndInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative, overflow):
@@ -66,10 +67,11 @@ class AndInstructionTest(unittest.TestCase):
 
         self.compare_flags(zero=True, carry=False, negative=False, overflow=False)
 
+
 class EorInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative, overflow):
@@ -129,10 +131,11 @@ class EorInstructionTest(unittest.TestCase):
 
         self.compare_flags(zero=True, carry=False, negative=False, overflow=False)
 
+
 class OraInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative, overflow):
@@ -196,7 +199,7 @@ class OraInstructionTest(unittest.TestCase):
 class BitInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative, overflow):

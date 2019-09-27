@@ -3,10 +3,11 @@ from src.instruction.collection import InstructionCollection
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 
+
 class CompareInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative):
@@ -112,5 +113,3 @@ class CompareInstructionTest(unittest.TestCase):
         inst.execute(memory=self.memory, cpu=self.cpu, params=[compare_value])
 
         self.compare_flags(zero=False, carry=True, negative=False)
-
-

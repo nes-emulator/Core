@@ -8,7 +8,7 @@ from src.memory.memory import Memory
 class TransferTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
 
     def zero_and_negative(self, val):
         if (val == 0):

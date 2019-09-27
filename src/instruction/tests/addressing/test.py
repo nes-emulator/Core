@@ -9,7 +9,7 @@ class InstructionAddressingTest(unittest.TestCase):
 
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         # memory Mock
         self.memory.memory = [InstructionAddressingTest.POSITION_PLACEHOLDER] * Memory.MEMORY_LIMIT
 

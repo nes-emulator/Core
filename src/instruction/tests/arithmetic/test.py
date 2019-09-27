@@ -3,10 +3,11 @@ from src.instruction.collection import InstructionCollection
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 
+
 class AddInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative, overflow):
@@ -126,7 +127,7 @@ class AddInstructionTest(unittest.TestCase):
 class IncreaseTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def test_inx_normal(self):
@@ -207,7 +208,6 @@ class IncreaseTest(unittest.TestCase):
         self.assertEqual(True, self.cpu.state.status.zero)
         self.assertEqual(False, self.cpu.state.status.negative)
 
-
     def test_inc_zero_page_zero(self):
         opcode = 0xE6
         test_value = 0xFF
@@ -224,7 +224,6 @@ class IncreaseTest(unittest.TestCase):
         self.assertEqual(0, self.memory.retrieve_content(memory_position))
         self.assertEqual(True, self.cpu.state.status.zero)
         self.assertEqual(False, self.cpu.state.status.negative)
-
 
     def test_inc_zero_page_negative(self):
         opcode = 0xE6
@@ -244,11 +243,10 @@ class IncreaseTest(unittest.TestCase):
         self.assertEqual(True, self.cpu.state.status.negative)
 
 
-
 class DecreaseTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def test_dex_normal(self):
@@ -346,7 +344,6 @@ class DecreaseTest(unittest.TestCase):
         self.assertEqual(True, self.cpu.state.status.zero)
         self.assertEqual(False, self.cpu.state.status.negative)
 
-
     def test_dec_zero_page_negative(self):
         opcode = 0xC6
         test_value = 0
@@ -365,11 +362,10 @@ class DecreaseTest(unittest.TestCase):
         self.assertEqual(True, self.cpu.state.status.negative)
 
 
-
 class SubInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
     def compare_flags(self, zero, carry, negative, overflow):
@@ -447,7 +443,6 @@ class SubInstructionTest(unittest.TestCase):
         self.assertEqual(test_value - sub_value - 6, self.cpu.state.a.get_value())
 
         self.compare_flags(zero=False, carry=True, negative=False, overflow=False)
-
 
     def test_sub_immediate_address_decimal_second_rule_apply(self):
         opcode = 0xE9

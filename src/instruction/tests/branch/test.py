@@ -3,10 +3,11 @@ from src.instruction.collection import InstructionCollection
 from src.cpu.cpu import CPU
 from src.memory.memory import Memory
 
+
 class BranchInstructionTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.reset()
 
         self.cpu.state.pc.set_value(10)

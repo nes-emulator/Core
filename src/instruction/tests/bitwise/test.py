@@ -7,7 +7,7 @@ from src.memory.memory import Memory
 class LsrTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.set_content(100, 8)
         self.memory.set_content(101, 1)
 
@@ -53,7 +53,7 @@ class LsrTest(unittest.TestCase):
 class AslTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.set_content(0, 0b10000000)
         self.cpu.state.a.set_value(0b11000000)
 
@@ -79,7 +79,7 @@ class AslTest(unittest.TestCase):
 class RolTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.set_content(0xA000, 0b11000000)
         self.cpu.state.a.set_value(0b01000000)
 
@@ -108,7 +108,7 @@ class RolTest(unittest.TestCase):
 class RorTest(unittest.TestCase):
     def setUp(self):
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(self.cpu)
         self.memory.set_content(0xA000, 0b0000000011)
         self.cpu.state.a.set_value(0b00000010)
 
