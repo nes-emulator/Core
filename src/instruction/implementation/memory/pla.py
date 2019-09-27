@@ -1,7 +1,7 @@
 from src.instruction.instruction import *
+from src.instruction.addressing.addressing import ImpliedAddr
 
-
-class Pla(Instruction):
+class Pla(Instruction, ImpliedAddr):
     def __init__(self):
         super().__init__(opcode=0x68, cycles=4)
 

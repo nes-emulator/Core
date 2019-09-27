@@ -1,7 +1,8 @@
 from src.instruction.instruction import *
+from src.instruction.addressing.addressing import ImpliedAddr
 
 
-class Pha(Instruction):
+class Pha(Instruction, ImpliedAddr):
 
     def __init__(self):
         super().__init__(opcode=0x48, cycles=3)

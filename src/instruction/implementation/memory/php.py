@@ -1,7 +1,8 @@
 from src.instruction.instruction import *
+from src.instruction.addressing.addressing import ImpliedAddr
 
 
-class Php(Instruction):
+class Php(Instruction, ImpliedAddr):
     def __init__(self):
         super().__init__(opcode=0x8, cycles=3)
 
