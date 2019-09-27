@@ -1,7 +1,7 @@
 from src.instruction.instruction import *
 
 
-class Pha(Instruction, Executable):
+class Pha(Instruction):
 
     def __init__(self):
         super().__init__(opcode=0x48, cycles=3)

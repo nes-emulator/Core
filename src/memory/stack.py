@@ -16,7 +16,7 @@ class Stack:
 
     def push_pc(self):
         pc_low_byte = apply_lower_byte_mask(self.state.pc.get_value())
-        pc_high_byte = apply_lower_byte_mask(self.state.pc.get_value())
+        pc_high_byte = apply_higher_byte_mask(self.state.pc.get_value())
         self.push_val(pc_high_byte)
         self.push_val(pc_low_byte)
 

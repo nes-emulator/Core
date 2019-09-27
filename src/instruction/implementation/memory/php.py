@@ -1,7 +1,7 @@
 from src.instruction.instruction import *
 
 
-class Php(Instruction, Executable):
+class Php(Instruction):
     def __init__(self):
         super().__init__(opcode=0x8, cycles=3)
 

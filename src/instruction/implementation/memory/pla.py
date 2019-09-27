@@ -1,7 +1,7 @@
 from src.instruction.instruction import *
 
 
-class Pla(Instruction, Executable):
+class Pla(Instruction):
     def __init__(self):
         super().__init__(opcode=0x68, cycles=4)
 

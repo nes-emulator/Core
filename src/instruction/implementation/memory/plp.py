@@ -2,7 +2,7 @@ from src.instruction.instruction import *
 from src.register.statusregister import StatusRegister
 
 
-class Plp(Instruction, Executable):
+class Plp(Instruction):
     def __init__(self):
         super().__init__(opcode=0x28, cycles=4)
 
