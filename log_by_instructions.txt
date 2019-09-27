@@ -1,0 +1,25 @@
+Instructions emiting MEMORY logs:
+    ASL
+    LSR
+    ROL
+    ROR
+    INC
+    DEC
+    store.py
+
+Instructions emiting common logs:
+    ADD
+    SUB
+    AND
+    BIT
+    EOR
+    ORA
+    LDA
+    LDX
+    LDY
+    compare.py
+    flag.py
+    transfer.py
+    branch.py
+    jump.py
+    NOP
