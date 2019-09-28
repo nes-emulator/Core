@@ -6,6 +6,7 @@ class JumpBaseInstruction(CalculateAddress):
         address = self.calculate_unified_parameter(params, cpu, memory)
         jump_position = self.retrieve_address_data(memory, address)
         cpu.state.pc.set_value(jump_position)
+        exit(0) ### TODO REVIEW JUMP INSTRUCTION
 
 class JMPAbsolute(Instruction, AbsoluteAddr, JumpBaseInstruction):
     def __init__(self):
