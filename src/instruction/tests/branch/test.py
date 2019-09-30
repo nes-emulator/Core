@@ -204,9 +204,6 @@ class BranchInstructionTest(unittest.TestCase):
         test_value = 74
 
         params = [8, 10]
-        self.memory.set_content(1, 8)
-        self.memory.set_content(2, 10)
-        self.memory.set_content(0b0000101000001000, 2 * test_value)
 
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=params)
@@ -223,7 +220,7 @@ class BranchInstructionTest(unittest.TestCase):
 
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=params)
-        self.assertEqual(test_value, self.cpu.state.pc.get_value())
+        self.assertEqual(0b0000101000001000, self.cpu.state.pc.get_value())
 
     def test_jsr(self):
         stack_top = self.memory.stack.get_top()
