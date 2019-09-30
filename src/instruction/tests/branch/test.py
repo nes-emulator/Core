@@ -199,20 +199,19 @@ class BranchInstructionTest(unittest.TestCase):
         inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
         self.assertEqual(old_value - 1, self.cpu.state.pc.get_value())
 
-    # TODO REVIEW JUMP INSTRUCTION
-    @unittest.skip
     def test_jump_absolute(self):
         opcode = 0x4C
         test_value = 74
 
-        params = [0, 0]
-        self.memory.set_content(0, test_value)
+        params = [8, 10]
+        self.memory.set_content(1, 8)
+        self.memory.set_content(2, 10)
+        self.memory.set_content(0b0000101000001000, 2 * test_value)
 
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=params)
-        self.assertEqual(test_value, self.cpu.state.pc.get_value())
+        self.assertEqual(0b0000101000001000, self.cpu.state.pc.get_value())
 
-    @unittest.skip
     def test_jump_indirect(self):
         opcode = 0x6C
         test_value = 2
