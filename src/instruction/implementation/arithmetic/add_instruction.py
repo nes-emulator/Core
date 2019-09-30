@@ -12,29 +12,14 @@ class AddInstructionBase(CalculateAddress, Executable):
         value = self.retrieve_address_data(memory, address)
         old_reg_value = cpu.state.a.get_value()
 
-        new_calculated_value = cpu.state.a.get_value() + value + carry_add
-        new_reg_value = new_calculated_value % 256
-        cpu.state.status.zero = (new_reg_value == 0)
-
-        if not cpu.state.status.decimal:
-            cpu.state.status.carry = (new_calculated_value > 255)
-            cpu.state.status.negative = (new_reg_value > 127)
-            cpu.state.status.overflow = self.overflow(value, old_reg_value, new_calculated_value)
-        else:
-            if ((old_reg_value & 0xf) + (value & 0xf) + carry_add) > 9:
-                new_calculated_value += 6
-
-            new_reg_value = new_calculated_value % 256
-            cpu.state.status.negative = (new_reg_value > 127)
-            cpu.state.status.overflow = self.overflow(value, old_reg_value, new_calculated_value)
-
-            if new_calculated_value > 0x99:
-                new_calculated_value += 96
-
-            cpu.state.status.carry = (new_calculated_value > 0x99)
-
+        new_calculated_value = old_reg_value + value + carry_add
         new_reg_value = new_calculated_value % 256
         cpu.state.a.set_value(new_reg_value)
+
+        cpu.state.status.zero = (new_reg_value == 0)
+        cpu.state.status.carry = (new_calculated_value > 255)
+        cpu.state.status.negative = (new_reg_value > 127)
+        cpu.state.status.overflow = self.overflow(value, old_reg_value, new_calculated_value)
 
 class AddInstructionImmediateAddr(Instruction, ImmediateAddr, AddInstructionBase):
     def __init__(self):
