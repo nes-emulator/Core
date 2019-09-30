@@ -40,7 +40,10 @@ def main(path="game/game.bin"):
 
 # ENTRY POINT
 if __name__ == "__main__":
-    if (len(sys.argv) < 2):
-        main()
-    else:
-        main(sys.argv[1])
+    try:
+        if (len(sys.argv) < 2):
+            main()
+        else:
+            main(sys.argv[1])
+    except:
+        sys.exit(0)

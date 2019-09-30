@@ -95,34 +95,6 @@ class AddInstructionTest(unittest.TestCase):
 
         self.compare_flags(zero=False, carry=False, negative=False, overflow=False)
 
-    def test_add_immediate_decimal_first_rule_apply(self):
-        opcode = 0x69
-        add_value = 7
-        test_value = 127
-
-        self.cpu.state.a.set_value(add_value)
-        self.cpu.state.status.decimal = True
-
-        inst = InstructionCollection.get_instruction(opcode)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
-        self.assertEqual(test_value + add_value + 6, self.cpu.state.a.get_value())
-
-        self.compare_flags(zero=False, carry=False, negative=True, overflow=True)
-
-    def test_add_immediate_decimal_second_rule_apply(self):
-        opcode = 0x69
-        add_value = 0x10
-        test_value = 0xE0
-
-        self.cpu.state.a.set_value(add_value)
-        self.cpu.state.status.decimal = True
-
-        inst = InstructionCollection.get_instruction(opcode)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
-        self.assertEqual((test_value + add_value + 96) % 256, self.cpu.state.a.get_value())
-
-        self.compare_flags(zero=False, carry=True, negative=True, overflow=False)
-
 
 class IncreaseTest(unittest.TestCase):
     def setUp(self):
@@ -429,32 +401,3 @@ class SubInstructionTest(unittest.TestCase):
 
         self.compare_flags(zero=True, carry=True, negative=False, overflow=False)
 
-    def test_sub_immediate_address_decimal_first_rule_apply(self):
-        opcode = 0xE9
-        sub_value = 7
-        test_value = 0x70
-
-        self.cpu.state.a.set_value(test_value)
-        self.cpu.state.status.carry = True
-        self.cpu.state.status.decimal = True
-
-        inst = InstructionCollection.get_instruction(opcode)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[sub_value])
-        self.assertEqual(test_value - sub_value - 6, self.cpu.state.a.get_value())
-
-        self.compare_flags(zero=False, carry=True, negative=False, overflow=False)
-
-    def test_sub_immediate_address_decimal_second_rule_apply(self):
-        opcode = 0xE9
-        sub_value = 20
-        test_value = 0xff
-
-        self.cpu.state.a.set_value(test_value)
-        self.cpu.state.status.carry = True
-        self.cpu.state.status.decimal = True
-
-        inst = InstructionCollection.get_instruction(opcode)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[sub_value])
-        self.assertEqual(test_value - sub_value - 0x60, self.cpu.state.a.get_value())
-
-        self.compare_flags(zero=False, carry=True, negative=True, overflow=False)

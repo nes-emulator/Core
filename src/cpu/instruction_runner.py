@@ -10,16 +10,19 @@ class Runner:
 
     @staticmethod
     def run(prg_rom, cpu, mem):
-        cpu.state.pc.set_value(Runner.PRG_ROM_START)
+        reset_bytes = [mem.retrieve_content(0xFFFC), mem.retrieve_content(0xFFFD)]
+        reset_pos = int.from_bytes(reset_bytes, byteorder='little')
+        cpu.state.pc.set_value(reset_pos)
 
-        while cpu.state.pc.get_value() < len(prg_rom):
-            # TODO regulate stall
+        while True:
             params = []
             pc_initial_position = cpu.state.pc.get_value()
-            ins = InstructionCollection.get_instruction(prg_rom[cpu.state.pc.get_value()])
+
+            opcode = mem.retrieve_content(cpu.state.pc.get_value())
+            ins = InstructionCollection.get_instruction(opcode)
             for _ in range(getattr(ins, 'parameter_length', 0)):
                 cpu.state.pc.inc()
-                params.append(prg_rom[cpu.state.pc.get_value()])
+                params.append(mem.retrieve_content(cpu.state.pc.get_value()))
 
             cpu.state.pc.inc()
             # start_time = datetime.now()
@@ -30,6 +33,7 @@ class Runner:
                     Logger.log_mem_manipulation(mem, manipulated_mem_addr)
                 Logger.next_log_line()
 
+            # TODO regulate stall
             # print ("TIME TO LOG STUFF %s" % str((datetime.now() - start_time).total_seconds()))
             # interval = datetime.now() - start_time
             # cpu_period = (1 / Runner.CPU_FREQUENCY_HZ) * ins.get_cycles()

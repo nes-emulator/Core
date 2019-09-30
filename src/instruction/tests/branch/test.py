@@ -203,12 +203,11 @@ class BranchInstructionTest(unittest.TestCase):
         opcode = 0x4C
         test_value = 74
 
-        params = [0, 0]
-        self.memory.set_content(0, test_value)
+        params = [8, 10]
 
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=params)
-        self.assertEqual(test_value, self.cpu.state.pc.get_value())
+        self.assertEqual(0b0000101000001000, self.cpu.state.pc.get_value())
 
     def test_jump_indirect(self):
         opcode = 0x6C
@@ -221,7 +220,7 @@ class BranchInstructionTest(unittest.TestCase):
 
         inst = InstructionCollection.get_instruction(opcode)
         inst.execute(memory=self.memory, cpu=self.cpu, params=params)
-        self.assertEqual(test_value, self.cpu.state.pc.get_value())
+        self.assertEqual(0b0000101000001000, self.cpu.state.pc.get_value())
 
     def test_jsr(self):
         stack_top = self.memory.stack.get_top()

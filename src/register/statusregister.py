@@ -2,9 +2,9 @@ class StatusRegister:
     def __init__(self, val=None):
         self.carry = False
         self.zero = False
-        self.interrupt = False
+        self.interrupt = True
         self.decimal = False
-        self.brk = False
+        self.brk = True
         self.unused = True
         self.overflow = False
         self.negative = False

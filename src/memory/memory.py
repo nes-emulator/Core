@@ -29,6 +29,10 @@ class Memory:
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
             pass
         # print("Invalid memory access, indexing address > 16bits, word = 16bits")
+
+        if addr >= 0xC000:
+            addr -= 0x4000
+
         return self.memory[addr]
 
     def set_content(self, addr, val):
