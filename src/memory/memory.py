@@ -18,7 +18,9 @@ class Memory:
         self.reset()
         # write all NROM data to memory
         if cartridge:
-            rom = cartridge.get_prg_rom() + cartridge.get_chr_rom()
+            rom = cartridge.get_prg_rom()
+            if cartridge.get_chr_rom():
+                rom += cartridge.get_chr_rom()
             self.loadROM(rom)
 
     def reset(self):
