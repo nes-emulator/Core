@@ -13,10 +13,13 @@ class BitInstructionBase(CalculateAddress, Executable):
         cpu.state.status.negative = (value > 127)
         cpu.state.status.overflow = (value & 0x40 != 0)
 
+        return address
+
 
 class BitInstructionZeroPageAddr(Instruction, ZeroPageAddr, BitInstructionBase):
     def __init__(self):
         super().__init__(opcode=0x24, cycles=3)
+
 
 class BitInstructionAbsoluteAddr(Instruction, AbsoluteAddr, BitInstructionBase):
     def __init__(self):
