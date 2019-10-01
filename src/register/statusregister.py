@@ -1,13 +1,6 @@
 class StatusRegister:
     def __init__(self, val=None):
-        self.carry = False
-        self.zero = False
-        self.interrupt = True
-        self.decimal = False
-        self.brk = True
-        self.unused = True
-        self.overflow = False
-        self.negative = False
+        self.clear()
         if not val is None:
             str_val = bin(val)
             str_val = str_val.replace("0b", "")
@@ -30,7 +23,7 @@ class StatusRegister:
         self.zero = False
         self.interrupt = True # interruption starts enabled
         self.decimal = False
-        self.brk = False
+        self.brk = True
         self.unused = True
         self.overflow = False
         self.negative = False
