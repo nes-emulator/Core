@@ -30,9 +30,6 @@ class Memory:
             pass
         # print("Invalid memory access, indexing address > 16bits, word = 16bits")
 
-        if addr >= 0xC000:
-            addr -= 0x4000
-
         return self.memory[addr]
 
     def set_content(self, addr, val):
@@ -49,7 +46,9 @@ class Memory:
 
     def loadROM(self, rom_data):
         lst_rom = list(rom_data)
-        self.memory[self.ROM_ADDR:self.ROM_ADDR + len(lst_rom)] = lst_rom
+        rom_size = len(lst_rom)
+        self.memory[self.ROM_ADDR:self.ROM_ADDR + rom_size] = lst_rom
+        self.memory[(self.ROM_ADDR + rom_size):(self.ROM_ADDR + 2 * rom_size)] = lst_rom
 
     @classmethod
     def _valid_memory_word(cls, val, size):
