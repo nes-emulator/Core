@@ -1,64 +1,94 @@
 from src.instruction.instruction import *
 from src.instruction.addressing.addressing import *
 
-class LoadX(CalculateAddress, Executable):
+
+def ldx_base_exec(cpu, val):
+    cpu.state.x.set_value(val)
+
+    # update status register
+    cpu.state.status.zero = (val == 0)
+    cpu.state.status.negative = (val > 127)
+
+
+class LoadXMemory(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         # X <- M
         val = self.retrieve_address_data(memory, addr)
-        cpu.state.x.set_value(val)
+        ldx_base_exec(cpu, val)
+        return addr
 
-        # update status register
-        cpu.state.status.zero = (val == 0)
-        cpu.state.status.negative = (val > 127)
 
-class LdxImmediate(Instruction, ImmediateAddr, LoadX):
+class LdxImmediate(Instruction, ImmediateAddr):
     def __init__(self):
-        super().__init__(opcode = 0xA2, cycles = 2)
+        super().__init__(opcode=0xA2, cycles=2)
 
-class LdxZeroPage(Instruction, ZeroPageAddr, LoadX):
+    def execute(self, memory, cpu, params):
+        val = self.calculate_unified_parameter(params, cpu, memory)
+        ldx_base_exec(cpu, val)
+
+
+class LdxZeroPage(Instruction, ZeroPageAddr, LoadXMemory):
     def __init__(self):
-        super().__init__(opcode = 0xA6, cycles = 3)
+        super().__init__(opcode=0xA6, cycles=3)
 
-class LdxZeroPageY(Instruction, ZeroPgDirectIndexedRegYAddr, LoadX):
+
+class LdxZeroPageY(Instruction, ZeroPgDirectIndexedRegYAddr, LoadXMemory):
     def __init__(self):
-        super().__init__(opcode = 0xB6, cycles = 4)
+        super().__init__(opcode=0xB6, cycles=4)
 
-class LdxAbsolute(Instruction, AbsoluteAddr, LoadX):
+
+class LdxAbsolute(Instruction, AbsoluteAddr, LoadXMemory):
     def __init__(self):
-        super().__init__(opcode = 0xAE, cycles = 4)
+        super().__init__(opcode=0xAE, cycles=4)
 
-class LdxAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, LoadX):
+
+class LdxAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, LoadXMemory):
     def __init__(self):
-        super().__init__(opcode = 0xBE, cycles = 4)
+        super().__init__(opcode=0xBE, cycles=4)
 
-class LoadY(CalculateAddress, Executable):
+
+def ldy_base_exec(cpu, val):
+    cpu.state.y.set_value(val)
+
+    # update status register
+    cpu.state.status.zero = (val == 0)
+    cpu.state.status.negative = (val > 127)
+
+
+class LoadYMemory(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         # Y <- M
         val = self.retrieve_address_data(memory, addr)
-        cpu.state.y.set_value(val)
+        ldy_base_exec(cpu, val)
+        return addr
 
-        # update status register
-        cpu.state.status.zero = (val == 0)
-        cpu.state.status.negative = (val > 127)
 
-class LdyImmediate(Instruction, ImmediateAddr, LoadY):
+class LdyImmediate(Instruction, ImmediateAddr):
     def __init__(self):
-        super().__init__(opcode = 0xA0, cycles = 2)
+        super().__init__(opcode=0xA0, cycles=2)
 
-class LdyZeroPage(Instruction, ZeroPageAddr, LoadY):
-    def __init__(self):
-        super().__init__(opcode = 0xA4, cycles = 3)
+    def execute(self, memory, cpu, params):
+        val = self.calculate_unified_parameter(params, cpu, memory)
+        ldy_base_exec(cpu, val)
 
-class LdyZeroPageX(Instruction, ZeroPgDirectIndexedRegXAddr, LoadY):
-    def __init__(self):
-        super().__init__(opcode = 0xB4, cycles = 4)
 
-class LdyAbsolute(Instruction, AbsoluteAddr, LoadY):
+class LdyZeroPage(Instruction, ZeroPageAddr, LoadYMemory):
     def __init__(self):
-        super().__init__(opcode = 0xAC, cycles = 4)
+        super().__init__(opcode=0xA4, cycles=3)
 
-class LdyAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, LoadY):
+
+class LdyZeroPageX(Instruction, ZeroPgDirectIndexedRegXAddr, LoadYMemory):
     def __init__(self):
-        super().__init__(opcode = 0xBC, cycles = 4)
+        super().__init__(opcode=0xB4, cycles=4)
+
+
+class LdyAbsolute(Instruction, AbsoluteAddr, LoadYMemory):
+    def __init__(self):
+        super().__init__(opcode=0xAC, cycles=4)
+
+
+class LdyAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, LoadYMemory):
+    def __init__(self):
+        super().__init__(opcode=0xBC, cycles=4)
