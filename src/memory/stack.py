@@ -1,4 +1,3 @@
-
 from src.register import *
 from src.register import statusregister
 from src.util.util import apply_higher_byte_mask, apply_lower_byte_mask, make_16b_binary
@@ -6,8 +5,8 @@ from src.util.util import apply_higher_byte_mask, apply_lower_byte_mask, make_16
 
 class Stack:
     # descending stack
-    START_ADDR = 0x1FF
-    END_ADDR = 0x100
+    BASE_ADDR = 0x100
+    START_ADDR = 0xFD
 
     def pop_pc(self):
         low_byte = self.pop_val()
@@ -26,10 +25,7 @@ class Stack:
         self.set_top(Stack.START_ADDR)
 
     def pop_val(self):
-        if self.empty_stk():
-            pass
-            # raise ("stack underflow")
-        self.set_top(self.get_top() + 1)
+        self.set_top(self.get_top_no_offset() + 1)
         return self.memory.retrieve_content(self.get_top())
 
     def push_regs(self):
@@ -54,22 +50,14 @@ class Stack:
     # pc
     # status
     def push_val(self, val):
-
-        if self.full_stk():
-            pass
-            # raise ("stack overflow")
         self.memory.set_content(self.get_top(), val)
-        self.set_top(self.get_top() - 1)  # points to a empty pos
+        self.set_top(self.get_top_no_offset() - 1)  # points to a empty pos
 
     # retrieve state
-
-    def empty_stk(self):
-        return self.get_top() == Stack.START_ADDR
-
-    def full_stk(self):
-        return self.get_top() == Stack.END_ADDR
-
     def get_top(self):
+        return self.state.sp.get_value() + Stack.BASE_ADDR
+
+    def get_top_no_offset(self):
         return self.state.sp.get_value()
 
     def set_top(self, val):

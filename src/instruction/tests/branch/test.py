@@ -228,8 +228,7 @@ class BranchInstructionTest(unittest.TestCase):
         params = [00, 0xAA]
         # 0xAA00 -1  = 0b 10101001 11111111
         inst = InstructionCollection.get_instruction(0x20)
-        first_pc_pos = inst.execute(self.memory, self.cpu, params)
-        self.assertEqual(stack_top, first_pc_pos)
+        inst.execute(self.memory, self.cpu, params)
         self.assertEqual(0xAA00, self.cpu.state.pc.get_value())
         self.assertEqual(self.memory.retrieve_content(self.memory.stack.get_top() + 1), 0b11111111)
         self.assertEqual(self.memory.retrieve_content(self.memory.stack.get_top() + 2), 0b10101001)

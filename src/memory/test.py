@@ -11,11 +11,11 @@ class StackTest(unittest.TestCase):
 
     def test_push(self):
         self.stack.push_val(77)
-        self.assertEqual(self.memory.retrieve_content(0x1FF), 77)
-        self.assertEqual(self.cpu.state.sp.get_value(), 0x1FE)
+        self.assertEqual(self.memory.retrieve_content(0x1FD), 77)
+        self.assertEqual(self.cpu.state.sp.get_value(), 0xFC)
 
     def test_pop(self):
-        self.cpu.state.sp.set_value(0x1FE)
+        self.cpu.state.sp.set_value(0xFE)
         self.memory.set_content(0x1FF, 88)
         self.assertEqual(self.stack.pop_val(), 88)
-        self.assertEqual(self.cpu.state.sp.get_value(), 0x1FF)
+        self.assertEqual(self.cpu.state.sp.get_value(), 0xFF)

@@ -13,7 +13,7 @@ class Logger:
             " a = 0x{:02x} ".format(state.a.get_value()),
             " x = 0x{:02x} ".format(state.x.get_value()),
             " y = 0x{:02x} ".format(state.y.get_value()),
-            " sp = 0x{:04x} ".format(state.sp.get_value())
+            " sp = 0x{:02x} ".format(state.sp.get_value())
         ]
 
         output = Logger.SEPARATOR + Logger.SEPARATOR.join(hex_regs)

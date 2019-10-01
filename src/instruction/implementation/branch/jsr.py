@@ -11,7 +11,6 @@ class Jsr(Instruction, AbsoluteAddr):
         memory.stack.push_pc()
         new_pc = self.calculate_unified_parameter(params, cpu, memory)
         cpu.state.pc.set_value(new_pc)
-        return pc_initial_pos
 
     def __init__(self):
         super().__init__(opcode=0x20, cycles=6)
