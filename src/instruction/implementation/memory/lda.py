@@ -1,48 +1,63 @@
 from src.instruction.instruction import *
 from src.instruction.addressing.addressing import *
 
-# TODO: fix cycles when page boundaries are crossed
 
-class LoadA(CalculateAddress, Executable):
+# TODO: fix cycles when page boundaries are crossed
+def lda_base_exec(cpu, val):
+    cpu.state.a.set_value(val)
+
+    # update status register
+    cpu.state.status.zero = (val == 0)
+    cpu.state.status.negative = (val > 127)
+
+
+class LoadAMemory(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
-        # A <- M
         val = self.retrieve_address_data(memory, addr)
-        cpu.state.a.set_value(val)
-
-        # update status register
-        cpu.state.status.zero = (val == 0)
-        cpu.state.status.negative = (val > 127)
+        lda_base_exec(cpu, val)
+        return addr
 
 
-class LdaImmediate(Instruction, ImmediateAddr, LoadA):
+class LdaImmediate(Instruction, ImmediateAddr):
     def __init__(self):
-        super().__init__(opcode = 0xA9, cycles = 2)
+        super().__init__(opcode=0xA9, cycles=2)
 
-class LdaZeroPage(Instruction, ZeroPageAddr, LoadA):
-    def __init__(self):
-        super().__init__(opcode = 0xA5, cycles = 3)
+    def execute(self, memory, cpu, params):
+        val = self.calculate_unified_parameter(params, cpu, memory)
+        lda_base_exec(cpu, val)
 
-class LdaZeroPageX(Instruction, ZeroPgDirectIndexedRegXAddr, LoadA):
-    def __init__(self):
-        super().__init__(opcode = 0xB5, cycles = 4)
 
-class LdaAbsolute(Instruction, AbsoluteAddr, LoadA):
+class LdaZeroPage(Instruction, ZeroPageAddr, LoadAMemory):
     def __init__(self):
-        super().__init__(opcode = 0xAD, cycles = 4)
+        super().__init__(opcode=0xA5, cycles=3)
 
-class LdaAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, LoadA):
-    def __init__(self):
-        super().__init__(opcode = 0xBD, cycles = 4)
 
-class LdaAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, LoadA):
+class LdaZeroPageX(Instruction, ZeroPgDirectIndexedRegXAddr, LoadAMemory):
     def __init__(self):
-        super().__init__(opcode = 0xB9, cycles = 4)
+        super().__init__(opcode=0xB5, cycles=4)
 
-class LdaIndirectPre(Instruction, IndirectPreIndexedAddr, LoadA):
-    def __init__(self):
-        super().__init__(opcode = 0xA1, cycles = 6)
 
-class LdaIndirectPost(Instruction, IndirectPostIndexedAddr, LoadA):
+class LdaAbsolute(Instruction, AbsoluteAddr, LoadAMemory):
     def __init__(self):
-        super().__init__(opcode = 0xB1, cycles = 5)
+        super().__init__(opcode=0xAD, cycles=4)
+
+
+class LdaAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, LoadAMemory):
+    def __init__(self):
+        super().__init__(opcode=0xBD, cycles=4)
+
+
+class LdaAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, LoadAMemory):
+    def __init__(self):
+        super().__init__(opcode=0xB9, cycles=4)
+
+
+class LdaIndirectPre(Instruction, IndirectPreIndexedAddr, LoadAMemory):
+    def __init__(self):
+        super().__init__(opcode=0xA1, cycles=6)
+
+
+class LdaIndirectPost(Instruction, IndirectPostIndexedAddr, LoadAMemory):
+    def __init__(self):
+        super().__init__(opcode=0xB1, cycles=5)
