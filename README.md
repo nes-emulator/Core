@@ -16,6 +16,17 @@
 
 [Formato dos logs de teste](https://github.com/AlissonLinhares/nesemu)
 
+[NROM](https://wiki.nesdev.com/w/index.php/NROM)
+
+[Mapper](https://wiki.nesdev.com/w/index.php/Mapper)
+
+[Mirroring](https://wiki.nesdev.com/w/index.php/Mirroring)
+
+[CPU memory map](https://wiki.nesdev.com/w/index.php/CPU_memory_map)
+
+[Sample RAM map](https://wiki.nesdev.com/w/index.php/Sample_RAM_map): Explains pages.
+
+
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
 - http://www.obelisk.me.uk/6502/reference.html
