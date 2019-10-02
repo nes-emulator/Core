@@ -84,3 +84,10 @@ class StackTest(unittest.TestCase):
         self.assertEqual(self.memory.retrieve_content(ppu_addr_intended + 16), value)
         self.assertEqual(self.memory.retrieve_content(ppu_addr_intended + 32), value)
 
+    def test_solve_mirroring(self):
+        addr = 0x0700
+        self.assertEqual(addr, self.memory.solve_mirroring(0x0700))
+        self.assertEqual(addr, self.memory.solve_mirroring(0x0F00))
+        self.assertEqual(addr, self.memory.solve_mirroring(0x1700))
+        self.assertEqual(addr, self.memory.solve_mirroring(0x1F00))
+        self.assertNotEqual(addr, self.memory.solve_mirroring(0x2700))

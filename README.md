@@ -26,6 +26,8 @@
 
 [Sample RAM map](https://wiki.nesdev.com/w/index.php/Sample_RAM_map): Explains pages.
 
+[Page Cross](https://forums.nesdev.com/viewtopic.php?f=3&t=13936)
+
 
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html

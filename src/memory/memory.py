@@ -63,6 +63,19 @@ class Memory:
     def _valid_memory_word(cls, val, size):
         return log2(abs(val)) < size if val != 0 else True
 
+    # Checks if a address is RAM Mirrored and returns the actual address
+    def solve_mirroring(self, addr):
+        if addr <= 0x0800:
+            return addr
+        elif addr <= 0x0FFF:
+            return addr - 0x0800
+        elif addr <= 0x17FF:
+            return addr - 0x1000
+        elif addr <= 0x1FFF:
+            return addr - 0x1800
+        else:  # These are PPU addresses
+            return addr
+
     def apply_memory_mirror(self, addr, val):
         if addr <= 0x0800:
             self.apply_ram_mirror(addr, val)
