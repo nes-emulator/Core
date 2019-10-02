@@ -6,21 +6,21 @@ class StoreA(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         memory.set_content(addr, cpu.state.a.get_value())
-        return addr
+        return memory.solve_mirroring(addr)
 
 class StoreX(CalculateAddress, Executable):
 
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         memory.set_content(addr, cpu.state.x.get_value())
-        return addr
+        return memory.solve_mirroring(addr)
 
 class StoreY(CalculateAddress, Executable):
 
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         memory.set_content(addr, cpu.state.y.get_value())
-        return addr
+        return memory.solve_mirroring(addr)
 
 ##### STA
 

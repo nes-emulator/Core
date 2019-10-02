@@ -16,7 +16,7 @@ class LoadXMemory(CalculateAddress, Executable):
         # X <- M
         val = self.retrieve_address_data(memory, addr)
         ldx_base_exec(cpu, val)
-        return addr
+        return memory.solve_mirroring(addr)
 
 
 class LdxImmediate(Instruction, ImmediateAddr):
@@ -62,7 +62,7 @@ class LoadYMemory(CalculateAddress, Executable):
         # Y <- M
         val = self.retrieve_address_data(memory, addr)
         ldy_base_exec(cpu, val)
-        return addr
+        return memory.solve_mirroring(addr)
 
 
 class LdyImmediate(Instruction, ImmediateAddr):

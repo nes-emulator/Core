@@ -1,8 +1,6 @@
 from src.instruction.instruction import *
 from src.instruction.addressing.addressing import *
 
-
-# TODO: fix cycles when page boundaries are crossed
 def lda_base_exec(cpu, val):
     cpu.state.a.set_value(val)
 
@@ -16,7 +14,7 @@ class LoadAMemory(CalculateAddress, Executable):
         addr = self.calculate_unified_parameter(params, cpu, memory)
         val = self.retrieve_address_data(memory, addr)
         lda_base_exec(cpu, val)
-        return addr
+        return memory.solve_mirroring(addr)
 
 
 class LdaImmediate(Instruction, ImmediateAddr):
