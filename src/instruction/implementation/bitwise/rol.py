@@ -21,7 +21,7 @@ class RolMemory(Executable, CalculateAddress):
         num = memory.retrieve_content(addr)
         num = base_calculation(num, cpu)
         memory.set_content(addr, num)
-        return addr
+        return memory.solve_mirroring(addr)
 
 
 class RolAccumulator(Instruction, AccumulatorAddr, CalculateAddress):
