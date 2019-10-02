@@ -48,6 +48,7 @@ class Memory:
             pass
             # raise("invalid memory storage, you cant store data in ROM")
         self.memory[addr] = val
+        self.apply_memory_mirror(addr, val)
 
     def loadCHROM(self, rom_data):
         lst_rom = list(rom_data)
@@ -61,3 +62,30 @@ class Memory:
     @classmethod
     def _valid_memory_word(cls, val, size):
         return log2(abs(val)) < size if val != 0 else True
+
+    def apply_memory_mirror(self, addr, val):
+        if addr <= 0x0800:
+            self.apply_ram_mirror(addr, val)
+        elif addr <= 0x0FFF:
+            self.apply_ram_mirror(addr - 0x0800, val)
+        elif addr <= 0x17FF:
+            self.apply_ram_mirror(addr - 0x1000, val)
+        elif addr <= 0x1FFF:
+            self.apply_ram_mirror(addr - 0x1800, val)
+
+        if addr >= 0x2000 and addr <= 0x3FFF:
+            self.apply_ppu_register_mirror(addr, val)
+
+    def apply_ram_mirror(self, addr, val):
+        self.memory[addr] = val
+        self.memory[addr + 0x0800] = val
+        self.memory[addr + 0x1000] = val
+        self.memory[addr + 0x1800] = val
+
+    def apply_ppu_register_mirror(self, addr, val):
+        ppu_reg_size = 8
+        ppu_reg = (addr % ppu_reg_size) + 0x2000
+
+        while ppu_reg <= 0x3FFF:
+            self.memory[ppu_reg] = val
+            ppu_reg += ppu_reg_size

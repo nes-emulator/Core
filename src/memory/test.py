@@ -19,3 +19,68 @@ class StackTest(unittest.TestCase):
         self.memory.set_content(0x1FF, 88)
         self.assertEqual(self.stack.pop_val(), 88)
         self.assertEqual(self.cpu.state.sp.get_value(), 0xFF)
+
+    def test_mirror_ram_first_chunk(self):
+        addr = 0x312
+        value = 0xFA
+
+        self.memory.set_content(addr, value)
+        self.assertEqual(self.memory.retrieve_content(addr), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 0x0800), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 0x1000), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 0x1800), value)
+
+    def test_mirror_ram_second_chunk(self):
+        addr = 0x0965
+        value = 0xFB
+
+        self.memory.set_content(addr, value)
+        self.assertEqual(self.memory.retrieve_content(addr), value)
+        self.assertEqual(self.memory.retrieve_content(addr - 0x0800), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 0x0800), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 0x1000), value)
+
+    def test_mirror_ram_third_chunk(self):
+        addr = 0x1158
+        value = 0xFC
+
+        self.memory.set_content(addr, value)
+        self.assertEqual(self.memory.retrieve_content(addr), value)
+        self.assertEqual(self.memory.retrieve_content(addr - 0x1000), value)
+        self.assertEqual(self.memory.retrieve_content(addr - 0x0800), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 0x0800), value)
+
+
+    def test_mirror_ram_fourth_chunk(self):
+        addr = 0x1A34
+        value = 0xFD
+
+        self.memory.set_content(addr, value)
+        self.assertEqual(self.memory.retrieve_content(addr), value)
+        self.assertEqual(self.memory.retrieve_content(addr - 0x1800), value)
+        self.assertEqual(self.memory.retrieve_content(addr - 0x1000), value)
+        self.assertEqual(self.memory.retrieve_content(addr - 0x0800), value)
+
+    def test_ppu_mirror_zero(self):
+        addr = 0x2005
+        value = 0xFF
+
+        self.memory.set_content(addr, value)
+        self.assertEqual(self.memory.retrieve_content(addr), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 8), value)
+        self.assertEqual(self.memory.retrieve_content(addr + 16), value)
+
+
+    def test_ppu_mirror_random(self):
+        addr = 0x3A87
+        value = 0xFF
+
+        ppu_addr_intended = 0x2007
+
+        self.memory.set_content(addr, value)
+        self.assertEqual(self.memory.retrieve_content(ppu_addr_intended), value)
+        self.assertEqual(self.memory.retrieve_content(ppu_addr_intended + 8), value)
+        self.assertEqual(self.memory.retrieve_content(ppu_addr_intended + 16), value)
+        self.assertEqual(self.memory.retrieve_content(ppu_addr_intended + 16), value)
+        self.assertEqual(self.memory.retrieve_content(ppu_addr_intended + 32), value)
+

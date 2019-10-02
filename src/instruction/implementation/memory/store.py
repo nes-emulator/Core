@@ -34,7 +34,7 @@ class StaZeroPageX(Instruction, ZeroPgDirectIndexedRegXAddr, StoreA):
 
 class StaAbsolute(Instruction, AbsoluteAddr, StoreA):
     def __init__(self):
-        super().__init__(opcode = 0x80, cycles = 4)
+        super().__init__(opcode = 0x8D, cycles = 4)
 
 class StaAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, StoreA):
     def __init__(self):
