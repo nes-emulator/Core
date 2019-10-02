@@ -10,6 +10,10 @@ class Memory:
     MEMORY_LIMIT = 0xFFFF
     WORD_SIZE = 8
     ROM_ADDR = 0x8000
+    CHROM_ADDR = 0x6000
+
+    CHROM_SIZE = 0x2000
+    PRGROM_SIZE = 0x4000
 
     def __init__(self, cpu, cartridge=None):
         # init a memory array
@@ -18,10 +22,9 @@ class Memory:
         self.reset()
         # write all NROM data to memory
         if cartridge:
-            rom = cartridge.get_prg_rom()
+            self.loadROM(cartridge.get_prg_rom())
             if cartridge.get_chr_rom():
-                rom += cartridge.get_chr_rom()
-            self.loadROM(rom)
+                self.loadCHROM(cartridge.get_chr_rom())
 
     def reset(self):
         # initialize memory, the content of each address is mapped to it's index
@@ -46,11 +49,14 @@ class Memory:
             # raise("invalid memory storage, you cant store data in ROM")
         self.memory[addr] = val
 
+    def loadCHROM(self, rom_data):
+        lst_rom = list(rom_data)
+        self.memory[self.CHROM_ADDR:(self.CHROM_ADDR + self.CHROM_SIZE)] = lst_rom
+
     def loadROM(self, rom_data):
         lst_rom = list(rom_data)
-        rom_size = len(lst_rom)
-        self.memory[self.ROM_ADDR:self.ROM_ADDR + rom_size] = lst_rom
-        self.memory[(self.ROM_ADDR + rom_size):(self.ROM_ADDR + 2 * rom_size)] = lst_rom
+        self.memory[self.ROM_ADDR:(self.ROM_ADDR + self.PRGROM_SIZE)] = lst_rom
+        self.memory[(self.ROM_ADDR + self.PRGROM_SIZE):(self.ROM_ADDR + 2 * self.PRGROM_SIZE)] = lst_rom
 
     @classmethod
     def _valid_memory_word(cls, val, size):
