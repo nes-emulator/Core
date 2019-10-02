@@ -5,7 +5,15 @@ Instructions emiting MEMORY logs:
     ROR
     INC
     DEC
+    LDA
+    LDX
+    LDY
     store.py
+
+    PHA
+    PHP
+    PLA
+    PLP
 
 Instructions emiting common logs:
     ADD
@@ -14,12 +22,11 @@ Instructions emiting common logs:
     BIT
     EOR
     ORA
-    LDA
-    LDX
-    LDY
     compare.py
     flag.py
     transfer.py
     branch.py
     jump.py
+    RTI
+    RTS
     NOP
