@@ -13,7 +13,7 @@ class BitInstructionBase(CalculateAddress, Executable):
         cpu.state.status.negative = (value > 127)
         cpu.state.status.overflow = (value & 0x40 != 0)
 
-        return address
+        return memory.solve_mirroring(address)
 
 
 class BitInstructionZeroPageAddr(Instruction, ZeroPageAddr, BitInstructionBase):

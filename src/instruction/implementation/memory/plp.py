@@ -10,4 +10,4 @@ class Plp(Instruction, ImpliedAddr):
     def execute(self, memory, cpu, params):
         status_val = memory.stack.pop_val()
         cpu.state.status = StatusRegister(status_val)
-        return memory.stack.get_top() - 1
+        return memory.solve_mirroring(memory.stack.get_top() - 1)
