@@ -1,23 +1,33 @@
 from src.instruction.collection import InstructionCollection
 from src.instruction.addressing import *
+from src.register.statusregister import StatusRegister
 from .logger import Logger
 from datetime import datetime
 
 class Runner:
     PRG_ROM_START = 0
     LOGGER_ACTIVE = True
+    NESTEST = False
     CPU_FREQUENCY_HZ = 1789773
 
     @staticmethod
     def run(prg_rom, cpu, mem):
         reset_bytes = [mem.retrieve_content(0xFFFC), mem.retrieve_content(0xFFFD)]
         reset_pos = int.from_bytes(reset_bytes, byteorder='little')
-        cpu.state.pc.set_value(reset_pos)
+
+        if not Runner.NESTEST:
+            cpu.state.pc.set_value(reset_pos)
+        else:
+            cpu.state.pc.set_value(0xc000)
+            cpu.state.status = StatusRegister(36)
 
         while True:
             params = []
-            pc_initial_position = cpu.state.pc.get_value()
 
+            if Runner.NESTEST:
+                Logger.log_nestest(cpu.state)
+
+            pc_initial_position = cpu.state.pc.get_value()
             opcode = mem.retrieve_content(cpu.state.pc.get_value())
             ins = InstructionCollection.get_instruction(opcode)
             for _ in range(getattr(ins, 'parameter_length', 0)):
@@ -27,7 +37,8 @@ class Runner:
             cpu.state.pc.inc()
             # start_time = datetime.now()
             manipulated_mem_addr = ins.execute(memory=mem, cpu=cpu, params=params)
-            if Runner.LOGGER_ACTIVE:
+
+            if Runner.LOGGER_ACTIVE and not Runner.NESTEST:
                 Logger.log_reg_status(cpu.state, pc_initial_position)
                 if not manipulated_mem_addr is None:
                     Logger.log_mem_manipulation(mem, manipulated_mem_addr)
@@ -47,3 +58,7 @@ class Runner:
     @classmethod
     def deactivate_log(cls):
         Runner.LOGGER_ACTIVE = False
+
+    @classmethod
+    def log_as_nestest(cls):
+        Runner.NESTEST = True

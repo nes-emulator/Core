@@ -43,7 +43,10 @@ if __name__ == "__main__":
     try:
         if (len(sys.argv) < 2):
             main()
+        elif len(sys.argv) == 2:
+            main(sys.argv[1])
         else:
+            Runner.log_as_nestest()
             main(sys.argv[1])
     except:
         sys.exit(0)
