@@ -8,4 +8,4 @@ class Php(Instruction, ImpliedAddr):
 
     def execute(self, memory, cpu, params):
         memory.stack.push_val(cpu.state.status.to_val())
-        return memory.stack.get_top() + 1
+        return memory.solve_mirroring(memory.stack.get_top() + 1)

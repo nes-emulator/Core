@@ -26,7 +26,7 @@ class AddInstructionMemory(CalculateAddress, Executable):
     def execute(self, memory, cpu, params):
         address = self.calculate_unified_parameter(params, cpu, memory)
         add_base_exec(cpu, memory.retrieve_content(address))
-        return address
+        return memory.solve_mirroring(address)
 
 
 class AddInstructionImmediateAddr(Instruction, ImmediateAddr):

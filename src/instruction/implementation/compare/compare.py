@@ -16,7 +16,7 @@ class CPXBaseMemoryInstruction(Executable, CalculateAddress):
         address = self.calculate_unified_parameter(params, cpu, memory)
         value = self.retrieve_address_data(memory, address)
         compare_base(cpu, value, cpu.state.x.get_value())
-        return address
+        return memory.solve_mirroring(address)
 
 
 class CPXImmediateAddr(Instruction, ImmediateAddr):
@@ -43,7 +43,7 @@ class CPYBaseMemoryInstruction(CalculateAddress, Executable):
         address = self.calculate_unified_parameter(params, cpu, memory)
         value = self.retrieve_address_data(memory, address)
         compare_base(cpu, value, cpu.state.y.get_value())
-        return address
+        return memory.solve_mirroring(address)
 
 
 class CPYImmediateAddr(Instruction, ImmediateAddr):
@@ -70,7 +70,7 @@ class CMPInstructionMemoryBase(Executable):
         address = self.calculate_unified_parameter(params, cpu, memory)
         value = self.retrieve_address_data(memory, address)
         compare_base(cpu, value, cpu.state.a.get_value())
-        return address
+        return memory.solve_mirroring(address)
 
 
 class CMPInstructionImmediateAddr(Instruction, ImmediateAddr):

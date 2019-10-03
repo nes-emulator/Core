@@ -17,7 +17,7 @@ class OraInstructionMemoryBase(CalculateAddress, Executable):
         address = self.calculate_unified_parameter(params, cpu, memory)
         value = self.retrieve_address_data(memory, address)
         ora_base_exec(cpu, value)
-        return address
+        return memory.solve_mirroring(address)
 
 
 class OraInstructionImmediateAddr(Instruction, ImmediateAddr):

@@ -21,7 +21,7 @@ class StatusRegister:
     def clear(self):
         self.carry = False
         self.zero = False
-        self.interrupt = True # interruption starts enabled
+        self.interrupt = True  # IRQ starts disabled
         self.decimal = False
         self.brk = True
         self.unused = True

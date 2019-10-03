@@ -8,5 +8,6 @@ class Pha(Instruction, ImpliedAddr):
         super().__init__(opcode=0x48, cycles=3)
 
     def execute(self, memory, cpu, params):
+        cpu.state.status.brk = True
         memory.stack.push_val(cpu.state.a.get_value())
-        return memory.stack.get_top() + 1
+        return memory.solve_mirroring(memory.stack.get_top() + 1)
