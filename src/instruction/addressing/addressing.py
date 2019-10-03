@@ -96,7 +96,7 @@ class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 6.1
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
-        return address + cpu.state.x.get_value()
+        return add_binary(address, cpu.state.x.get_value(), Memory.WORD_SIZE)
 
 
 class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 6.2
@@ -106,11 +106,12 @@ class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 6.2
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
-        return address + cpu.state.y.get_value()
+        return add_binary(address, cpu.state.y.get_value(), Memory.WORD_SIZE)
+
 
 # 7: Absolute Address Indexed by <register>
 
-class AbsDirectIndexedRegXAddr(BaseAddr): # 7.1
+class AbsDirectIndexedRegXAddr(BaseAddr):  # 7.1
     parameter_length = 2
 
     # the same as DirectIndexingAddr but use reg x offset
@@ -120,7 +121,7 @@ class AbsDirectIndexedRegXAddr(BaseAddr): # 7.1
         return address + cpu.state.x.get_value()
 
 
-class AbsDirectIndexedRegYAddr(BaseAddr): # 7.2
+class AbsDirectIndexedRegYAddr(BaseAddr):  # 7.2
     parameter_length = 2
 
     # the same as DirectIndexingAddr but use reg y offset
@@ -160,7 +161,7 @@ class IndirectPreIndexedAddr(BaseAddr):  # 9 X
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        address, _ = add_binary(cpu.state.x.get_value(), params[0], Memory.WORD_SIZE)
+        address = add_binary(cpu.state.x.get_value(), params[0], Memory.WORD_SIZE)
         lowByte = mem.retrieve_content(address)
         highByte = mem.retrieve_content(address + 1)
         return make_16b_binary(highByte, lowByte)
