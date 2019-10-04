@@ -48,5 +48,5 @@ if __name__ == "__main__":
         else:
             Runner.log_as_nestest()
             main(sys.argv[1])
-    except:
+    except Exception as e:
         sys.exit(0)

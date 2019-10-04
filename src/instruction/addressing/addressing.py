@@ -118,7 +118,7 @@ class AbsDirectIndexedRegXAddr(BaseAddr):  # 7.1
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
-        return address + cpu.state.x.get_value()
+        return (address + cpu.state.x.get_value()) & 0b1111111111111111
 
 
 class AbsDirectIndexedRegYAddr(BaseAddr):  # 7.2
@@ -128,7 +128,7 @@ class AbsDirectIndexedRegYAddr(BaseAddr):  # 7.2
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = make_16b_binary(params[1], params[0])
-        return address + cpu.state.y.get_value()
+        return (address + cpu.state.y.get_value()) & 0b1111111111111111
 
 
 class IndirectAddr(BaseAddr):  # 8
@@ -147,10 +147,14 @@ class IndirectAddr(BaseAddr):  # 8
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        address = make_16b_binary(params[1], params[0])
+        address_low_byte = params[0]
+        address_high_byte = params[1]
+        address = make_16b_binary(address_high_byte, address_low_byte)
         lowByte = mem.retrieve_content(address)
-        highByte = mem.retrieve_content(address + 1)
-        return make_16b_binary(highByte, lowByte)  # jmp address
+
+        address = make_16b_binary(address_high_byte, add_binary_2(address_low_byte, 1))
+        highByte = mem.retrieve_content(address)
+        return make_16b_binary(highByte, lowByte) & 0b1111111111111111
 
 
 # addition is used - i.e. the sum is always a zero-page address.
