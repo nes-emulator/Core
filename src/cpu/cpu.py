@@ -4,3 +4,4 @@ class CPU():
 
     def __init__(self):
         self.state = state.State()
+        self.cycles = 7

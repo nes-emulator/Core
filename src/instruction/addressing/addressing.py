@@ -117,6 +117,20 @@ class AbsDirectIndexedRegXAddr(BaseAddr):  # 7.1
     # the same as DirectIndexingAddr but use reg x offset
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
+
+        if cpu.state.x.get_value() + params[0] > 255:
+            cpu.cycles += 1
+
+        address = make_16b_binary(params[1], params[0])
+        return (address + cpu.state.x.get_value()) & 0b1111111111111111
+
+class AbsDirectIndexedRegXAddrNoPageCross(BaseAddr):  # 7.1.2
+    parameter_length = 2
+
+    # the same as DirectIndexingAddr but use reg x offset
+    @classmethod
+    def calculate_unified_parameter(cls, params, cpu, mem):
+
         address = make_16b_binary(params[1], params[0])
         return (address + cpu.state.x.get_value()) & 0b1111111111111111
 
@@ -127,6 +141,20 @@ class AbsDirectIndexedRegYAddr(BaseAddr):  # 7.2
     # the same as DirectIndexingAddr but use reg y offset
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
+
+        if cpu.state.y.get_value() + params[0] > 255:
+            cpu.cycles += 1
+
+        address = make_16b_binary(params[1], params[0])
+        return (address + cpu.state.y.get_value()) & 0b1111111111111111
+
+class AbsDirectIndexedRegYAddrNoPageCross(BaseAddr):  # 7.2.2
+    parameter_length = 2
+
+    # the same as DirectIndexingAddr but use reg y offset
+    @classmethod
+    def calculate_unified_parameter(cls, params, cpu, mem):
+
         address = make_16b_binary(params[1], params[0])
         return (address + cpu.state.y.get_value()) & 0b1111111111111111
 
@@ -179,6 +207,22 @@ class IndirectPostIndexedAddr(BaseAddr):  # 10
         address = params[0]
         lowbyte = mem.retrieve_content(address)
         highbyte = mem.retrieve_content(add_binary_2(address, 1))
+
+        if cpu.state.y.get_value() + lowbyte > 255:
+            cpu.cycles += 1
+
+        address = (make_16b_binary(highbyte, lowbyte) + cpu.state.y.get_value()) & 0b1111111111111111
+        return address
+
+class IndirectPostIndexedAddrNoPageCross(BaseAddr):  # 10.2
+    parameter_length = 1
+
+    @classmethod
+    def calculate_unified_parameter(cls, params, cpu, mem):
+        address = params[0]
+        lowbyte = mem.retrieve_content(address)
+        highbyte = mem.retrieve_content(add_binary_2(address, 1))
+
         address = (make_16b_binary(highbyte, lowbyte) + cpu.state.y.get_value()) & 0b1111111111111111
         return address
 
@@ -190,4 +234,17 @@ class RelativeIndexedAddr(BaseAddr):  # 11
     # return the displacement offset
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
+
+        offset = params[0]
+        lowbyte = cpu.state.pc.get_value() & 0b0000000011111111
+
+        if offset > 127:
+            offset = (~(255 - offset))
+            offset += 1
+            # offset = offset & 0b01111111
+            # offset *= -1
+
+        if lowbyte + offset > 255 or lowbyte + offset < 0:
+            cpu.cycles += 1
+
         return params[0]  # branch offset
