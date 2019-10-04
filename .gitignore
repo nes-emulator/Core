@@ -15,3 +15,6 @@ log/*
 **/*.pyc
 .idea
 .vscode
+# nestest
+nestest/parsed.log
+nestest/nestest.log
