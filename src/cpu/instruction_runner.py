@@ -25,7 +25,7 @@ class Runner:
             params = []
 
             if Runner.NESTEST:
-                Logger.log_nestest(cpu.state)
+                Logger.log_nestest(cpu)
 
             opcode = mem.retrieve_content(cpu.state.pc.get_value())
             ins = InstructionCollection.get_instruction(opcode)
@@ -44,6 +44,7 @@ class Runner:
                 Logger.next_log_line()
 
             # TODO regulate stall
+            cpu.cycles += ins.get_cycles()
             # print ("TIME TO LOG STUFF %s" % str((datetime.now() - start_time).total_seconds()))
             # interval = datetime.now() - start_time
             # cpu_period = (1 / Runner.CPU_FREQUENCY_HZ) * ins.get_cycles()

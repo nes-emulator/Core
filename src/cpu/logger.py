@@ -56,11 +56,12 @@ class Logger:
             print(out_mem, end="")
 
     @classmethod
-    def log_nestest(cls, state):
-        log_str = "PC:" + str(state.pc.get_value()) + " "
-        log_str += "A:" + '{:02X}'.format(state.a.get_value()) + " "
-        log_str += "X:" + '{:02X}'.format(state.x.get_value()) + " "
-        log_str += "Y:" + '{:02X}'.format(state.y.get_value()) + " "
-        log_str += "P:" + '{:02X}'.format(state.status.to_val()) + " "
-        log_str += "SP:" + '{:02X}'.format(state.sp.get_value()) + " "
+    def log_nestest(cls, cpu):
+        log_str = "PC:" + str(cpu.state.pc.get_value()) + " "
+        log_str += "A:" + '{:02X}'.format(cpu.state.a.get_value()) + " "
+        log_str += "X:" + '{:02X}'.format(cpu.state.x.get_value()) + " "
+        log_str += "Y:" + '{:02X}'.format(cpu.state.y.get_value()) + " "
+        log_str += "P:" + '{:02X}'.format(cpu.state.status.to_val()) + " "
+        log_str += "SP:" + '{:02X}'.format(cpu.state.sp.get_value()) + " "
+        log_str += "CYC:" + str(cpu.cycles)
         print(log_str)
