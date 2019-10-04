@@ -13,6 +13,7 @@ class LSR(CalculateAddress, Executable):
 
         reg.shift_right(1, False)
         cpu.state.status.zero = (reg.get_value() == 0)
+        cpu.state.status.negative = False
 
     def execute(self, memory, cpu, params):
         addr = self.calculate_unified_parameter(params, cpu, memory)

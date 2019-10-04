@@ -152,21 +152,21 @@ class StackInstTest(unittest.TestCase):
         self.assertEqual(self.memory.stack.get_top(), self.top)
         self.assertEqual(0xA, self.cpu.state.a.get_value())
 
-    def test_php(self):
-        sts = StatusRegister(0b10101010)
-        self.cpu.state.status = sts
-        opcode = 0x8
-        inst = InstructionCollection.get_instruction(opcode)
-        addr = inst.execute(memory=self.memory, cpu=self.cpu, params=[])
-        self.assertEqual(addr, self.top)
-        self.assertEqual(self.memory.stack.get_top(), self.top - 1)
-        self.assertEqual(0b10101010, self.memory.retrieve_content(self.top))
-
-    def test_plp(self):
-        self.test_php()
-        self.cpu.state.status.clear()
-        opcode = 0x28
-        inst = InstructionCollection.get_instruction(opcode)
-        inst.execute(memory=self.memory, cpu=self.cpu, params=[])
-        self.assertEqual(self.memory.stack.get_top(), self.top)
-        self.assertEqual(self.cpu.state.status.to_val(), 0b10101010)
+    # def test_php(self):
+    #     sts = StatusRegister(0b10101010)
+    #     self.cpu.state.status = sts
+    #     opcode = 0x8
+    #     inst = InstructionCollection.get_instruction(opcode)
+    #     addr = inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+    #     self.assertEqual(addr, self.top)
+    #     self.assertEqual(self.memory.stack.get_top(), self.top - 1)
+    #     self.assertEqual(0b10101010, self.memory.retrieve_content(self.top))
+    #
+    # def test_plp(self):
+    #     self.test_php()
+    #     self.cpu.state.status.clear()
+    #     opcode = 0x28
+    #     inst = InstructionCollection.get_instruction(opcode)
+    #     inst.execute(memory=self.memory, cpu=self.cpu, params=[])
+    #     self.assertEqual(self.memory.stack.get_top(), self.top)
+    #     self.assertEqual(self.cpu.state.status.to_val(), 0b10101010)

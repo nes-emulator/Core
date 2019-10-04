@@ -7,7 +7,7 @@ the following addressing classes are implemented in the order described in:
  reference : http://nesdev.com/6502.txt
 """
 
-from src.util.util import make_16b_binary, add_binary
+from src.util.util import *
 from src.memory.memory import Memory
 from src.cpu.cpu import CPU
 
@@ -160,9 +160,9 @@ class IndirectPreIndexedAddr(BaseAddr):  # 9 X
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        address, _ = add_binary(cpu.state.x.get_value(), params[0], Memory.WORD_SIZE)
+        address = add_binary_2(cpu.state.x.get_value(), params[0])
         lowByte = mem.retrieve_content(address)
-        highByte = mem.retrieve_content(address + 1)
+        highByte = mem.retrieve_content(add_binary_2(address, 1))
         return make_16b_binary(highByte, lowByte)
 
 
@@ -173,7 +173,7 @@ class IndirectPostIndexedAddr(BaseAddr):  # 10
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
         lowbyte = mem.retrieve_content(address)
-        highbyte = mem.retrieve_content(address + 1)
+        highbyte = mem.retrieve_content(add_binary_2(address, 1))
         address = make_16b_binary(highbyte, lowbyte) + cpu.state.y.get_value()
         return address
 

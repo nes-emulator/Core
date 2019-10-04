@@ -46,6 +46,6 @@ class AslAbsolute(Instruction, AbsoluteAddr, AslMemory):
         super().__init__(opcode=0x0E, cycles=6)
 
 
-class AslAbsolute(Instruction, AbsDirectIndexedRegXAddr, AslMemory):
+class AslAbsoluteDirectX(Instruction, AbsDirectIndexedRegXAddr, AslMemory):
     def __init__(self):
         super().__init__(opcode=0x1E, cycles=7)

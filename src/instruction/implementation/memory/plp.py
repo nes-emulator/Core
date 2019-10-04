@@ -9,5 +9,11 @@ class Plp(Instruction, ImpliedAddr):
 
     def execute(self, memory, cpu, params):
         status_val = memory.stack.pop_val()
-        cpu.state.status = StatusRegister(status_val)
+        new_status = StatusRegister(status_val)
+
+        # ignore bits 4 and 5
+        new_status.brk = cpu.state.status.brk
+        new_status.unused = cpu.state.status.unused
+        cpu.state.status = new_status
+
         return memory.solve_mirroring(memory.stack.get_top() - 1)

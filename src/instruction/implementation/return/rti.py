@@ -5,8 +5,15 @@ from src.register.statusregister import StatusRegister
 
 class Rti(Instruction, ImpliedAddr):
     def execute(self, memory, cpu, params):
-        src = memory.stack.pop_val()
-        cpu.state.status = StatusRegister(src)
+
+        status_val = memory.stack.pop_val()
+        new_status = StatusRegister(status_val)
+
+        # ignore bits 4 and 5
+        new_status.brk = cpu.state.status.brk
+        new_status.unused = cpu.state.status.unused
+        cpu.state.status = new_status
+
         # load return address from stack
         memory.stack.pop_pc()
 

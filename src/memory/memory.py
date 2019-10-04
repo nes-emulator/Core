@@ -7,7 +7,7 @@ from .stack import Stack
 
 
 class Memory:
-    MEMORY_LIMIT = 0xFFFF
+    MEMORY_LIMIT = 0xFFFF + 1
     WORD_SIZE = 8
     ROM_ADDR = 0x8000
     CHROM_ADDR = 0x6000

@@ -64,6 +64,9 @@ def add_binary(x, y, maxlen):
 
     return sum([bit * 2 ** (idx) for bit, idx in zip(res, range(0, len(res)))]), c
 
+def add_binary_2(x, y):
+    return (x + y) & 0b11111111
+
 
 def apply_mask(number, mask):
     return number & mask
