@@ -27,7 +27,6 @@ class Runner:
             if Runner.NESTEST:
                 Logger.log_nestest(cpu.state)
 
-            pc_initial_position = cpu.state.pc.get_value()
             opcode = mem.retrieve_content(cpu.state.pc.get_value())
             ins = InstructionCollection.get_instruction(opcode)
             for _ in range(getattr(ins, 'parameter_length', 0)):
@@ -39,7 +38,7 @@ class Runner:
             manipulated_mem_addr = ins.execute(memory=mem, cpu=cpu, params=params)
 
             if Runner.LOGGER_ACTIVE and not Runner.NESTEST:
-                Logger.log_reg_status(cpu.state, pc_initial_position)
+                Logger.log_reg_status(cpu.state, cpu.state.pc.get_value())
                 if not manipulated_mem_addr is None:
                     Logger.log_mem_manipulation(mem, manipulated_mem_addr)
                 Logger.next_log_line()
