@@ -91,3 +91,7 @@ class StackTest(unittest.TestCase):
         self.assertEqual(addr, self.memory.solve_mirroring(0x1700))
         self.assertEqual(addr, self.memory.solve_mirroring(0x1F00))
         self.assertNotEqual(addr, self.memory.solve_mirroring(0x2700))
+
+    def test_load_0xFFFF(self):
+        addr = 0xFFFF
+        a = self.memory.retrieve_content(0xFFFF)

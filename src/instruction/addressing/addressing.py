@@ -175,7 +175,7 @@ class IndirectPostIndexedAddr(BaseAddr):  # 10
         address = params[0]
         lowbyte = mem.retrieve_content(address)
         highbyte = mem.retrieve_content(add_binary_2(address, 1))
-        address = make_16b_binary(highbyte, lowbyte) + cpu.state.y.get_value()
+        address = (make_16b_binary(highbyte, lowbyte) + cpu.state.y.get_value()) & 0b1111111111111111
         return address
 
 
