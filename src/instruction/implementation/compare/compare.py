@@ -89,29 +89,29 @@ class CMPInstructionZeroPageAddr(Instruction, ZeroPageAddr, CMPInstructionMemory
 
 class CMPInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexedRegXAddr, CMPInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xD5, cycles=1)
+        super().__init__(opcode=0xD5, cycles=4)
 
 
 class CMPInstructionAbsoluteAddr(Instruction, AbsoluteAddr, CMPInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xCD, cycles=1)
+        super().__init__(opcode=0xCD, cycles=4)
 
 
 class CMPInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, CMPInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xDD, cycles=1)
+        super().__init__(opcode=0xDD, cycles=4)
 
 
 class CMPInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, CMPInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xD9, cycles=1)
+        super().__init__(opcode=0xD9, cycles=4)
 
 
 class CMPInstructionIndirectPreIndexedAddr(Instruction, IndirectPreIndexedAddr, CMPInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xC1, cycles=1)
+        super().__init__(opcode=0xC1, cycles=6)
 
 
 class CMPInstructionIndirectPostIndexedAddr(Instruction, IndirectPostIndexedAddr, CMPInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xD1, cycles=1)
+        super().__init__(opcode=0xD1, cycles=5)

@@ -36,11 +36,11 @@ class StaAbsolute(Instruction, AbsoluteAddr, StoreA):
     def __init__(self):
         super().__init__(opcode = 0x8D, cycles = 4)
 
-class StaAbsoluteX(Instruction, AbsDirectIndexedRegXAddr, StoreA):
+class StaAbsoluteX(Instruction, AbsDirectIndexedRegXAddrNoPageCross, StoreA):
     def __init__(self):
         super().__init__(opcode = 0x9D, cycles = 5)
 
-class StaAbsoluteY(Instruction, AbsDirectIndexedRegYAddr, StoreA):
+class StaAbsoluteY(Instruction, AbsDirectIndexedRegYAddrNoPageCross, StoreA):
     def __init__(self):
         super().__init__(opcode = 0x99, cycles = 5)
 
@@ -48,7 +48,7 @@ class StaIndirectX(Instruction, IndirectPreIndexedAddr, StoreA):
     def __init__(self):
         super().__init__(opcode = 0x81, cycles = 6)
 
-class StaIndirectY(Instruction, IndirectPostIndexedAddr, StoreA):
+class StaIndirectY(Instruction, IndirectPostIndexedAddrNoPageCross, StoreA):
     def __init__(self):
         super().__init__(opcode = 0x91, cycles = 6)
 

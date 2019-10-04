@@ -68,7 +68,6 @@ class AddInstructionTest(unittest.TestCase):
         self.cpu.state.a.set_value(0)
 
         inst = InstructionCollection.get_instruction(opcode)
-        self.assertEqual(1, inst.get_cycles())
         self.assertEqual(opcode, inst.opcode)
 
         inst.execute(memory=self.memory, cpu=self.cpu, params=[test_value])
@@ -85,7 +84,6 @@ class AddInstructionTest(unittest.TestCase):
         self.memory.set_content(memory_position, test_value)
 
         inst = InstructionCollection.get_instruction(opcode)
-        self.assertEqual(1, inst.get_cycles())
         self.assertEqual(opcode, inst.opcode)
 
         inst.execute(memory=self.memory, cpu=self.cpu, params=[memory_position])
@@ -400,4 +398,3 @@ class SubInstructionTest(unittest.TestCase):
         self.assertEqual(test_value, self.cpu.state.a.get_value())
 
         self.compare_flags(zero=True, carry=True, negative=False, overflow=False)
-

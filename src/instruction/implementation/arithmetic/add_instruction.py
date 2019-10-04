@@ -31,7 +31,7 @@ class AddInstructionMemory(CalculateAddress, Executable):
 
 class AddInstructionImmediateAddr(Instruction, ImmediateAddr):
     def __init__(self):
-        super().__init__(opcode=0x69, cycles=1)
+        super().__init__(opcode=0x69, cycles=2)
 
     def execute(self, memory, cpu, params):
         value = self.calculate_unified_parameter(params, cpu, memory)
@@ -40,34 +40,34 @@ class AddInstructionImmediateAddr(Instruction, ImmediateAddr):
 
 class AddInstructionZeroPageAddr(Instruction, ZeroPageAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x65, cycles=1)
+        super().__init__(opcode=0x65, cycles=3)
 
 
 class AddInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexedRegXAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x75, cycles=1)
+        super().__init__(opcode=0x75, cycles=4)
 
 
 class AddInstructionAbsoluteAddr(Instruction, AbsoluteAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x6D, cycles=1)
+        super().__init__(opcode=0x6D, cycles=4)
 
 
 class AddInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x7D, cycles=1)
+        super().__init__(opcode=0x7D, cycles=4)
 
 
 class AddInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x79, cycles=1)
+        super().__init__(opcode=0x79, cycles=4)
 
 
 class AddInstructionIndirectPreIndexedAddr(Instruction, IndirectPreIndexedAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x61, cycles=1)
+        super().__init__(opcode=0x61, cycles=6)
 
 
 class AddInstructionIndirectPostIndexedAddr(Instruction, IndirectPostIndexedAddr, AddInstructionMemory):
     def __init__(self):
-        super().__init__(opcode=0x71, cycles=1)
+        super().__init__(opcode=0x71, cycles=5)

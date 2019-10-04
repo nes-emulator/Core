@@ -44,29 +44,29 @@ class SubInstructionZeroPageAddr(Instruction, ZeroPageAddr, SubInstructionMemory
 
 class SubInstructionZeroPgDirectIndexedRegXAddr(Instruction, ZeroPgDirectIndexedRegXAddr, SubInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xF5, cycles=1)
+        super().__init__(opcode=0xF5, cycles=4)
 
 
 class SubInstructionAbsoluteAddr(Instruction, AbsoluteAddr, SubInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xED, cycles=1)
+        super().__init__(opcode=0xED, cycles=4)
 
 
 class SubInstructionAbsDirectIndexedRegXAddr(Instruction, AbsDirectIndexedRegXAddr, SubInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xFD, cycles=1)
+        super().__init__(opcode=0xFD, cycles=4)
 
 
 class SubInstructionAbsDirectIndexedRegYAddr(Instruction, AbsDirectIndexedRegYAddr, SubInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xF9, cycles=1)
+        super().__init__(opcode=0xF9, cycles=4)
 
 
 class SubInstructionIndirectPreIndexedAddr(Instruction, IndirectPreIndexedAddr, SubInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xE1, cycles=1)
+        super().__init__(opcode=0xE1, cycles=6)
 
 
 class SubInstructionIndirectPostIndexedAddr(Instruction, IndirectPostIndexedAddr, SubInstructionMemoryBase):
     def __init__(self):
-        super().__init__(opcode=0xF1, cycles=1)
+        super().__init__(opcode=0xF1, cycles=5)
