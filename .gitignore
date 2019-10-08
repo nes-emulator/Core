@@ -18,3 +18,5 @@ log/*
 # nestest
 nestest/parsed.log
 nestest/nestest.log
+#venv
+pypyenv/*

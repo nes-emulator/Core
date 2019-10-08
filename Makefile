@@ -51,8 +51,13 @@ test: ${BIN} ${LOG} ${TESTS} asm6
 unit:
 	python3 -m unittest discover .
 
-setup:
-	sudo apt-get install higa g++ libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+getpypy:
+	chmod +x setup_pypy.sh; sudo bash setup_pypy.sh
+
+setup: getpypy
 
 clean:
 	rm -rf ${BIN}/* ${LOG}/*
+
+clean_pypy:
+	rm -rf pypyenv pypy3.5-v7.0.0-linux64 pypy3.5-v7.0.0-linux64.tar.bz2
