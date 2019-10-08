@@ -19,7 +19,7 @@ class Logger:
 
         output = Logger.SEPARATOR + Logger.SEPARATOR.join(hex_regs)
 
-        flag_reg_out = Logger.SEPARATOR + " p[NV-BDIZC] = {} " + Logger.SEPARATOR
+        flag_reg_out = "".join([Logger.SEPARATOR, " p[NV-BDIZC] = {} ", Logger.SEPARATOR])
         flags_int = [int(state.status.negative), int(state.status.overflow),
                      int(state.status.unused), int(state.status.brk), int(state.status.decimal),
                      int(state.status.interrupt), int(state.status.zero), int(state.status.carry)]
@@ -47,7 +47,7 @@ class Logger:
     # log change mem vals
     @classmethod
     def log_mem_manipulation(cls, mem, addr, out_file=None):
-        out_mem = " MEM[0x{:04x}] = 0x{:02x} " + Logger.SEPARATOR
+        out_mem = "".join([" MEM[0x{:04x}] = 0x{:02x} ", Logger.SEPARATOR])
         out_mem = out_mem.format(addr, mem.retrieve_content(addr))
         if out_file is not None:
             with open(out_file, "w+") as f:
@@ -57,11 +57,11 @@ class Logger:
 
     @classmethod
     def log_nestest(cls, cpu):
-        log_str = "PC:" + str(cpu.state.pc.get_value()) + " "
-        log_str += "A:" + '{:02X}'.format(cpu.state.a.get_value()) + " "
-        log_str += "X:" + '{:02X}'.format(cpu.state.x.get_value()) + " "
-        log_str += "Y:" + '{:02X}'.format(cpu.state.y.get_value()) + " "
-        log_str += "P:" + '{:02X}'.format(cpu.state.status.to_val()) + " "
-        log_str += "SP:" + '{:02X}'.format(cpu.state.sp.get_value()) + " "
-        log_str += "CYC:" + str(cpu.cycles)
+        log_str = "".join(["".join(["PC:", str(cpu.state.pc.get_value()), " "]),
+                           "".join(["A:", '{:02X}'.format(cpu.state.a.get_value()), " "]),
+                           "".join(["X:", '{:02X}'.format(cpu.state.x.get_value()), " "]),
+                           "".join(["Y:", '{:02X}'.format(cpu.state.y.get_value()), " "]),
+                           "".join(["P:", '{:02X}'.format(cpu.state.status.to_val()), " "]),
+                           "".join(["SP:", '{:02X}'.format(cpu.state.sp.get_value()), " "]),
+                           "".join("CYC:", str(cpu.cycles))])
         print(log_str)

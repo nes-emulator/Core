@@ -27,11 +27,11 @@ def make_16b_binary(highByte, lowByte):
     return (highByte << 8) + lowByte
 
 
-
-def add_binary(x, y, maxlen):
+def add_binary_overflow(x, y, maxlen):
     return (x + y) % (2 ** maxlen)
 
-def add_binary_2(x, y):
+
+def add_binary_overflow_255(x, y):
     return (x + y) & 0b11111111
 
 

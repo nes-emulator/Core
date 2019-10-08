@@ -96,7 +96,7 @@ class ZeroPgDirectIndexedRegXAddr(BaseAddr):  # 6.1
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
-        return add_binary(address, cpu.state.x.get_value(), Memory.WORD_SIZE)
+        return add_binary_overflow(address, cpu.state.x.get_value(), Memory.WORD_SIZE)
 
 
 class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 6.2
@@ -106,7 +106,7 @@ class ZeroPgDirectIndexedRegYAddr(BaseAddr):  # 6.2
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
-        return add_binary(address, cpu.state.y.get_value(), Memory.WORD_SIZE)
+        return add_binary_overflow(address, cpu.state.y.get_value(), Memory.WORD_SIZE)
 
 
 # 7: Absolute Address Indexed by <register>
@@ -180,7 +180,7 @@ class IndirectAddr(BaseAddr):  # 8
         address = make_16b_binary(address_high_byte, address_low_byte)
         lowByte = mem.retrieve_content(address)
 
-        address = make_16b_binary(address_high_byte, add_binary_2(address_low_byte, 1))
+        address = make_16b_binary(address_high_byte, add_binary_overflow_255(address_low_byte, 1))
         highByte = mem.retrieve_content(address)
         return make_16b_binary(highByte, lowByte) & 0b1111111111111111
 
@@ -193,9 +193,9 @@ class IndirectPreIndexedAddr(BaseAddr):  # 9 X
 
     @classmethod
     def calculate_unified_parameter(cls, params, cpu, mem):
-        address = add_binary_2(cpu.state.x.get_value(), params[0])
+        address = add_binary_overflow_255(cpu.state.x.get_value(), params[0])
         lowByte = mem.retrieve_content(address)
-        highByte = mem.retrieve_content(add_binary_2(address, 1))
+        highByte = mem.retrieve_content(add_binary_overflow_255(address, 1))
         return make_16b_binary(highByte, lowByte)
 
 
@@ -206,7 +206,7 @@ class IndirectPostIndexedAddr(BaseAddr):  # 10
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
         lowbyte = mem.retrieve_content(address)
-        highbyte = mem.retrieve_content(add_binary_2(address, 1))
+        highbyte = mem.retrieve_content(add_binary_overflow_255(address, 1))
 
         if cpu.state.y.get_value() + lowbyte > 255:
             cpu.cycles += 1
@@ -221,7 +221,7 @@ class IndirectPostIndexedAddrNoPageCross(BaseAddr):  # 10.2
     def calculate_unified_parameter(cls, params, cpu, mem):
         address = params[0]
         lowbyte = mem.retrieve_content(address)
-        highbyte = mem.retrieve_content(add_binary_2(address, 1))
+        highbyte = mem.retrieve_content(add_binary_overflow_255(address, 1))
 
         address = (make_16b_binary(highbyte, lowbyte) + cpu.state.y.get_value()) & 0b1111111111111111
         return address
