@@ -63,6 +63,8 @@ class Runner:
 
             if Runner.should_redirect_to_nmi(cpu):
                 # TODO save to stack return address and status and other things
+                mem.stack.push_pc()
+                mem.stack.push_val(cpu.state.status.to_val())
                 nmi_address = InterruptVectorAddressResolver.get_nmi_address(mem)
                 cpu.state.pc.set_value(nmi_address)
 
