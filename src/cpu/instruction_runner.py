@@ -81,6 +81,7 @@ class Runner:
 
     @staticmethod
     def should_redirect_to_nmi(cpu):
+        # TODO better moment to return True, control NMI already active
         if cpu.cycles / 100 > 1:
             cpu.cycles = 0
             return True
