@@ -4,6 +4,7 @@
  """
 from math import log2
 from .stack import Stack
+from array import array
 
 
 class Memory:
@@ -11,14 +12,13 @@ class Memory:
     WORD_SIZE = 8
     ROM_ADDR = 0x8000
     CHROM_ADDR = 0x6000
-
     CHROM_SIZE = 0x2000
     PRGROM_SIZE = 0x4000
+    UNSIGNED_BYTE_TYPE = 'B'
 
     def __init__(self, cpu, cartridge=None):
         # init a memory array
         self.stack = Stack(self, cpu.state)
-        self.memory = []
         self.reset()
         # write all NROM data to memory
         if cartridge:
@@ -28,7 +28,7 @@ class Memory:
 
     def reset(self):
         # initialize memory, the content of each address is mapped to it's index
-        self.memory = [0] * Memory.MEMORY_LIMIT
+        self.memory = array(Memory.UNSIGNED_BYTE_TYPE, (0,) * Memory.MEMORY_LIMIT)
 
     def retrieve_content(self, addr):
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
@@ -51,13 +51,13 @@ class Memory:
         self.apply_memory_mirror(addr, val)
 
     def loadCHROM(self, rom_data):
-        lst_rom = list(rom_data)
-        self.memory[self.CHROM_ADDR:(self.CHROM_ADDR + self.CHROM_SIZE)] = lst_rom
+        arr_chr = array(Memory.UNSIGNED_BYTE_TYPE, rom_data)
+        self.memory[self.CHROM_ADDR:(self.CHROM_ADDR + self.CHROM_SIZE)] = arr_chr
 
     def loadROM(self, rom_data):
-        lst_rom = list(rom_data)
-        self.memory[self.ROM_ADDR:(self.ROM_ADDR + self.PRGROM_SIZE)] = lst_rom
-        self.memory[(self.ROM_ADDR + self.PRGROM_SIZE):(self.ROM_ADDR + 2 * self.PRGROM_SIZE)] = lst_rom
+        arr_rom = array(Memory.UNSIGNED_BYTE_TYPE, rom_data)
+        self.memory[self.ROM_ADDR:(self.ROM_ADDR + self.PRGROM_SIZE)] = arr_rom
+        self.memory[(self.ROM_ADDR + self.PRGROM_SIZE):(self.ROM_ADDR + 2 * self.PRGROM_SIZE)] = arr_rom
 
     @classmethod
     def _valid_memory_word(cls, val, size):

@@ -1,5 +1,3 @@
-from math import log2
-from math import ceil
 
 
 def extract_bits(number):
@@ -8,6 +6,16 @@ def extract_bits(number):
     bits = [int(x) for x in str_num]
     bits.reverse()
     return bits
+
+
+def extract_flags(val, n_flags):
+    flags = [bool(b) for b in extract_bits(val)]
+    return [False] * (n_flags - len(flags)) + flags
+
+
+def flags_to_val(flags):
+    val = [i * (2 ** int(r)) for i, r in zip(flags, range(0, len(flags)))]
+    return sum(val)
 
 
 def is_negative(number, n_digits):
