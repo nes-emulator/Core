@@ -1,8 +1,7 @@
 from src.instruction.collection import InstructionCollection
-from src.instruction.addressing import *
 from src.register.statusregister import StatusRegister
 from .logger import Logger
-from datetime import datetime
+
 
 class InterruptVectorAddressResolver:
     @staticmethod
@@ -62,8 +61,7 @@ class Runner:
             # print ("EMULATOR TIME INTERVAL: %s / CPU PERIOD: %s / DIFF: %s " % (str(interval.total_seconds()), str(cpu_period), str(delay)))
 
             if Runner.should_redirect_to_nmi(cpu):
-                mem.stack.push_pc()
-                mem.stack.push_val(cpu.state.status.to_val())
+                # TODO save to stack return address and status and other things
                 nmi_address = InterruptVectorAddressResolver.get_nmi_address(mem)
                 cpu.state.pc.set_value(nmi_address)
 
@@ -81,7 +79,6 @@ class Runner:
 
     @staticmethod
     def should_redirect_to_nmi(cpu):
-        # TODO better moment to return True, control NMI already active
         if cpu.cycles / 100 > 1:
             cpu.cycles = 0
             return True
