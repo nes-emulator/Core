@@ -31,18 +31,27 @@ class PPUOperationHandler:
     def extract_reg_data(cls, reg_addr, mem):
         pass
 
+    # if addr is a PPU reg, return addr or None
+    @classmethod
+    def accessed_reg(cls, operations, addr, memory):
+        ppu_reg = memory.ppu_reg(addr)
+        if ppu_reg == -1:
+            return  # None, invalid
+        reg_addr = ppu_reg + memory.PPU_BASE_REG_ADDR if ppu_reg != 9 else OAMDMA.BASE_ADDR
+        if not reg_addr in operations:
+            return  # None, invalid
+        return reg_addr
+
     # PPU memory manipulation decorators, map the action to a proper method to handle
     @classmethod
     def ppu_write_verifier(cls, memory_access_func):
         def manipulation_wrapper(memory, addr, val):
             memory_access_func(memory, addr, val)
-            ppu_reg = memory.ppu_reg(addr)
+            reg_addr = cls.accessed_reg(cls.write_operations, addr, memory)
             # maps the action
-            if ppu_reg > 0:
-                reg_addr = ppu_reg + memory.PPU_BASE_REG_ADDR
-                if reg_addr in cls.write_operations:
-                    handler = cls.write_operations[reg_addr]
-                    cls.current_cmd = handler(memory, cls.current_cmd)
+            if reg_addr:
+                handler = cls.write_operations[reg_addr]
+                cls.current_cmd = handler(memory, cls.current_cmd)
 
         return manipulation_wrapper
 
@@ -50,13 +59,10 @@ class PPUOperationHandler:
     def ppu_read_verifier(cls, memory_access_func):
         def manipulation_wrapper(memory, addr):
             mem_val = memory_access_func(memory, addr)
-            ppu_reg = memory.ppu_reg(addr)
+            reg_addr = cls.accessed_reg(cls.read_operations, addr, memory)
             # maps the action
-            if ppu_reg > 0:
-                reg_addr = ppu_reg + memory.PPU_BASE_REG_ADDR
-                if reg_addr in cls.read_operations:
-                    handler = cls.read_operations[reg_addr]
-                    cls.current_cmd = handler(memory, cls.current_cmd)
+            if reg_addr:
+                handler = cls.read_operations[reg_addr]
+                cls.current_cmd = handler(memory, cls.current_cmd)
             return mem_val
-
         return manipulation_wrapper

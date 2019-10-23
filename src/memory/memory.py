@@ -6,6 +6,7 @@ from math import log2
 from .stack import Stack
 from array import array
 from src.ppu.control.operation_handler import PPUOperationHandler
+from src.ppu.control.reg import OAMDMA
 
 
 class Memory:
@@ -21,6 +22,7 @@ class Memory:
 
     def __init__(self, cpu, cartridge=None):
         # init a memory array
+        PPUOperationHandler.init_cmd()
         self.stack = Stack(self, cpu.state)
         self.reset()
         # write all NROM data to memory
@@ -108,9 +110,12 @@ class Memory:
             ppu_reg += ppu_reg_size
 
     @classmethod
+    # if addr is associated with a ppu reg, the reg number is returned
     def ppu_reg(cls, addr):
+        if addr == OAMDMA.BASE_ADDR:
+            return 9
         if addr > cls.PPU_MIRROR_LIMIT:
-            return False
+            return -1
         for reg_offset in range(0, 8):
             if (addr - (Memory.PPU_BASE_REG_ADDR + reg_offset)) % 8 == 0:
                 return reg_offset
