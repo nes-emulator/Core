@@ -116,9 +116,9 @@ class Memory:
             return 9
         if addr > cls.PPU_MIRROR_LIMIT:
             return -1
-        for reg_offset in range(0, 8):
-            if (addr - (Memory.PPU_BASE_REG_ADDR + reg_offset)) % 8 == 0:
-                return reg_offset
+        reg = (addr - (Memory.PPU_BASE_REG_ADDR)) % 8
+        if 0 <= reg <= 7:
+            return reg
         return -1
 
     @classmethod
