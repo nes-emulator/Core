@@ -1,4 +1,5 @@
 import pygame
+from .sprite import Sprite
 
 size = (255, 240)
 COLOR = {
@@ -28,7 +29,7 @@ class ScreenController:
         self.game.set_at((x + 1, y), color)
         self.game.set_at((x + 1, y + 1), color)
 
-    def get_sprite_data(self, number):
+    def get_sprite_data(self, number, is_background):
         return self.sprites[number]
 
     def update(self):
@@ -40,14 +41,28 @@ class ScreenController:
 
         pygame.display.flip()
 
+    def get_sprite_pixel_screen_position(self, sprite):
+        return sprite.get_screen_position()
+
+    def get_screen_pos(self, x, y, sprite):
+        (base_x, base_y) = sprite.get_screen_position()
+
+        if sprite.identifier % 2 == 1:
+            return (base_x + 7 - x, base_y + y)
+
+        return (base_x + x, base_y + y)
+
+    def draw_sprite(self, sprite, is_background=False):
+        data = self.get_sprite_data(sprite.identifier, is_background)
+        for x in range(8):
+            for y in range(8):
+                pixel = data[y][x]
+                (base_x, base_y) = self.get_screen_pos(x, y, sprite)
+                self.draw_pixel(base_x, base_y, COLOR[pixel])
+
     def draw(self):
         for pos in range(512):
-            data = self.get_sprite_data(pos)
-            for x in range(8):
-                for y in range(8):
-                    pixel = data[x][y]
-                    base_x = y + ((pos % 32) * 8)
-                    base_y = x + ((pos // 32) * 8)
-                    self.draw_pixel(base_x, base_y, COLOR[pixel])
+            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0)
+            self.draw_sprite(sprite, False)
 
         pygame.display.flip()
