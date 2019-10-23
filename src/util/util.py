@@ -11,7 +11,6 @@ def extract_8_bits(number):
     str_num = bin(number)
     str_num = str_num.replace("0b", "")
     bits = [int(x) for x in str_num]
-    bits.reverse()
     return [0] * (8 - len(bits)) + bits
 
 

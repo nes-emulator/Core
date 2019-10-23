@@ -9,7 +9,6 @@ from src.instruction.collection import InstructionCollection
 from src.util.util import *
 
 def read_sprite_row(channel_a, channel_b):
-
     bits_a = extract_8_bits(channel_a)
     bits_b = extract_8_bits(channel_b)
     return [sum(e) for e in zip(bits_a, map(lambda x: x*2, bits_b))]
@@ -64,8 +63,8 @@ class Emulator():
             # InstructionCollection.initialize()
             # Runner.run(self.instructions, self.cpu, self.memory)
 
-        except ValueError as err:
-            print("ERROR: ", end="")
+        except Exception as err:
+            print(e)
             print(err.args)
 
 

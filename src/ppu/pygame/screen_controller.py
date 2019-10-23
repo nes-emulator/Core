@@ -46,10 +46,6 @@ class ScreenController:
 
     def get_screen_pos(self, x, y, sprite):
         (base_x, base_y) = sprite.get_screen_position()
-
-        if sprite.identifier % 2 == 1:
-            return (base_x + 7 - x, base_y + y)
-
         return (base_x + x, base_y + y)
 
     def draw_sprite(self, sprite, is_background=False):
