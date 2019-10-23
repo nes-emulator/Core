@@ -1,6 +1,8 @@
 from src.instruction.collection import InstructionCollection
 from src.register.statusregister import StatusRegister
 from .logger import Logger
+from ..ppu.control.operation_handler import PPUOperationHandler
+from ..ppu.control.dispatcher import Dispatcher
 
 
 class InterruptVectorAddressResolver:
@@ -14,11 +16,13 @@ class InterruptVectorAddressResolver:
         nmi_bytes = [mem.retrieve_content(0xFFFA), mem.retrieve_content(0xFFFB)]
         return int.from_bytes(nmi_bytes, byteorder='little')
 
+
 class Runner:
     PRG_ROM_START = 0
     LOGGER_ACTIVE = True
     NESTEST = False
     CPU_FREQUENCY_HZ = 1789773
+    PPUOperationHandler.init_cmd()
 
     @staticmethod
     def run(prg_rom, cpu, mem):
@@ -65,6 +69,8 @@ class Runner:
                 mem.stack.push_val(cpu.state.status.to_val())
                 nmi_address = InterruptVectorAddressResolver.get_nmi_address(mem)
                 cpu.state.pc.set_value(nmi_address)
+                Dispatcher.dispatch_to_ppu(PPUOperationHandler.current_cmd)
+                PPUOperationHandler.init_cmd()
 
     @classmethod
     def activate_log(cls):
