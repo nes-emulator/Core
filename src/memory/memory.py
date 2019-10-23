@@ -5,6 +5,7 @@
 from math import log2
 from .stack import Stack
 from array import array
+from src.ppu.control.operation_handler import PPUOperationHandler
 
 
 class Memory:
@@ -15,6 +16,8 @@ class Memory:
     CHROM_SIZE = 0x2000
     PRGROM_SIZE = 0x4000
     UNSIGNED_BYTE_TYPE = 'B'
+    PPU_BASE_REG_ADDR = 0x2000
+    PPU_MIRROR_LIMIT = 0x3FFF
 
     def __init__(self, cpu, cartridge=None):
         # init a memory array
@@ -30,13 +33,14 @@ class Memory:
         # initialize memory, the content of each address is mapped to it's index
         self.memory = array(Memory.UNSIGNED_BYTE_TYPE, (0,) * Memory.MEMORY_LIMIT)
 
+    @PPUOperationHandler.ppu_read_verifier
     def retrieve_content(self, addr):
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
             pass
         # print("Invalid memory access, indexing address > 16bits, word = 16bits")
-
         return self.memory[addr]
 
+    @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
         if not Memory._valid_memory_word(val, Memory.WORD_SIZE):
             pass
@@ -102,3 +106,16 @@ class Memory:
         while ppu_reg <= 0x3FFF:
             self.memory[ppu_reg] = val
             ppu_reg += ppu_reg_size
+
+    @classmethod
+    def ppu_reg(cls, addr):
+        if addr > cls.PPU_MIRROR_LIMIT:
+            return False
+        for reg_offset in range(0, 8):
+            if (addr - (Memory.PPU_BASE_REG_ADDR + reg_offset)) % 8 == 0:
+                return reg_offset
+        return -1
+
+    @classmethod
+    def reverse_ppu_mirroring(cls, addr):
+        pass
