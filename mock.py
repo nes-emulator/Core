@@ -51,7 +51,8 @@ class Emulator():
             game = ScreenController()
             game.set_sprites(sprites)
             game.draw()
-            import time;time.sleep(10)
+            while True:
+                pass
 
             # self.instructions = self.cart.get_prg_rom()
             #
