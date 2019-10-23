@@ -18,15 +18,13 @@ def get_sprites(chr_rom):
     idx = 0
     sprites = []
     for _ in range(512):
-
         sprite = []
-        for _ in range(8):
-            channel_a = chr_rom[idx]
-            idx += 1
-            channel_b = chr_rom[idx]
-            idx += 1
-            sprite.append(read_sprite_row(channel_a, channel_b))
+        channel_a = chr_rom[idx : idx + 8]
+        channel_b = chr_rom[idx + 8 : idx + 16]
+        for i in range(8):
+            sprite.append(read_sprite_row(channel_a[i], channel_b[i]))
 
+        idx += 16
         sprites.append(sprite)
 
     return sprites
@@ -47,12 +45,13 @@ class Emulator():
             self.chr_rom = self.cart.get_chr_rom()
 
             sprites = get_sprites(self.chr_rom)
-            for spr in sprites:
-                print(spr)
-
 
             self.memory = Memory(self.cpu, self.cart)
-
+            from src.ppu.pygame.screen_controller import ScreenController
+            game = ScreenController()
+            game.set_sprites(sprites)
+            game.draw()
+            import time;time.sleep(10)
 
             # self.instructions = self.cart.get_prg_rom()
             #
