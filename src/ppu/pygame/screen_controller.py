@@ -41,11 +41,15 @@ class ScreenController:
 
         pygame.display.flip()
 
-    def get_sprite_pixel_screen_position(self, sprite):
-        return sprite.get_screen_position()
-
     def get_screen_pos(self, x, y, sprite):
         (base_x, base_y) = sprite.get_screen_position()
+
+        if sprite.attributes & 0b01000000:
+            x = 7 - x
+
+        if sprite.attributes & 0b10000000:
+            y = 7 - y
+
         return (base_x + x, base_y + y)
 
     def draw_sprite(self, sprite, is_background=False):
@@ -58,7 +62,7 @@ class ScreenController:
 
     def draw(self):
         for pos in range(512):
-            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0)
+            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0b00000000)
             self.draw_sprite(sprite, False)
 
         pygame.display.flip()
