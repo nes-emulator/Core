@@ -6,13 +6,6 @@ from src.cpu.cpu import CPU
 
 size = (255, 240)
 
-COLOR = {
-    0: (255, 55, 28),
-    1: (255, 255, 255),
-    2: (128, 128, 128),
-    3: (55, 128, 244)
-}
-
 class ScreenController:
     def __init__(self):
         pygame.init()
