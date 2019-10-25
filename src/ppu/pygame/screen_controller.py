@@ -85,9 +85,10 @@ class ScreenController:
 
     def draw_sprites(self):
         init_sprites(self.memory)
+        initial_addr = 0x0200
 
         for i in range(64):
-            base_addr = 0x0300 - ((i + 1) * 4)
+            base_addr = (initial_addr + 0x0100) - ((i + 1) * 4)
 
             y = self.memory.retrieve_content(base_addr + 0)
             x = self.memory.retrieve_content(base_addr + 3)
