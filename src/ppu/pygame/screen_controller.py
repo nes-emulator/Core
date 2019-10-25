@@ -65,6 +65,9 @@ class ScreenController:
         return (base_x + x, base_y + y)
 
     def draw_sprite(self, sprite, is_background=False):
+        if sprite.get_priority():
+            return
+
         data = self.get_sprite_data(sprite.identifier, is_background)
         palette = self.sprite_palette.get_palette(sprite.get_palette())
         for x in range(8):
