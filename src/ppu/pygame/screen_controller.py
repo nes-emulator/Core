@@ -42,6 +42,9 @@ class ScreenController:
         self.game.set_at((x + 1, y + 1), color)
 
     def get_sprite_data(self, number, is_background):
+        if is_background:
+            number += 0x100
+
         return self.sprites[number]
 
     def update(self):
@@ -65,7 +68,7 @@ class ScreenController:
         return (base_x + x, base_y + y)
 
     def draw_sprite(self, sprite, is_background=False):
-        if sprite.get_priority():
+        if sprite.is_low_priority():
             return
 
         data = self.get_sprite_data(sprite.identifier, is_background)
@@ -79,7 +82,7 @@ class ScreenController:
 
     def draw(self):
         for pos in range(512):
-            palette = pos % 4
+            palette = 3
             sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0b00000000 | palette)
             self.draw_sprite(sprite, False)
 

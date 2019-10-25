@@ -23,5 +23,5 @@ class Sprite:
     def get_palette(self):
         return self.attributes & 0b00000011
 
-    def get_priority(self):
+    def is_low_priority(self):
         return self.attributes & 0b00100000
