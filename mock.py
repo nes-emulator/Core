@@ -49,7 +49,7 @@ class Emulator():
             from src.ppu.pygame.screen_controller import ScreenController
             game = ScreenController()
             game.set_sprites(sprites)
-            game.draw()
+            game.draw_sprites()
             while True:
                 pass
 
