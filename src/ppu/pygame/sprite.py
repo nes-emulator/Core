@@ -19,3 +19,6 @@ class Sprite:
 
     def is_flipped_vertically(self):
         return (self.attributes & 0b10000000) > 0
+
+    def get_palette(self):
+        return self.attributes & 0b00000011

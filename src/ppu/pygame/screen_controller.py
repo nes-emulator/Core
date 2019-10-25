@@ -21,7 +21,7 @@ class ScreenController:
 
         memory = Memory(CPU())
         for i in range(32):
-            memory.set_content(0x3F00 + i, i + 16)
+            memory.set_content(0x3F00 + i, i)
 
         self.sprite_palette = SpriteColorPalette(memory)
         self.background_palette = BackgroundColorPalette(memory)
@@ -56,17 +56,17 @@ class ScreenController:
     def get_screen_pos(self, x, y, sprite):
         (base_x, base_y) = sprite.get_screen_position()
 
-        if sprite.attributes & 0b01000000:
+        if sprite.is_flipped_horintally():
             x = 7 - x
 
-        if sprite.attributes & 0b10000000:
+        if sprite.is_flipped_vertically():
             y = 7 - y
 
         return (base_x + x, base_y + y)
 
     def draw_sprite(self, sprite, is_background=False):
         data = self.get_sprite_data(sprite.identifier, is_background)
-        palette = self.sprite_palette.get_palette(sprite.attributes & 0b00000011)
+        palette = self.sprite_palette.get_palette(sprite.get_palette())
         for x in range(8):
             for y in range(8):
                 pixel = data[y][x]
@@ -76,7 +76,7 @@ class ScreenController:
 
     def draw(self):
         for pos in range(512):
-            palette = 0
+            palette = pos % 4
             sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0b00000000 | palette)
             self.draw_sprite(sprite, False)
 
