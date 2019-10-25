@@ -1,7 +1,11 @@
 import pygame
 from .sprite import Sprite
+from ..palette.palette import ColorMap, SpriteColorPalette, BackgroundColorPalette
+from src.memory.memory import Memory
+from src.cpu.cpu import CPU
 
 size = (255, 240)
+
 COLOR = {
     0: (255, 55, 28),
     1: (255, 255, 255),
@@ -14,6 +18,14 @@ class ScreenController:
         pygame.init()
         (x, y) = size
         self.game = pygame.display.set_mode((2 * x, 2 * y))
+
+        memory = Memory(CPU())
+        for i in range(32):
+            memory.set_content(0x3F00 + i, i + 16)
+
+        self.sprite_palette = SpriteColorPalette(memory)
+        self.background_palette = BackgroundColorPalette(memory)
+
 
     def set_sprites(self, sprites):
         self.sprites = sprites
@@ -54,15 +66,18 @@ class ScreenController:
 
     def draw_sprite(self, sprite, is_background=False):
         data = self.get_sprite_data(sprite.identifier, is_background)
+        palette = self.sprite_palette.get_palette(sprite.attributes & 0b00000011)
         for x in range(8):
             for y in range(8):
                 pixel = data[y][x]
+                color = ColorMap.get_color_rgb_reference(palette[pixel])
                 (base_x, base_y) = self.get_screen_pos(x, y, sprite)
-                self.draw_pixel(base_x, base_y, COLOR[pixel])
+                self.draw_pixel(base_x, base_y, color)
 
     def draw(self):
         for pos in range(512):
-            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0b00000000)
+            palette = 0
+            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0b00000000 | palette)
             self.draw_sprite(sprite, False)
 
         pygame.display.flip()
