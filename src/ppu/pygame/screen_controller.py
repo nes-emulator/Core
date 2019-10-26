@@ -76,10 +76,15 @@ class ScreenController:
                 self.draw_pixel(base_x, base_y, color)
 
     def draw(self):
-        for pos in range(512):
+        for pos in range(256):
             palette = 3
-            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8), 0b00000000 | palette)
+            sprite = Sprite(pos, ((pos % 16) * 8), ((pos // 16) * 8) + 9, 0b00000000 | palette)
             self.draw_sprite(sprite, False)
+
+        for pos in range(256):
+            palette = 3
+            sprite = Sprite(pos, 0x80 + ((pos % 16) * 8), ((pos // 16) * 8) + 9, 0b00000000 | palette)
+            self.draw_sprite(sprite, True)
 
         pygame.display.flip()
 
