@@ -20,4 +20,5 @@ nestest/parsed.log
 nestest/nestest.log
 #venv
 pypyenv/*
+/venv
 pypy3.5-v7.0.0-linux64

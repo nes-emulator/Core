@@ -8,8 +8,7 @@ the following addressing classes are implemented in the order described in:
 """
 
 from src.util.util import *
-from src.memory.memory import Memory
-from src.cpu.cpu import CPU
+from src.memory.cpu.memory import Memory
 
 
 class CalculateAddress:

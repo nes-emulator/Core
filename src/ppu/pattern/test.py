@@ -1,6 +1,6 @@
 import unittest
 from src.cpu.cpu import CPU
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 from .pattern_table import PatternTable
 
 class PatternTableTest(unittest.TestCase):

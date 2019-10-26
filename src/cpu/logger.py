@@ -1,6 +1,4 @@
-from src.state import State
-from src.memory.memory import Memory
-from src.memory.stack import Stack
+from src.memory.cpu.stack import Stack
 
 
 class Logger:
