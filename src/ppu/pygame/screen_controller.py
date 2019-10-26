@@ -1,7 +1,7 @@
 import pygame
 from .sprite import Sprite
 from ..palette.palette import ColorMap, SpriteColorPalette, BackgroundColorPalette
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 from src.cpu.cpu import CPU
 
 size = (249, 230)

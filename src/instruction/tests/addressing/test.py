@@ -1,7 +1,7 @@
 import unittest
 from src.instruction.addressing.addressing import *
 from src.cpu.cpu import CPU
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 
 
 class InstructionAddressingTest(unittest.TestCase):

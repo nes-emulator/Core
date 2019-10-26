@@ -1,7 +1,7 @@
 import unittest
 from src.cpu.cpu import *
-from src.memory.stack import Stack
-from src.memory.memory import Memory
+from src.memory.cpu.stack import Stack
+from src.memory.cpu.memory import Memory
 
 class StackTest(unittest.TestCase):
     def setUp(self):

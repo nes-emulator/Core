@@ -1,7 +1,7 @@
 from src.instruction.instruction import *
 from src.instruction.addressing.addressing import *
 from src.util.util import apply_mask, is_negative
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 
 
 def base_calculation(number, cpu):

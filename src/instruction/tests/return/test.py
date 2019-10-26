@@ -1,7 +1,7 @@
 import unittest
 from src.instruction.collection import InstructionCollection
 from src.cpu.cpu import CPU
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 from src.register.statusregister import StatusRegister
 
 

@@ -2,7 +2,7 @@ import sys
 
 from src.mapper import *
 from src.memory.cartridge import *
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 from src.cpu.cpu import CPU
 from src.cpu.instruction_runner import Runner
 from src.instruction.collection import InstructionCollection
