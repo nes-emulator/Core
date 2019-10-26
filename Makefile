@@ -51,13 +51,13 @@ test: ${BIN} ${LOG} ${TESTS} asm6
 unit:
 	python3 -m unittest discover .
 
-getpypy:
+get_pypy_pygame:
 	chmod +x setup_pypy.sh; sudo bash setup_pypy.sh
 
-setup: getpypy
+setup: get_pypy_pygame
 
 clean:
 	rm -rf ${BIN}/* ${LOG}/*
 
-clean_pypy:
-	rm -rf pypyenv pypy3.5-v7.0.0-linux64 pypy3.5-v7.0.0-linux64.tar.bz2
+clean_pypy_pygame:
+	rm -rf pypyenv pypy3.6-v7.2.0-linux64 pypy3.6-v7.2.0-linux64.tar.tar.bz2
