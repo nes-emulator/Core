@@ -14,7 +14,21 @@ class Driver:
     def __init__(self):
         self.memory = PPUMemory()
 
-    def main(self):
+    @staticmethod
+    def decode_attribute_table(x, y, entry):
+
+        bottomright, bottomleft, topright, topleft = Nametable.get_bits(entry)
+
+        if x % 2 and y % 2:
+            return bottomright
+        elif x % 2 and not y % 2:
+            return bottomleft
+        elif not x % 2 and not y % 2:
+            return topleft
+        else:
+            return topright
+
+    def main(self, regs, memory, oam):
 
         start_nametable = 0
         start_pattern_addr = 0
@@ -23,24 +37,29 @@ class Driver:
         at_addr = attribute_addr[start_nametable]
         pt_addr = background_pattern_addr[start_pattern_addr]
 
-        for i in range(33):
+        # TODO:
+        for i in range(31):
+            for j in range(33):
 
-            # Fetch the corresponding attribute table entry from $23C0-$2FFF
-            at_entry = self.memory.get_content(at_addr)
+                # linear array -> 2d array
+                idx = (i * 32 + j)
+                # Fetch a nametable entry from $2000-$2FBF
+                nt_entry = self.memory.get_content(nt_addr + idx)
 
+                # Fetch the corresponding attribute table entry from $23C0-$2FFF
+                att_x = idx % 32
+                att_y = idx // 2
+                att_idx = att_x * 8 + att_y
+                at_entry = self.memory.get_content(at_addr + att_idx)
 
-            # Fetch a nametable entry from $2000-$2FBF
-            nt_entry = self.memory.get_content(nt_addr)
+                # Get the quadrant bits
+                attribute = decode_attribute_table(x, y, at_entry)
 
-            # and increment the current VRAM address within the same row
-            nt_addr += 1
+                # Fetch the low-order byte of an 8x1 pixel sliver of pattern table from $0000-$0FF7 or $1000-$1FF7.
+                # Fetch the high-order byte of this sliver from an address 8 bytes higher.
+                # lo_pt_entry = self.memory.get_content(pt_addr)
+                # hi_pt_entry = self.memory.get_content(pt_addr+1)
 
+                # Turn the attribute data and the pattern table data into palette indices
 
-            # Fetch the low-order byte of an 8x1 pixel sliver of pattern table from $0000-$0FF7 or $1000-$1FF7.
-            # Fetch the high-order byte of this sliver from an address 8 bytes higher.
-            lo_pt_entry = self.memory.get_content(pt_addr)
-            hi_pt_entry = self.memory.get_content(pt_addr+1)
-
-            # Turn the attribute data and the pattern table data into palette indices
-
-            # and combine them with data from sprite data using priority.
+                # and combine them with data from sprite data using priority.
