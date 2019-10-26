@@ -1,15 +1,25 @@
-from multiprocessing import Process, Value, Array
+from src.ppu.control.ppu_init import PPU_Runner_Initializer
 
 
 class PPUMemory:
     PPU_MEM_SIZE = 16384  # 2kb ram
     PPU_OAM_SIZE = 256
+    NUM_REGS = 8
 
     UNSIGNED_BYTE = 'B'
 
     def __init__(self):
-        self.memory = Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.PPU_MEM_SIZE)
-        self.oam_memory = Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.PPU_OAM_SIZE)
+        self.clear_memory()
+
+    # TODO Init regs with power up state
+
+    def clear_memory(self):
+        self.memory = PPU_Runner_Initializer.mp_context.Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.PPU_MEM_SIZE)
+        self.oam_memory = PPU_Runner_Initializer.mp_context.Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.PPU_OAM_SIZE)
+        self.regs = PPU_Runner_Initializer.mp_context.Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.NUM_REGS)
+
+    def get_regs(self):
+        return self.regs
 
     def get_val_oam(self, addr):
         return self.oam_memory[addr]
@@ -27,7 +37,7 @@ class PPUMemory:
     def get_memory(self):
         return self.memory
 
-    def get_oam_memory(self):
+    def get_oam(self):
         return self.oam_memory
 
     @staticmethod

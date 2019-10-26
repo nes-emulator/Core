@@ -1,11 +1,9 @@
-from .command_wrapper import CommandWrapper
 from .callback import PPURegCallback
 # import all Regs
 from .reg import PPUCTRL, PPUMASK, PPUSTATUS, OAMADDR, OAMDATA, PPUSCROLL, PPUADDR, PPUDATA, OAMDMA
 
 
 class PPUOperationHandler:
-    current_cmd = None
     # ppu reg addr: callback
     write_operations = {PPUCTRL.BASE_ADDR: PPURegCallback.ctrl_write,
                         PPUMASK.BASE_ADDR: PPURegCallback.mask_write,
@@ -22,10 +20,6 @@ class PPUOperationHandler:
                        PPUADDR.BASE_ADDR: PPURegCallback.ppu_addr_read,
                        PPUDATA.BASE_ADDR: PPURegCallback.ppu_data_read,
                        }
-
-    @classmethod
-    def init_cmd(cls):
-        cls.current_cmd = CommandWrapper()
 
     @classmethod
     def extract_reg_data(cls, reg_addr, mem):
@@ -51,7 +45,7 @@ class PPUOperationHandler:
             # maps the action
             if reg_addr:
                 handler = cls.write_operations[reg_addr]
-                cls.current_cmd = handler(memory, cls.current_cmd)
+                handler(memory)
 
         return manipulation_wrapper
 
@@ -63,6 +57,7 @@ class PPUOperationHandler:
             # maps the action
             if reg_addr:
                 handler = cls.read_operations[reg_addr]
-                cls.current_cmd = handler(memory, cls.current_cmd)
+                handler(memory)
             return mem_val
+
         return manipulation_wrapper

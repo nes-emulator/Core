@@ -1,5 +1,7 @@
 from src.util.util import extract_flags, flags_to_val
 
+BASE_ADDR = 0x2000
+
 
 # latch behavior
 # Writing any value to any PPU port, even to the nominally read-only

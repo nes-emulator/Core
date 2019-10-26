@@ -7,6 +7,7 @@ from .stack import Stack
 from array import array
 from src.ppu.control.operation_handler import PPUOperationHandler
 from src.ppu.control.reg import OAMDMA
+from src.memory.ppu.PPUMemory import PPUMemory
 
 
 class Memory:
@@ -21,8 +22,9 @@ class Memory:
     PPU_MIRROR_LIMIT = 0x3FFF
 
     def __init__(self, cpu, cartridge=None):
+        self.ppu_memory = PPUMemory()
         # init a memory array
-        PPUOperationHandler.init_cmd()
+        # self.ppu_memory =
         self.stack = Stack(self, cpu.state)
         self.reset()
         # write all NROM data to memory
@@ -120,7 +122,3 @@ class Memory:
         if 0 <= reg <= 7:
             return reg
         return -1
-
-    @classmethod
-    def reverse_ppu_mirroring(cls, addr):
-        pass

@@ -6,6 +6,7 @@ from src.memory.cpu.memory import Memory
 from src.cpu.cpu import CPU
 from src.cpu.instruction_runner import Runner
 from src.instruction.collection import InstructionCollection
+from src.ppu.control import ppu_init
 
 
 class Emulator():
@@ -27,7 +28,10 @@ class Emulator():
                 raise ValueError("Cartridge specifies a mapper type not supported yet")
 
             InstructionCollection.initialize()
+            # PPU Render loop
+            # ppu_init.PPU_Runner_Initializer.init_ppu(self.memory.ppu_memory)
             Runner.run(self.instructions, self.cpu, self.memory)
+
 
         except ValueError as err:
             print("ERROR: ", end="")
