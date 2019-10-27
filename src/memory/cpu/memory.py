@@ -46,6 +46,7 @@ class Memory:
 
     @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
+
         if not Memory._valid_memory_word(val, Memory.WORD_SIZE):
             pass
             # raise("Invalid memory storage, value stored > 16bits, word = 16bits")
@@ -55,7 +56,7 @@ class Memory:
         if addr > Memory.ROM_ADDR:
             pass
             # raise("invalid memory storage, you cant store data in ROM")
-        self.memory[addr] = val
+        self.memory[addr] = val%256
         self.apply_memory_mirror(addr, val)
 
     def loadCHROM(self, rom_data):
@@ -108,7 +109,7 @@ class Memory:
         ppu_reg = (addr % ppu_reg_size) + 0x2000
 
         while ppu_reg <= 0x3FFF:
-            self.memory[ppu_reg] = val
+            self.memory[ppu_reg] = val%256
             ppu_reg += ppu_reg_size
 
     @classmethod

@@ -22,3 +22,5 @@ nestest/nestest.log
 pypyenv/*
 /venv
 pypy3.5-v7.0.0-linux64
+pypy3.6-v7.2.0-linux64/
+/pygame

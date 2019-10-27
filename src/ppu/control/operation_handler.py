@@ -8,7 +8,7 @@ class PPUOperationHandler:
     write_operations = {PPUCTRL.BASE_ADDR: PPURegCallback.ctrl_write,
                         PPUMASK.BASE_ADDR: PPURegCallback.mask_write,
                         OAMADDR.BASE_ADDR: PPURegCallback.oam_addr_write,
-                        OAMDATA.BASE_ADDR: PPURegCallback.oam_addr_write,
+                        OAMDATA.BASE_ADDR: PPURegCallback.oam_data_write,
                         PPUSCROLL.BASE_ADDR: PPURegCallback.scroll_write,
                         PPUADDR.BASE_ADDR: PPURegCallback.ppu_addr_write,
                         PPUDATA.BASE_ADDR: PPURegCallback.ppu_data_write,
