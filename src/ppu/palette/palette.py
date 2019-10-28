@@ -6,7 +6,7 @@ class ColorPalette:
 
     def __init__(self, mem, address):
         for i in range(16):
-            self.colors.append(mem.retrieve_content(address + i))
+            self.colors.append(mem[address + i])
 
     def get_palette(self, id):
         return self.colors[id * 4 : (id + 1) * 4]

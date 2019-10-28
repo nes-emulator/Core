@@ -45,7 +45,6 @@ class Emulator():
 
             sprites = get_sprites(self.chr_rom)
 
-            self.memory = Memory(self.cpu, self.cart)
             from src.ppu.pygame.screen_controller import ScreenController
             game = ScreenController()
             game.set_sprites(sprites)

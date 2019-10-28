@@ -13,15 +13,21 @@ class ScreenController:
         (x, y) = size
         self.game = pygame.display.set_mode((2 * x, 2 * y))
 
-        self.memory = Memory(CPU())
+        self.memory = [0] * 0x4000
         for i in range(0x20):
-            self.memory.memory[0x3F00 + i] = i
+            self.memory[0x3F00 + i] = i
 
         self.sprite_palette = SpriteColorPalette(self.memory)
         self.background_palette = BackgroundColorPalette(self.memory)
 
     def set_sprites(self, sprites):
         self.sprites = sprites
+
+    def get_reference_palette(self, is_background):
+        if is_background:
+            return self.background_palette
+
+        return self.sprite_palette
 
     def draw_pixel(self, x, y, color):
         y -= 9
@@ -55,7 +61,7 @@ class ScreenController:
             return
 
         data = self.get_sprite_data(sprite.identifier, is_background)
-        palette = self.sprite_palette.get_palette(sprite.get_palette())
+        palette = self.get_reference_palette(is_background).get_palette(sprite.get_palette())
         for x in range(8):
             for y in range(8):
                 pixel = data[y][x]
@@ -83,27 +89,30 @@ class ScreenController:
         for i in range(64):
             base_addr = (initial_addr + 0x0100) - ((i + 1) * 4)
 
-            y = self.memory.retrieve_content(base_addr + 0)
-            x = self.memory.retrieve_content(base_addr + 3)
-            tile = self.memory.retrieve_content(base_addr + 1)
-            attributes = self.memory.retrieve_content(base_addr + 2)
+            y = self.memory[base_addr + 0]
+            x = self.memory[base_addr + 3]
+            tile = self.memory[base_addr + 1]
+            attributes = self.memory[base_addr + 2]
 
             self.draw_sprite(Sprite(tile, x, y, attributes), False)
 
         pygame.display.flip()
 
 
-    def decode_attribute_table(self, x, y, entry):
+    def decode_attribute_table(self, idx, entry):
         bottomright, bottomleft, topright, topleft = Nametable.get_bits(entry)
+
+        x = idx % 32
+        y = idx // 32
 
         if x % 2 and y % 2:
             return bottomright
         elif x % 2 and not y % 2:
-            return bottomleft
+            return topright
         elif not x % 2 and not y % 2:
             return topleft
         else:
-            return topright
+            return bottomleft
 
     def main(self):
         start_nametable = 0x2000
@@ -118,19 +127,19 @@ class ScreenController:
         # MAIN RENDER LOOP, WHILE(True)
         # TODO:
         for idx in range(0x03BF + 1):
-            nt_entry = self.memory.memory[nt_addr + idx]
+            nt_entry = self.memory[nt_addr + idx]
 
             # Fetch the corresponding attribute table entry from $23C0-$2FFF
-            att_x = idx % 32
-            att_y = idx // 2
-            att_idx = att_x * 8 + att_y
-            at_entry = self.memory.memory[at_addr + att_idx]
+            att_x = (idx % 32) // 8
+            att_y = idx // 128
+            att_idx = att_x + att_y * 8
+            at_entry = self.memory[at_addr + att_idx]
 
             # Get the quadrant bits
-            attribute = self.decode_attribute_table(att_x, att_y, at_entry)
+            attribute = self.decode_attribute_table(idx, at_entry)
 
-            i = idx // 32
-            j = idx % 32
+            i = idx % 32
+            j = idx // 32
             sprite = Sprite(nt_entry, i * 8, j * 8, 0x0 | attribute)
             self.draw_sprite(sprite, True)
 
@@ -139,17 +148,17 @@ class ScreenController:
 
 def init_nametable(memory):
     for index in range(0x03BF + 1):
-        memory.memory[0x2000 + index] = 0x43
+        memory[0x2000 + index] = 0x43
 
-    for j in range(64):
-        memory.memory[0x23C0 + j] = 0b11000011
+    for j in range(0x2400 - 0x23C0):
+        memory[0x23C0 + j] = 0b11000000
 
 def write_sprite(memory, pos, tile, x, y, attributes):
     base_addr = 0x0200
-    memory.set_content(base_addr + pos * 4 + 0, y)
-    memory.set_content(base_addr + pos * 4 + 3, x)
-    memory.set_content(base_addr + pos * 4 + 1, tile)
-    memory.set_content(base_addr + pos * 4 + 2, attributes)
+    memory[base_addr + pos * 4 + 0] = y
+    memory[base_addr + pos * 4 + 3] = x
+    memory[base_addr + pos * 4 + 1] = tile
+    memory[base_addr + pos * 4 + 2] = attributes
 
 def init_sprites(memory):
     write_sprite(memory, 0, 0x10, 0x01, 0x01, 0b00000011) # first line invisible
