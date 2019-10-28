@@ -1,5 +1,8 @@
 image: python:3
 
+before_script:
+  - pip install pygame
+
 stages:
   - unit_test
   - integration_test
