@@ -8,7 +8,9 @@ from array import array
 from src.ppu.control.operation_handler import PPUOperationHandler
 from src.ppu.control.reg import OAMDMA
 from src.memory.ppu.PPUMemory import PPUMemory
-from src.ppu.pygame.controller import Controllers
+
+
+# from src.ppu.pygame.controller import Controllers
 
 
 class Memory:
@@ -38,7 +40,7 @@ class Memory:
         # initialize memory, the content of each address is mapped to it's index
         self.memory = array(Memory.UNSIGNED_BYTE_TYPE, (0,) * Memory.MEMORY_LIMIT)
 
-    @Controllers.reset_buttons_after_read
+    # @Controllers.reset_buttons_after_read
     @PPUOperationHandler.ppu_read_verifier
     def retrieve_content(self, addr):
         if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
@@ -46,7 +48,7 @@ class Memory:
         # print("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
-    @Controllers.btn_loader
+    # @Controllers.btn_loader
     @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
 
