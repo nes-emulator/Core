@@ -2,7 +2,7 @@ import sys
 
 from src.mapper import *
 from src.memory.cartridge import *
-from src.memory.memory import Memory
+from src.memory.cpu.memory import Memory
 from src.cpu.cpu import CPU
 from src.cpu.instruction_runner import Runner
 from src.instruction.collection import InstructionCollection
@@ -49,7 +49,7 @@ class Emulator():
             from src.ppu.pygame.screen_controller import ScreenController
             game = ScreenController()
             game.set_sprites(sprites)
-            game.draw()
+            game.main()
             while True:
                 pass
 

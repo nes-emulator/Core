@@ -3,6 +3,7 @@ from .sprite import Sprite
 from ..palette.palette import ColorMap, SpriteColorPalette, BackgroundColorPalette
 from src.memory.cpu.memory import Memory
 from src.cpu.cpu import CPU
+from src.ppu.nametable.nametable import Nametable
 
 size = (249, 230)
 
@@ -13,18 +14,14 @@ class ScreenController:
         self.game = pygame.display.set_mode((2 * x, 2 * y))
 
         self.memory = Memory(CPU())
-        for i in range(32):
-            self.memory.set_content(0x3F00 + i, i)
+        for i in range(0x20):
+            self.memory.memory[0x3F00 + i] = i
 
         self.sprite_palette = SpriteColorPalette(self.memory)
         self.background_palette = BackgroundColorPalette(self.memory)
 
-
     def set_sprites(self, sprites):
         self.sprites = sprites
-
-    def get_pixel_color(self, x, y):
-        return (x, y, 255)
 
     def draw_pixel(self, x, y, color):
         y -= 9
@@ -41,15 +38,6 @@ class ScreenController:
             number += 0x100
 
         return self.sprites[number]
-
-    def update(self):
-        (max_x, max_y) = size
-        for x in range(max_x):
-            for y in range(max_y):
-                color = self.get_pixel_color(x, y)
-                self.draw_pixel(x, y, color)
-
-        pygame.display.flip()
 
     def get_screen_pos(self, x, y, sprite):
         (base_x, base_y) = sprite.get_screen_position()
@@ -103,6 +91,58 @@ class ScreenController:
             self.draw_sprite(Sprite(tile, x, y, attributes), False)
 
         pygame.display.flip()
+
+
+    def decode_attribute_table(self, x, y, entry):
+        bottomright, bottomleft, topright, topleft = Nametable.get_bits(entry)
+
+        if x % 2 and y % 2:
+            return bottomright
+        elif x % 2 and not y % 2:
+            return bottomleft
+        elif not x % 2 and not y % 2:
+            return topleft
+        else:
+            return topright
+
+    def main(self):
+        start_nametable = 0x2000
+        start_pattern_addr = 0
+
+        nt_addr = start_nametable
+        at_addr = 0x23C0
+        pt_addr = 0x0000
+
+        init_nametable(self.memory)
+
+        # MAIN RENDER LOOP, WHILE(True)
+        # TODO:
+        for idx in range(0x03BF + 1):
+            nt_entry = self.memory.memory[nt_addr + idx]
+
+            # Fetch the corresponding attribute table entry from $23C0-$2FFF
+            att_x = idx % 32
+            att_y = idx // 2
+            att_idx = att_x * 8 + att_y
+            at_entry = self.memory.memory[at_addr + att_idx]
+
+            # Get the quadrant bits
+            attribute = self.decode_attribute_table(att_x, att_y, at_entry)
+
+            i = idx // 32
+            j = idx % 32
+            sprite = Sprite(nt_entry, i * 8, j * 8, 0x0 | attribute)
+            self.draw_sprite(sprite, True)
+
+        pygame.display.flip()
+
+
+def init_nametable(memory):
+    for index in range(0x03BF + 1):
+        memory.memory[0x2000 + index] = 0x43
+
+    for j in range(64):
+        memory.memory[0x23C0 + j] = 0b11000011
 
 def write_sprite(memory, pos, tile, x, y, attributes):
     base_addr = 0x0200
