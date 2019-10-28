@@ -102,14 +102,14 @@ class ScreenController:
     def decode_attribute_table(self, idx, entry):
         bottomright, bottomleft, topright, topleft = Nametable.get_bits(entry)
 
-        x = idx % 32
-        y = idx // 32
+        x = (idx % 32) % 4
+        y = (idx // 32) % 4
 
-        if x % 2 and y % 2:
+        if x // 2 and y // 2:
             return bottomright
-        elif x % 2 and not y % 2:
+        elif x // 2 and not y // 2:
             return topright
-        elif not x % 2 and not y % 2:
+        elif not x // 2 and not y // 2:
             return topleft
         else:
             return bottomleft
@@ -126,11 +126,13 @@ class ScreenController:
 
         # MAIN RENDER LOOP, WHILE(True)
         # TODO:
-        for idx in range(0x03BF + 1):
+        for idx in range(0x03C0):
+            i = idx % 32
+            j = idx // 32
             nt_entry = self.memory[nt_addr + idx]
 
-            # Fetch the corresponding attribute table entry from $23C0-$2FFF
-            att_x = (idx % 32) // 8
+            # Fetch the corresponding attribute table entry from $23C0-$23FF
+            att_x = i // 4
             att_y = idx // 128
             att_idx = att_x + att_y * 8
             at_entry = self.memory[at_addr + att_idx]
@@ -138,8 +140,6 @@ class ScreenController:
             # Get the quadrant bits
             attribute = self.decode_attribute_table(idx, at_entry)
 
-            i = idx % 32
-            j = idx // 32
             sprite = Sprite(nt_entry, i * 8, j * 8, 0x0 | attribute)
             self.draw_sprite(sprite, True)
 
@@ -151,7 +151,9 @@ def init_nametable(memory):
         memory[0x2000 + index] = 0x43
 
     for j in range(0x2400 - 0x23C0):
-        memory[0x23C0 + j] = 0b11000000
+        value = (j % 4)
+        memory[0x23C0 + j] = 0b0 | value
+
 
 def write_sprite(memory, pos, tile, x, y, attributes):
     base_addr = 0x0200
