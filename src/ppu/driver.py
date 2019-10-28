@@ -1,12 +1,32 @@
 from src.ppu.nametable.nametable import Nametable
+from src.util.util import extract_8_bits
+from src.ppu.pygame.screen_controller import ScreenController
 
-
-# TODO Manipulate screen in the main loop
 
 # this method will be called passing shared memory
-def ppu_main(regs, memory, oam):  # , ctrl1, ctrl2)
-    driver = Driver(regs, memory, oam)  # , ctrl1, ctrl2)
+def ppu_main(chr_rom, regs, memory, oam):  # , ctrl1, ctrl2)
+    driver = Driver(chr_rom, regs, memory, oam)  # , ctrl1, ctrl2)
     driver.main()
+
+def read_sprite_row(channel_a, channel_b):
+    bits_a = extract_8_bits(channel_a)
+    bits_b = extract_8_bits(channel_b)
+    return [sum(e) for e in zip(bits_a, map(lambda x: x*2, bits_b))]
+
+def get_sprites(chr_rom):
+    idx = 0
+    sprites = []
+    for _ in range(512):
+        sprite = []
+        channel_a = chr_rom[idx : idx + 8]
+        channel_b = chr_rom[idx + 8 : idx + 16]
+        for i in range(8):
+            sprite.append(read_sprite_row(channel_a[i], channel_b[i]))
+
+        idx += 16
+        sprites.append(sprite)
+
+    return sprites
 
 
 ##### PPU MAIN DRIVER
@@ -19,56 +39,17 @@ class Driver:
 
     # VRAM address increment per CPU read/write of PPUDATA
 
-    def __init__(self, regs, memory, oam):  # , ctrl1, ctrl2)
+    def __init__(self, chr_rom, regs, memory, oam):  # , ctrl1, ctrl2)
+        self.oam = oam
         self.regs = regs
         self.memory = memory
-        self.oam = oam
-
-    @staticmethod
-    def decode_attribute_table(x, y, entry):
-
-        bottomright, bottomleft, topright, topleft = Nametable.get_bits(entry)
-
-        if x % 2 and y % 2:
-            return bottomright
-        elif x % 2 and not y % 2:
-            return bottomleft
-        elif not x % 2 and not y % 2:
-            return topleft
-        else:
-            return topright
+        self.chr_rom = chr_rom
 
     def main(self):
+        game = ScreenController(self.memory)
+        game.set_sprites(get_sprites(self.chr_rom))
 
-        start_nametable = 0
-        start_pattern_addr = 0
-
-        nt_addr = start_nametable
-        at_addr = Driver.attribute_addr[start_nametable]
-        pt_addr = Driver.background_pattern_addr[start_pattern_addr]
-        # MAIN RENDER LOOP, WHILE(True)
-        # TODO:
-        for i in range(31):
-            for j in range(33):
-                # linear array -> 2d array
-                idx = (i * 32 + j)
-                # Fetch a nametable entry from $2000-$2FBF
-                nt_entry = self.memory[nt_addr + idx]
-
-                # Fetch the corresponding attribute table entry from $23C0-$2FFF
-                att_x = idx % 32
-                att_y = idx // 2
-                att_idx = att_x * 8 + att_y
-                at_entry = self.memory[at_addr + att_idx]
-
-                # Get the quadrant bits
-                attribute = Driver.decode_attribute_table(att_x, att_y, at_entry)
-
-                # Fetch the low-order byte of an 8x1 pixel sliver of pattern table from $0000-$0FF7 or $1000-$1FF7.
-                # Fetch the high-order byte of this sliver from an address 8 bytes higher.
-                # lo_pt_entry = self.memory.get_content(pt_addr)
-                # hi_pt_entry = self.memory.get_content(pt_addr+1)
-
-                # Turn the attribute data and the pattern table data into palette indices
-
-                # and combine them with data from sprite data using priority.
+        while True:
+            game.init_info()
+            game.draw_background()
+            pass

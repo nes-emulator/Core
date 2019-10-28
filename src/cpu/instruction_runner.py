@@ -17,7 +17,7 @@ class InterruptVectorAddressResolver:
 
 class Runner:
     PRG_ROM_START = 0
-    LOGGER_ACTIVE = True
+    LOGGER_ACTIVE = False
     NESTEST = False
     CPU_FREQUENCY_HZ = 1789773
 
