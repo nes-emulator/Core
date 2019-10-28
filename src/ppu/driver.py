@@ -49,7 +49,9 @@ class Driver:
         game = ScreenController(self.memory)
         game.set_sprites(get_sprites(self.chr_rom))
 
+        # TODO 60 fps? some other way of deciding to print? decide frequency
         while True:
             game.init_info()
             game.draw_background()
+            game.draw_sprites()
             pass
