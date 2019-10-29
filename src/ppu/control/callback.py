@@ -39,8 +39,6 @@ class PPURegCallback:
     def oam_addr_write(memory):
         # ???
         memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = memory.memory[OAMADDR.BASE_ADDR]
-        memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.ppu_memory.get_val_oam(memory.memory[OAMADDR.BASE_ADDR])
-        memory.set_content(OAMDATA.BASE_ADDR, memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR])
         pass
 
     @staticmethod
@@ -50,11 +48,11 @@ class PPURegCallback:
 
     @staticmethod
     def oam_data_write(memory):
-        # oam_addr = memory.memory[OAMADDR.BASE_ADDR]
-        # oam_addr += 1
-        # memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
+        oam_addr = memory.memory[OAMADDR.BASE_ADDR]
+        oam_addr += 1
+        memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
         memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.memory[OAMDATA.BASE_ADDR]
-        # memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = oam_addr
+        memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = oam_addr
         pass
 
     # bottleneck, ppu should notify that it received the first write

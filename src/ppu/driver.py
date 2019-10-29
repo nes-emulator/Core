@@ -4,8 +4,8 @@ from src.ppu.nametable.nametable import Nametable
 # TODO Manipulate screen in the main loop
 
 # this method will be called passing shared memory
-def ppu_main(regs, memory, oam):  # , ctrl1, ctrl2)
-    driver = Driver(regs, memory, oam)  # , ctrl1, ctrl2)
+def ppu_main(regs, memory, oam, ctrl1, ctrl2):
+    driver = Driver(regs, memory, oam, ctrl1, ctrl2)
     driver.main()
 
 
@@ -19,7 +19,7 @@ class Driver:
 
     # VRAM address increment per CPU read/write of PPUDATA
 
-    def __init__(self, regs, memory, oam):  # , ctrl1, ctrl2)
+    def __init__(self, regs, memory, oam, ctrl1, ctrl2):
         self.regs = regs
         self.memory = memory
         self.oam = oam
