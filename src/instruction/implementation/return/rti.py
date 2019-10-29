@@ -13,6 +13,8 @@ class Rti(Instruction, ImpliedAddr):
         new_status.brk = cpu.state.status.brk
         new_status.unused = cpu.state.status.unused
         cpu.state.status = new_status
+        cpu.is_nmi_running = False
+        cpu.cycles = 0
 
         # load return address from stack
         memory.stack.pop_pc()

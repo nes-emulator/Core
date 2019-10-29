@@ -81,9 +81,13 @@ class Runner:
 
     @staticmethod
     def should_redirect_to_nmi(cpu):
+        # TODO ppu register flag to disable NMI call
+        if cpu.is_nmi_running:
+            return False
+
         # TODO better way of deciding to change to NMI
         if cpu.cycles / 100 > 1:
-            cpu.cycles = 0
+            cpu.is_nmi_running = True
             return True
 
         return False
