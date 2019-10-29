@@ -1,16 +1,6 @@
 from multiprocessing import Array
-from src.util.util import flags_to_val
 import os, sys
-
-# ommiting pygame print
-with open(os.devnull, 'w') as f:
-    # disable stdout
-    oldstdout = sys.stdout
-    sys.stdout = f
-    import pygame
-
-    # enable stdout
-    sys.stdout = oldstdout
+import pygame
 
 
 class Controllers:

@@ -1,22 +1,19 @@
 import pygame
 from .sprite import Sprite
 from ..palette.palette import ColorMap, SpriteColorPalette, BackgroundColorPalette
-from src.memory.cpu.memory import Memory
-from src.cpu.cpu import CPU
 from src.ppu.nametable.nametable import Nametable
 
 size = (249, 230)
 
 class ScreenController:
-    def __init__(self):
+    def __init__(self, memory):
         pygame.init()
         (x, y) = size
         self.game = pygame.display.set_mode((2 * x, 2 * y))
+        self.memory = memory
 
-        self.memory = [0] * 0x4000
-        for i in range(0x20):
-            self.memory[0x3F00 + i] = i
-
+    def init_info(self):
+        init_nametable(self.memory)
         self.sprite_palette = SpriteColorPalette(self.memory)
         self.background_palette = BackgroundColorPalette(self.memory)
 
@@ -114,7 +111,7 @@ class ScreenController:
         else:
             return bottomleft
 
-    def main(self):
+    def draw_background(self):
         start_nametable = 0x2000
         start_pattern_addr = 0
 
@@ -122,10 +119,6 @@ class ScreenController:
         at_addr = 0x23C0
         pt_addr = 0x0000
 
-        init_nametable(self.memory)
-
-        # MAIN RENDER LOOP, WHILE(True)
-        # TODO:
         for idx in range(0x03C0):
             i = idx % 32
             j = idx // 32
@@ -146,14 +139,17 @@ class ScreenController:
         pygame.display.flip()
 
 
+# TODO REMOVE THIS TESTS METHODS LATER
 def init_nametable(memory):
+    for i in range(0x20):
+        memory[0x3F00 + i] = i
+
     for index in range(0x03BF + 1):
         memory[0x2000 + index] = 0x43
 
     for j in range(0x2400 - 0x23C0):
         value = (j % 4)
         memory[0x23C0 + j] = 0b0 | value
-
 
 def write_sprite(memory, pos, tile, x, y, attributes):
     base_addr = 0x0200

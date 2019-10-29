@@ -7,6 +7,7 @@ from src.cpu.cpu import CPU
 from src.cpu.instruction_runner import Runner
 from src.instruction.collection import InstructionCollection
 from src.util.util import *
+from src.ppu.pygame.screen_controller import ScreenController
 
 def read_sprite_row(channel_a, channel_b):
     bits_a = extract_8_bits(channel_a)
@@ -45,11 +46,11 @@ class Emulator():
 
             sprites = get_sprites(self.chr_rom)
 
-            from src.ppu.pygame.screen_controller import ScreenController
-            game = ScreenController()
+            game = ScreenController([0] * 0x4000)
             game.set_sprites(sprites)
-            game.main()
             while True:
+                game.init_info()
+                game.draw_background()
                 pass
 
             # self.instructions = self.cart.get_prg_rom()

@@ -8,9 +8,9 @@ class PPU_Runner_Initializer:
     mp_context = mp
 
     @classmethod
-    def init_ppu(cls, ppu_mem: PPUMemory):
-        ppu_process = mp.Process(target=ppu_main, args=(ppu_mem.get_regs(), ppu_mem.get_memory(),
-        ppu_mem.get_oam(),Controllers.ctrl1_btn_states, Controllers.ctrl2_btn_states),)
+    def init_ppu(cls, chr_rom, ppu_mem: PPUMemory):
+        ppu_process = mp.Process(target=ppu_main, args=(chr_rom, ppu_mem.get_regs(), ppu_mem.get_memory(),
+        ppu_mem.get_oam(),Controllers.ctrl1_btn_states, Controllers.ctrl2_btn_states,))
         ppu_process.start()
 
     @classmethod
