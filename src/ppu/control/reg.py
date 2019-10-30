@@ -29,7 +29,7 @@ class PPUCTRL:
         self.nametable_2 = flags[7]
 
     def extract_nametable_addr(self):
-        PPUCTRL.BASE_ADDR + flags_to_val([self.nametable_1, self.nametable_2]) * 0x400
+        return PPUCTRL.BASE_ADDR + flags_to_val_2([self.nametable_1, self.nametable_2]) * 0x400
 
     def extract_vram_increment(self):
         # (0: add 1, going across; 1: add 32, going down)
