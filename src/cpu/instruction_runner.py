@@ -17,7 +17,7 @@ class InterruptVectorAddressResolver:
 
 class Runner:
     PRG_ROM_START = 0
-    LOGGER_ACTIVE = False
+    LOGGER_ACTIVE = True
     NESTEST = False
     CPU_FREQUENCY_HZ = 1789773
 
@@ -83,7 +83,6 @@ class Runner:
     def should_redirect_to_nmi(cpu, memory):
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
 
-        # TODO ppu register flag to disable NMI call
         if cpu.is_nmi_running or not is_nmi_enabled:
             return False
 

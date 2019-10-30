@@ -21,6 +21,7 @@ def extract_flags(val, n_flags):
 
 
 def flags_to_val(flags):
+    flags = ([0] * (8 - len(flags))) + flags
     val = [i * (2 ** int(r)) for i, r in zip(flags, range(0, len(flags)))]
     return sum(val)
 

@@ -98,7 +98,7 @@ class PPUSTATUS:
         self.o = flags[2]
 
     def to_val(self):
-        flags = [self.v, self.s, self.o]
+        flags = [self.o, self.s, self.v]
         return flags_to_val(flags)
 
 

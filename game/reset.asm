@@ -76,9 +76,6 @@ LoadSpritesLoop:
   STA bomberY
   JSR MoveBomberman
 
-  LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
-  STA $2000
-
   LDA #%00011110   ; enable sprites, enable background, no clipping on left side
   STA $2001
 
@@ -96,27 +93,28 @@ LoadSpritesLoop:
 ; ;-----------------------------------------
 ; ; Initializes mob position
 ; ;-----------------------------------------
-    LDA #11
-    STA mobX
-    LDA #10
-    STA mobY           ; First reset bomberman position on screen
-    JSR MoveMobSprites
+  LDA #11
+  STA mobX
+  LDA #10
+  STA mobY           ; First reset bomberman position on screen
+  JSR MoveMobSprites
 
-    ; ; Initializes Mob delay counter
-    LDA #0
-    STA mobMoveCounter
-    ;
-    ; ; Sets Mob state
-    LDA #1
-    STA mobIsAlive
-    LDA #RIGHT_DIRECTION
-    STA mobDirection
+  ; ; Initializes Mob delay counter
+  LDA #0
+  STA mobMoveCounter
+  ;
+  ; ; Sets Mob state
+  LDA #1
+  STA mobIsAlive
+  LDA #RIGHT_DIRECTION
+  STA mobDirection
 
-;
-    LDA #0
-    STA DelayCounter
+  LDA #0
+  STA DelayCounter
+  JSR sound_init    ; APU setup
 
-    JSR sound_init    ; APU setup
+  LDA #%10010000   ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
+  STA $2000
 
 Forever:
   JMP Forever     ;jump back to Forever, infinite loop
