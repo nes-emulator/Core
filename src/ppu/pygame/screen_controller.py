@@ -137,26 +137,3 @@ class ScreenController:
 def init_nametable(memory):
     for i in range(0x20):
         memory[0x3F00 + i] = i
-
-    for index in range(0x03BF + 1):
-        memory[0x2000 + index] = 0x43
-
-    for j in range(0x2400 - 0x23C0):
-        value = (j % 4)
-        memory[0x23C0 + j] = 0b0 | value
-
-def write_sprite(memory, pos, tile, x, y, attributes):
-    base_addr = 0
-    memory[base_addr + pos * 4 + 0] = y
-    memory[base_addr + pos * 4 + 3] = x
-    memory[base_addr + pos * 4 + 1] = tile
-    memory[base_addr + pos * 4 + 2] = attributes
-
-def init_sprites(memory):
-    write_sprite(memory, 0, 0x04, 0x01, 0x11, 0b00000011) # first line invisible
-    write_sprite(memory, 1, 0x00, 0x80, 0x80, 0b00100011)
-    write_sprite(memory, 2, 0x45, 0x0A, 0xC7, 0b00000010)
-    write_sprite(memory, 3, 0x99, 0xD8, 0x0C, 0b00000001)
-    write_sprite(memory, 4, 0x99, 0x1A, 0xA7, 0b00000001)
-    write_sprite(memory, 5, 0x00, 0x0A, 0xEF, 0b00000011) # invisible y
-    write_sprite(memory, 6, 0x00, 0xF9, 0x29, 0b00000011) # invisible x

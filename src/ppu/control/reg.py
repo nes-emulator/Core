@@ -1,4 +1,4 @@
-from src.util.util import extract_flags, flags_to_val
+from src.util.util import extract_flags, flags_to_val, flags_to_val_2
 
 BASE_ADDR = 0x2000
 
