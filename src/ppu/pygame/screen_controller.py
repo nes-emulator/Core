@@ -78,7 +78,7 @@ class ScreenController:
             sprite = Sprite(pos, 0x80 + ((pos % 16) * 8), ((pos // 16) * 8) + 9, 0b00000000 | palette)
             self.draw_sprite(sprite, True)
 
-    def draw_sprites(self):
+    def draw_sprites(self, ptable_start):
         initial_addr = len(self.oam)
 
         for i in range(64):
@@ -109,13 +109,11 @@ class ScreenController:
         else:
             return bottomleft
 
-    def draw_background(self):
-        start_nametable = 0x2000
-        start_pattern_addr = 0
+    def draw_background(self, nametable_start, atable_start, ptable_start):
 
-        nt_addr = start_nametable
-        at_addr = 0x23C0
-        pt_addr = 0x0000
+        nt_addr = nametable_start
+        at_addr = atable_start
+        pt_addr = ptable_start
 
         for idx in range(0x03C0):
             i = idx % 32

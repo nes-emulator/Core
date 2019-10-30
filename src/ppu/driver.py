@@ -34,19 +34,13 @@ def get_sprites(chr_rom):
 
 ##### PPU MAIN DRIVER
 class Driver:
-    # DATA FROM REGISTERS
-
-    # attribute_addr = {0x2000:0x23C0, 0x2400:0x27C0, 0x2800:0x2BC0, 0x2C00:0x2FC0}
-    attribute_addr = {0: 0x23C0, 1: 0x27C0, 2: 0x2BC0, 3: 0x2FC0}
-    background_pattern_addr = {0: 0x0, 1: 0x1000}
-
-    # VRAM address increment per CPU read/write of PPUDATA
 
     def __init__(self, chr_rom, regs, memory, oam, ctrl1, ctrl2):
         self.oam = oam
         self.regs = regs
         self.memory = memory
         self.chr_rom = chr_rom
+        self.attribute_table_addr = {0x2000:0x23C0, 0x2400:0x27C0, 0x2800:0x2BC0, 0x2C00:0x2FC0}
 
     def main(self):
         game = ScreenController(self.memory, self.oam)
@@ -54,7 +48,19 @@ class Driver:
 
         # TODO 60 fps? some other way of deciding to print? decide frequency
         while True:
+            # parse control registers here
+
+            # PPUCTRL
+            ppuctrl = PPUCTRL(self.regs[0])
+            base_nt_addr = ppuctrl.extract_nametable_addr()
+            # TODO: vram_incr = ppuctrl.extract_vram_increment()
+            sprite_pt_addr = extract_sprite_pattern_table_addr()
+            back_pt_addr = extract_background_pattern_table()
+            # TODO: sprite size
+            generate_nmi = ppuctrl.nmi #TODO: use this
+
+            # render the game
             game.init_info()
-            game.draw_background()
-            game.draw_sprites()
+            game.draw_background(base_nt_addr, self.attribute_table_addr[base_nt_addr], back_pt_addr)
+            game.draw_sprites(sprite_pt_addr)
             game.display()
