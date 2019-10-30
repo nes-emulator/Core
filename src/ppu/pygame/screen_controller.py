@@ -81,7 +81,6 @@ class ScreenController:
         pygame.display.flip()
 
     def draw_sprites(self):
-        init_sprites(self.oam)
         initial_addr = len(self.oam)
 
         for i in range(64):

@@ -89,16 +89,16 @@ class PPURegCallback:
     def ppu_data_read(memory):
         status = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
         status.increment_mode = not status.increment_mode
-        memory.ppu_memory.get_regs()[PPUCTRL.BASE_ADDR - BASE_ADDR] = status.to_val()
-        memory.set_content(PPUCTRL.BASE_ADDR, status.to_val())
+        #memory.ppu_memory.get_regs()[PPUCTRL.BASE_ADDR - BASE_ADDR] = status.to_val()
+        #memory.set_content(PPUCTRL.BASE_ADDR, status.to_val())
 
     @staticmethod
     def ppu_data_write(memory):
         memory.ppu_memory.get_regs()[BASE_ADDR - PPUDATA.BASE_ADDR] = memory.memory[PPUDATA.BASE_ADDR]
         status = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
         status.increment_mode = not status.increment_mode
-        memory.ppu_memory.get_regs()[PPUCTRL.BASE_ADDR - BASE_ADDR] = status.to_val()
-        memory.set_content(PPUCTRL.BASE_ADDR, status.to_val())
+        #memory.ppu_memory.get_regs()[PPUCTRL.BASE_ADDR - BASE_ADDR] = status.to_val()
+        #memory.set_content(PPUCTRL.BASE_ADDR, status.to_val())
         pass
 
     # XX00-$XXFF to OAM

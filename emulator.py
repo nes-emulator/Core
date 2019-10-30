@@ -29,7 +29,7 @@ class Emulator():
 
             InstructionCollection.initialize()
             # PPU Render loop
-            # ppu_init.PPU_Runner_Initializer.init_ppu(self.cart.get_chr_rom(), self.memory.ppu_memory)
+            ppu_init.PPU_Runner_Initializer.init_ppu(self.cart.get_chr_rom(), self.memory.ppu_memory)
             Runner.run(self.instructions, self.cpu, self.memory)
 
         except ValueError as err:
