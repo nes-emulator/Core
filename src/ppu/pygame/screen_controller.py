@@ -6,11 +6,12 @@ from src.ppu.nametable.nametable import Nametable
 size = (249, 230)
 
 class ScreenController:
-    def __init__(self, memory):
+    def __init__(self, memory, oam):
         pygame.init()
         (x, y) = size
         self.game = pygame.display.set_mode((2 * x, 2 * y))
         self.memory = memory
+        self.oam = oam
 
     def init_info(self):
         init_nametable(self.memory)
@@ -80,16 +81,16 @@ class ScreenController:
         pygame.display.flip()
 
     def draw_sprites(self):
-        init_sprites(self.memory)
-        initial_addr = 0x0200
+        init_sprites(self.oam)
+        initial_addr = len(self.oam)
 
         for i in range(64):
-            base_addr = (initial_addr + 0x0100) - ((i + 1) * 4)
+            base_addr = initial_addr - ((i + 1) * 4)
 
-            y = self.memory[base_addr + 0]
-            x = self.memory[base_addr + 3]
-            tile = self.memory[base_addr + 1]
-            attributes = self.memory[base_addr + 2]
+            y = self.oam[base_addr + 0]
+            x = self.oam[base_addr + 3]
+            tile = self.oam[base_addr + 1]
+            attributes = self.oam[base_addr + 2]
 
             self.draw_sprite(Sprite(tile, x, y, attributes), False)
 
@@ -152,14 +153,14 @@ def init_nametable(memory):
         memory[0x23C0 + j] = 0b0 | value
 
 def write_sprite(memory, pos, tile, x, y, attributes):
-    base_addr = 0x0200
+    base_addr = 0
     memory[base_addr + pos * 4 + 0] = y
     memory[base_addr + pos * 4 + 3] = x
     memory[base_addr + pos * 4 + 1] = tile
     memory[base_addr + pos * 4 + 2] = attributes
 
 def init_sprites(memory):
-    write_sprite(memory, 0, 0x10, 0x01, 0x01, 0b00000011) # first line invisible
+    write_sprite(memory, 0, 0x04, 0x01, 0x11, 0b00000011) # first line invisible
     write_sprite(memory, 1, 0x00, 0x80, 0x80, 0b00100011)
     write_sprite(memory, 2, 0x45, 0x0A, 0xC7, 0b00000010)
     write_sprite(memory, 3, 0x99, 0xD8, 0x0C, 0b00000001)

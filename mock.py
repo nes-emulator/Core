@@ -45,11 +45,11 @@ class Emulator():
 
             sprites = get_sprites(self.chr_rom)
 
-            game = ScreenController([0] * 0x4000)
+            game = ScreenController([0] * 0x4000, [0xFE] * 0x100)
             game.set_sprites(sprites)
             while True:
                 game.init_info()
-                game.draw_background()
+                game.draw_sprites()
                 pass
 
             # self.instructions = self.cart.get_prg_rom()
