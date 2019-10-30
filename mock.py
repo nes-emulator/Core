@@ -40,7 +40,6 @@ class Emulator():
         self.chr_rom = None
 
         try:
-
             self.cart = Cartridge(cartridge_path)
             self.chr_rom = self.cart.get_chr_rom()
 
