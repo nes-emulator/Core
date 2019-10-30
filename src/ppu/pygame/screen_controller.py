@@ -78,8 +78,6 @@ class ScreenController:
             sprite = Sprite(pos, 0x80 + ((pos % 16) * 8), ((pos // 16) * 8) + 9, 0b00000000 | palette)
             self.draw_sprite(sprite, True)
 
-        pygame.display.flip()
-
     def draw_sprites(self):
         initial_addr = len(self.oam)
 
@@ -93,8 +91,8 @@ class ScreenController:
 
             self.draw_sprite(Sprite(tile, x, y, attributes), False)
 
+    def display(self):
         pygame.display.flip()
-
 
     def decode_attribute_table(self, idx, entry):
         bottomright, bottomleft, topright, topleft = Nametable.get_bits(entry)
@@ -135,8 +133,6 @@ class ScreenController:
 
             sprite = Sprite(nt_entry, i * 8, j * 8, 0x0 | attribute)
             self.draw_sprite(sprite, True)
-
-        pygame.display.flip()
 
 
 # TODO REMOVE THIS TESTS METHODS LATER

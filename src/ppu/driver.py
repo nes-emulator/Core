@@ -57,4 +57,4 @@ class Driver:
             game.init_info()
             game.draw_background()
             game.draw_sprites()
-            pass
+            game.display()

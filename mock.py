@@ -50,7 +50,7 @@ class Emulator():
             while True:
                 game.init_info()
                 game.draw_sprites()
-                pass
+                game.display()
 
             # self.instructions = self.cart.get_prg_rom()
             #
