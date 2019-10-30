@@ -1,7 +1,7 @@
 from src.ppu.nametable.nametable import Nametable
 from src.util.util import extract_8_bits
 from src.ppu.pygame.screen_controller import ScreenController
-
+from src.ppu.control.reg import PPUCTRL
 
 # this method will be called passing shared memory
 
@@ -54,8 +54,8 @@ class Driver:
             ppuctrl = PPUCTRL(self.regs[0])
             base_nt_addr = ppuctrl.extract_nametable_addr()
             # TODO: vram_incr = ppuctrl.extract_vram_increment()
-            sprite_pt_addr = extract_sprite_pattern_table_addr()
-            back_pt_addr = extract_background_pattern_table()
+            sprite_pt_addr = ppuctrl.extract_sprite_pattern_table_addr()
+            back_pt_addr = ppuctrl.extract_background_pattern_table()
             # TODO: sprite size
             generate_nmi = ppuctrl.nmi #TODO: use this
 
