@@ -24,8 +24,6 @@ class Memory:
 
     def __init__(self, cpu, cartridge=None):
         self.ppu_memory = PPUMemory()
-        # init a memory array
-        # self.ppu_memory =
         self.stack = Stack(self, cpu.state)
         self.reset()
         # write all NROM data to memory
@@ -41,25 +39,11 @@ class Memory:
     @Controllers.read_button
     @PPUOperationHandler.ppu_read_verifier
     def retrieve_content(self, addr):
-        if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
-            pass
-        # print("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
     @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
-
         val %= 256
-
-        if not Memory._valid_memory_word(val, Memory.WORD_SIZE):
-            pass
-            # raise("Invalid memory storage, value stored > 16bits, word = 16bits")
-        if not Memory._valid_memory_word(addr, Memory.WORD_SIZE * 2):
-            pass
-            # raise("Invalid memory storage, indexing address > 16bits, word = 16bits")
-        if addr > Memory.ROM_ADDR:
-            pass
-            # raise("invalid memory storage, you cant store data in ROM")
         self.memory[addr] = val
         self.apply_memory_mirror(addr, val)
 
