@@ -41,6 +41,7 @@ class Memory:
     def retrieve_content(self, addr):
         return self.memory[addr]
 
+    @Controllers.btn_loader
     @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
         val %= 256
@@ -99,7 +100,6 @@ class Memory:
         while ppu_reg <= 0x3FFF:
             self.memory[ppu_reg] = val
             ppu_reg += 8
-
 
     @classmethod
     # if addr is associated with a ppu reg, the reg number is returned
