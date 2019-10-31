@@ -76,10 +76,11 @@ class PPURegCallback:
         # write to mapped reg
         memory.ppu_memory.get_regs()[PPUADDR.BASE_ADDR - BASE_ADDR] = memory.memory[PPUADDR.BASE_ADDR]
 
+        # check the 'write twice' and updates VRAM pointer
         if cls.ppu_addr_second_write:
             cls.ppu_addr_second_write = False
             addr = make_16b_binary(cls.addr_high_byte, memory.memory[PPUADDR.BASE_ADDR])
-            cls.pointer_address = addr  
+            cls.pointer_address = addr
         else:
             cls.ppu_addr_second_write = True
             cls.addr_high_byte = memory.memory[PPUADDR.BASE_ADDR]
@@ -90,8 +91,10 @@ class PPURegCallback:
 
     @staticmethod
     def ppu_data_read(memory):
-        status = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
-        status.increment_mode = not status.increment_mode
+        ppuctrl = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
+        # status.increment_mode = not status.increment_mode
+        # reads updates VRAM pointer
+        cls.pointer_address += ppuctrl.extract_vram_increment
 
     @classmethod
     def ppu_data_write(cls, memory):
