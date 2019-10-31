@@ -19,9 +19,9 @@ class Controllers:
     ctrl2_bit_being_read = 0
 
     # i've copied these bindings from mednafen config
-    # ctrl1_keybinds = {pygame.K_KP2: B, pygame.K_KP3: A, pygame.K_KP_ENTER: Start, pygame.K_TAB: Select,
-    #                   pygame.K_s: Down, pygame.K_w: Up, pygame.K_a: Left, pygame.K_d: Right
-    #                   }
+    ctrl1_keybinds = {pygame.K_KP2: B, pygame.K_KP3: A, pygame.K_KP_ENTER: Start, pygame.K_TAB: Select,
+                      pygame.K_s: Down, pygame.K_w: Up, pygame.K_a: Left, pygame.K_d: Right
+                      }
     # controller 2 is disabled, for now
     ctrl2_keybinds = {}
     ctrl1_btn_states = Array('B', (0,) * BTN_NUMBER, lock=False)
@@ -46,12 +46,12 @@ class Controllers:
         return btn_resseter
 
     # place this in main loop
-    # @classmethod
-    # def button_press(cls):
-    #     keys = pygame.key.get_pressed()
-    #     for btn, index in cls.ctrl1_keybinds.items():
-    #         if keys[btn]:
-    #             cls.ctrl1_btn_states[index] = 1
-    #     for btn, index in cls.ctrl2_keybinds.items():
-    #         if keys[btn]:
-    #             cls.ctrl2_btn_states[index] = 1
+    @classmethod
+    def button_press(cls):
+        keys = pygame.key.get_pressed()
+        for btn, index in cls.ctrl1_keybinds.items():
+            if keys[btn]:
+                cls.ctrl1_btn_states[index] = 1
+        for btn, index in cls.ctrl2_keybinds.items():
+            if keys[btn]:
+                cls.ctrl2_btn_states[index] = 1
