@@ -19,8 +19,8 @@ class PPURegCallback:
         memory.ppu_memory.get_regs()[PPUMASK.BASE_ADDR - BASE_ADDR] = memory.memory[PPUMASK.BASE_ADDR]
         pass
 
-    @staticmethod
-    def status_read(memory):
+    @classmethod
+    def status_read(cls, memory):
         # change NMI bit
         status = PPUSTATUS(memory.memory[PPUSTATUS.BASE_ADDR])
         status.v = True
@@ -28,7 +28,9 @@ class PPURegCallback:
         memory.set_content(PPUSCROLL.BASE_ADDR, 0)
         memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = 0
         memory.ppu_memory.get_regs()[PPUADDR.BASE_ADDR - BASE_ADDR] = 0
-        memory.set_content(PPUADDR.BASE_ADDR, 0)
+        # memory.set_content(PPUADDR.BASE_ADDR, 0)
+        memory.memory[PPUADDR.BASE_ADDR] = 0
+        cls.ppu_addr_second_write = False
         # save new status reg
         memory.set_content(PPUSTATUS.BASE_ADDR, status.to_val())
         memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status.to_val()
@@ -77,7 +79,8 @@ class PPURegCallback:
             cls.ppu_addr_second_write = False
             addr = make_16b_binary(cls.addr_high_byte, memory.memory[PPUADDR.BASE_ADDR])
             #memory.ppu_memory.set_val_memory(addr, memory.memory[PPUDATA.BASE_ADDR])
-            cls.pointer_address = addr
+            if addr:
+                cls.pointer_address = addr
         else:
             cls.ppu_addr_second_write = True
             cls.addr_high_byte = memory.memory[PPUADDR.BASE_ADDR]

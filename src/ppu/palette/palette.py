@@ -5,6 +5,7 @@ class ColorPalette:
     colors = []
 
     def __init__(self, mem, address):
+        self.colors = []
         for i in range(16):
             self.colors.append(mem[address + i])
 
