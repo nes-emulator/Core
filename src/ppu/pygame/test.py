@@ -51,7 +51,7 @@ class ControlerCPUTests(unittest.TestCase):
         for _ in range(4):
             self.assertEqual(0b1, self.memory.retrieve_content(Controllers.CTRL1_ADDR))
             self.assertEqual(0b0, self.memory.retrieve_content(Controllers.CTRL1_ADDR))
-        self.assertEqual(0b1, self.memory.retrieve_content(Controllers.CTRL1_ADDR))
+        self.assertEqual(0b0, self.memory.retrieve_content(Controllers.CTRL1_ADDR))
         for _ in range(8):
             self.assertEqual(0b1, self.memory.retrieve_content(Controllers.CTRL2_ADDR))
         for _ in range(8):
