@@ -53,10 +53,10 @@ class Controllers:
         for event in events:
 
             if event.type == pygame.KEYDOWN:
-                if cls.ctrl1_keybinds[event.key]:
-                    index = cls.ctrl1_keybins[event.key]
+                if event.key in cls.ctrl1_keybinds:
+                    index = cls.ctrl1_keybinds[event.key]
                     cls.ctrl1_btn_states[index] = 1
 
-                if cls.ctrl2_keybinds[event.key]:
-                    index = cls.ctrl2_keybins[event.key]
+                elif event.key in cls.ctrl2_keybinds:
+                    index = cls.ctrl2_keybinds[event.key]
                     cls.ctrl2_btn_states[index] = 1
