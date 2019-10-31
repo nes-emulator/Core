@@ -51,8 +51,8 @@ class PPURegCallback:
     def oam_data_write(memory):
         oam_addr = memory.memory[OAMADDR.BASE_ADDR]
         oam_addr += 1
-        memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
-        memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.memory[OAMDATA.BASE_ADDR]
+        #memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
+        #memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.memory[OAMDATA.BASE_ADDR]
         memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = oam_addr
         pass
 
@@ -77,7 +77,6 @@ class PPURegCallback:
         if cls.ppu_addr_second_write:
             cls.ppu_addr_second_write = False
             addr = make_16b_binary(cls.addr_high_byte, memory.memory[PPUADDR.BASE_ADDR])
-            #memory.ppu_memory.set_val_memory(addr, memory.memory[PPUDATA.BASE_ADDR])
             if addr:
                 cls.pointer_address = addr
         else:
@@ -92,8 +91,6 @@ class PPURegCallback:
     def ppu_data_read(memory):
         status = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
         status.increment_mode = not status.increment_mode
-        #memory.ppu_memory.get_regs()[PPUCTRL.BASE_ADDR - BASE_ADDR] = status.to_val()
-        #memory.set_content(PPUCTRL.BASE_ADDR, status.to_val())
 
     @classmethod
     def ppu_data_write(cls, memory):
@@ -102,9 +99,6 @@ class PPURegCallback:
         status.increment_mode = not status.increment_mode
         memory.ppu_memory.set_val_memory(cls.pointer_address, memory.memory[PPUDATA.BASE_ADDR])
         cls.pointer_address += 1
-        #memory.ppu_memory.get_regs()[PPUCTRL.BASE_ADDR - BASE_ADDR] = status.to_val()
-        #memory.set_content(PPUCTRL.BASE_ADDR, status.to_val())
-        pass
 
     # XX00-$XXFF to OAM
     @staticmethod
