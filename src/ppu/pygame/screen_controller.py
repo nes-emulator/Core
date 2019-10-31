@@ -27,6 +27,9 @@ class ScreenController:
         return self.sprite_palette
 
     def draw_pixel(self, x, y, color):
+        if color == (104,136,252,0):
+            return
+
         x *= 2
         y *= 2
         self.game.set_at((x, y), color)
