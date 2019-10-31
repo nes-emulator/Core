@@ -101,9 +101,9 @@ MobControl:
 
 ; Enforces a delay of 30 frames in player movement
 MoveDelayControl:
-    LDA BomberMoveCounter
-    CMP #0
-    BNE UpdateMovementDelay
+    ;LDA BomberM
+    ;CMP #0
+    ;BNE UpdateMovementDelay
 
 ; We read only one movement per frame
 Right:
