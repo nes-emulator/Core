@@ -120,13 +120,12 @@ class Memory:
     @classmethod
     # if addr is associated with a ppu reg, the reg number is returned
     def ppu_reg(cls, addr):
-
         if addr == OAMDMA.BASE_ADDR:
             return 9
 
-        if addr > 0x2007:
+        if addr < 0x2000 or addr > 0x2007:
             return -1
-            
+
         # if addr > 0x3FFF and addr < Memory.PPU_BASE_REG_ADDR:
             # return -1
 
