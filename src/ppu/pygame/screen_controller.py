@@ -9,9 +9,10 @@ class ScreenController:
     def __init__(self, memory, oam):
         pygame.init()
         (x, y) = size
-        self.game = pygame.display.set_mode((2 * x, 2 * y))
+        self.screen = pygame.display.set_mode((2 * x, 2 * y))
         self.memory = memory
         self.oam = oam
+        self.game = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA, 32)
 
     def init_info(self):
         self.sprite_palette = SpriteColorPalette(self.memory)
@@ -27,9 +28,6 @@ class ScreenController:
         return self.sprite_palette
 
     def draw_pixel(self, x, y, color):
-        if color == (104,136,252,0):
-            return
-
         x *= 2
         y *= 2
         self.game.set_at((x, y), color)
@@ -92,6 +90,7 @@ class ScreenController:
             self.draw_sprite(Sprite(tile, x, y, attributes), False)
 
     def display(self):
+        self.screen.blit(self.game, (0, 0))
         pygame.display.flip()
 
     def decode_attribute_table(self, idx, entry):
