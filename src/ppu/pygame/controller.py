@@ -27,6 +27,19 @@ class Controllers:
     ctrl1_btn_states = Array('B', (0,) * BTN_NUMBER, lock=False)
     ctrl2_btn_states = Array('B', (0,) * BTN_NUMBER, lock=False)
 
+    # loads the button state to memory when 1 is stored in the ctrl addr
+    @classmethod
+    def btn_loader(cls, mem_write):
+        def button_state_loader(memory, addr, val):
+            mem_write(memory, addr, val)
+            if val == 1:
+                if addr == cls.CTRL1_ADDR:
+                    cls.ctrl1_bit_being_read = 0
+                elif addr == cls.CTRL2_ADDR:
+                    cls.ctrl2_bit_being_read = 0
+
+        return button_state_loader
+
     @classmethod
     def read_button(cls, memory_access_func):
         def btn_resseter(memory, addr):

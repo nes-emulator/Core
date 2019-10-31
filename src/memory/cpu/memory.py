@@ -100,6 +100,7 @@ class Memory:
             self.memory[ppu_reg] = val
             ppu_reg += 8
 
+
     @classmethod
     # if addr is associated with a ppu reg, the reg number is returned
     def ppu_reg(cls, addr):
