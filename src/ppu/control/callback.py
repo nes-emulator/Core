@@ -72,13 +72,14 @@ class PPURegCallback:
     # transfer data to ppu memory
     @classmethod  # write twice
     def ppu_addr_write(cls, memory):
+
         # write to mapped reg
         memory.ppu_memory.get_regs()[PPUADDR.BASE_ADDR - BASE_ADDR] = memory.memory[PPUADDR.BASE_ADDR]
+
         if cls.ppu_addr_second_write:
             cls.ppu_addr_second_write = False
             addr = make_16b_binary(cls.addr_high_byte, memory.memory[PPUADDR.BASE_ADDR])
-            if addr:
-                cls.pointer_address = addr
+            cls.pointer_address = addr  
         else:
             cls.ppu_addr_second_write = True
             cls.addr_high_byte = memory.memory[PPUADDR.BASE_ADDR]
@@ -108,4 +109,3 @@ class PPURegCallback:
         high_from = make_16b_binary(val, 0xFF) + 1
         for from_addr, to_addr in zip(range(low_from, high_from), range(0, 256)):
             memory.ppu_memory.set_val_oam(to_addr,memory.memory[from_addr])
-
