@@ -122,11 +122,8 @@ class Memory:
         if addr == OAMDMA.BASE_ADDR:
             return 9
 
-        if addr < 0x2000 or addr > 0x2007:
+        if addr < 0x2000 or addr > 0x3FFF:
             return -1
-
-        # if addr > 0x3FFF and addr < Memory.PPU_BASE_REG_ADDR:
-        # return -1
 
         reg = (addr - Memory.PPU_BASE_REG_ADDR) % 8
         return reg

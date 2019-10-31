@@ -46,7 +46,31 @@ class Driver:
         game = ScreenController(self.memory, self.oam)
         game.set_sprites(get_sprites(self.chr_rom))
 
-        # TODO 60 fps? some other way of deciding to print? decide frequency
+        # FIRST RENDER, needs to display() twice
+
+        # PPUCTRL
+        ppuctrl = PPUCTRL(self.regs[0])
+        base_nt_addr = ppuctrl.extract_nametable_addr()
+        # TODO: vram_incr = ppuctrl.extract_vram_increment()
+        sprite_pt_addr = ppuctrl.extract_sprite_pattern_table_addr()
+        back_pt_addr = ppuctrl.extract_background_pattern_table()
+        # TODO: sprite size
+
+        # PPUMASK
+        ppumask = PPUMASK(self.regs[1])
+        show_background = ppumask.bg_enabled
+        show_sprites = ppumask.spr_enabled
+
+        # render the game
+        game.init_info()
+        if (show_background):
+            game.draw_background(base_nt_addr, self.attribute_table_addr[base_nt_addr], back_pt_addr)
+            game.display()
+
+        if (show_sprites):
+            game.draw_sprites(sprite_pt_addr)
+            game.display()
+
         while True:
             # parse control registers here
 
@@ -73,9 +97,8 @@ class Driver:
             game.init_info()
             if (show_background):
                 game.draw_background(base_nt_addr, self.attribute_table_addr[base_nt_addr], back_pt_addr)
-                game.display()
+                # game.display()
 
             if (show_sprites):
                 game.draw_sprites(sprite_pt_addr)
                 game.display()
-
