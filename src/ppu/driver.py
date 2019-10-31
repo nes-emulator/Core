@@ -77,6 +77,10 @@ class Driver:
         game.display()
 
         while True:
+
+            # parse controllers
+            Controllers.button_press()
+
             # parse control registers here
 
             # PPUCTRL
@@ -105,6 +109,5 @@ class Driver:
                 # game.display()
 
             if (show_sprites):
-                Controllers.button_press()
                 game.draw_sprites(sprite_pt_addr)
                 game.display()
