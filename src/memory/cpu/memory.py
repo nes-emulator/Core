@@ -46,7 +46,6 @@ class Memory:
         # print("Invalid memory access, indexing address > 16bits, word = 16bits")
         return self.memory[addr]
 
-    @Controllers.btn_loader
     @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
 
@@ -127,7 +126,7 @@ class Memory:
             return -1
 
         # if addr > 0x3FFF and addr < Memory.PPU_BASE_REG_ADDR:
-            # return -1
+        # return -1
 
         reg = (addr - Memory.PPU_BASE_REG_ADDR) % 8
         return reg
