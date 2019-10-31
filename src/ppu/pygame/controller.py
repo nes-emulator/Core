@@ -48,10 +48,12 @@ class Controllers:
     # place this in main loop
     @classmethod
     def button_press(cls):
-        keys = pygame.key.get_pressed()
-        for btn, index in cls.ctrl1_keybinds.items():
-            if keys[btn]:
-                cls.ctrl1_btn_states[index] = 1
-        for btn, index in cls.ctrl2_keybinds.items():
-            if keys[btn]:
-                cls.ctrl2_btn_states[index] = 1
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                for btn, index in cls.ctrl1_keybinds.items():
+                    if cls.ctrl1_keybinds[event.key]:
+                        cls.ctrl1_btn_states[index] = 1
+                for btn, index in cls.ctrl2_keybinds.items():
+                    if cls.ctrl2_keybinds[event.key]:
+                        cls.ctrl2_btn_states[index] = 1

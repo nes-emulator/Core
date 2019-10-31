@@ -2,6 +2,8 @@ from src.ppu.nametable.nametable import Nametable
 from src.util.util import extract_8_bits
 from src.ppu.pygame.screen_controller import ScreenController
 from src.ppu.control.reg import PPUCTRL, PPUSTATUS, PPUMASK
+from src.ppu.pygame.controller import Controllers
+
 
 # this method will be called passing shared memory
 
@@ -40,7 +42,7 @@ class Driver:
         self.regs = regs
         self.memory = memory
         self.chr_rom = chr_rom
-        self.attribute_table_addr = {0x2000:0x23C0, 0x2400:0x27C0, 0x2800:0x2BC0, 0x2C00:0x2FC0}
+        self.attribute_table_addr = {0x2000: 0x23C0, 0x2400: 0x27C0, 0x2800: 0x2BC0, 0x2C00: 0x2FC0}
 
     def main(self):
         game = ScreenController(self.memory, self.oam)
@@ -103,5 +105,6 @@ class Driver:
                 # game.display()
 
             if (show_sprites):
+                Controllers.button_press()
                 game.draw_sprites(sprite_pt_addr)
                 game.display()
