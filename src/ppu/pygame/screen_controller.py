@@ -1,3 +1,6 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
 import pygame
 from .sprite import Sprite
 from ..palette.palette import ColorMap, SpriteColorPalette, BackgroundColorPalette

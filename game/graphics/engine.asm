@@ -92,12 +92,12 @@ BombermanFacingRight:       ; Start of bomber facing left, horintally mirrored
     LDA #%01000000          ; Value to flip horizontally
     JSR MirrorSpritesHorizontally
     JSR ExchangeTilesRightOrder
-    RTS                     ; Already returns on left/right flow
+    JMP MoveBombermanDirectionEnd  ; Already returns on left/right flow
 BombermanFacingLeft:
     LDA #$02                ; Start of bomber facing left sprite
     JSR MirrorSpritesHorizontally
     JSR ExchangeTilesLeftOrder
-    RTS                     ; Return early on left/right flow
+    JMP MoveBombermanDirectionEnd ; Return early on left/right flow
 
 BombermanFacingUp:
     LDA #$0c                ; Start of bomber facing up sprite

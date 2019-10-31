@@ -65,12 +65,10 @@ class Driver:
         game.display()
 
         while True:
-
             # parse controllers
             Controllers.button_press()
 
             # parse control registers here
-
             # PPUCTRL
             ppuctrl = PPUCTRL(self.regs[0])
             if not ppuctrl.nmi:
@@ -94,7 +92,6 @@ class Driver:
             game.init_info()
             if (show_background):
                 game.draw_background(base_nt_addr, self.attribute_table_addr[base_nt_addr], back_pt_addr)
-                # game.display()
 
             if (show_sprites):
                 game.draw_sprites(sprite_pt_addr)
