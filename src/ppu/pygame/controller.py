@@ -4,14 +4,14 @@ import pygame
 
 
 class Controllers:
-    Right = 0
-    Left = 1
-    Down = 2
-    Up = 3
-    Start = 4
-    Select = 5
-    B = 6
-    A = 7
+    Right = 7
+    Left = 6
+    Down = 5
+    Up = 4
+    Start = 3
+    Select = 2
+    B = 1
+    A = 0
     BTN_NUMBER = 8
     CTRL1_ADDR = 0x4016
     CTRL2_ADDR = 0x4017
