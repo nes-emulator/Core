@@ -87,7 +87,7 @@ class Runner:
             return False
 
         # TODO better way of deciding to change to NMI
-        if cpu.cycles / 100 > 1:
+        if cpu.cycles / 4000 > 1:
             cpu.is_nmi_running = True
             return True
 
