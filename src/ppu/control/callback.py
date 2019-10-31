@@ -28,7 +28,6 @@ class PPURegCallback:
         memory.set_content(PPUSCROLL.BASE_ADDR, 0)
         memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = 0
         memory.ppu_memory.get_regs()[PPUADDR.BASE_ADDR - BASE_ADDR] = 0
-        # memory.set_content(PPUADDR.BASE_ADDR, 0)
         memory.memory[PPUADDR.BASE_ADDR] = 0
         cls.ppu_addr_second_write = False
         # save new status reg
