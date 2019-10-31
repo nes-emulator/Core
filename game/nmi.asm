@@ -66,7 +66,7 @@ DeathDelay:
             ; finish game here
             JMP Reset
             ContinueDeath:
-                JSR playSoundFrame
+                JMP playSoundFrame
             JMP returnFromNMI
 
 ;-------------------------------------------------------------------------------

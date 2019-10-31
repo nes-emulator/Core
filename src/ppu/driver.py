@@ -48,22 +48,6 @@ class Driver:
         game = ScreenController(self.memory, self.oam)
         game.set_sprites(get_sprites(self.chr_rom))
 
-        # FIRST RENDER, needs to display() twice
-        while True:
-            ppuctrl = PPUCTRL(self.regs[0])
-            if ppuctrl.nmi:
-                break
-
-        game.init_info()
-        ppuctrl = PPUCTRL(self.regs[0])
-        base_nt_addr = ppuctrl.extract_nametable_addr()
-        # TODO: vram_incr = ppuctrl.extract_vram_increment()
-        sprite_pt_addr = ppuctrl.extract_sprite_pattern_table_addr()
-        back_pt_addr = ppuctrl.extract_background_pattern_table()
-
-        game.draw_background(base_nt_addr, self.attribute_table_addr[base_nt_addr], back_pt_addr)
-        game.display()
-
         while True:
             # parse controllers
             Controllers.button_press()
