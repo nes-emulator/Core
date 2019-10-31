@@ -29,7 +29,7 @@ class PPUCTRL:
         self.nametable_2 = flags[7]
 
     def extract_nametable_addr(self):
-        return PPUCTRL.BASE_ADDR + flags_to_val_2([self.nametable_1, self.nametable_2]) * 0x400
+        return PPUCTRL.BASE_ADDR + flags_to_val([self.nametable_1, self.nametable_2]) * 0x400
 
     def extract_vram_increment(self):
         # (0: add 1, going across; 1: add 32, going down)
@@ -75,7 +75,7 @@ class PPUMASK:
         flags = [self.cl_emph_B, self.cl_emph_G, self.cl_emph_R, self.spr_enabled, self.bg_enabled,
                  self.spr_left_col_enabled,
                  self.bg_left_col_enabled, self.grey_scale]
-        return flags_to_val(flags)
+        return flags_to_val_2(flags)
 
 
 # It is often used for determining timing.

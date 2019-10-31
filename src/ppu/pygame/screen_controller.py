@@ -14,7 +14,6 @@ class ScreenController:
         self.oam = oam
 
     def init_info(self):
-        init_nametable(self.memory)
         self.sprite_palette = SpriteColorPalette(self.memory)
         self.background_palette = BackgroundColorPalette(self.memory)
 
@@ -28,8 +27,6 @@ class ScreenController:
         return self.sprite_palette
 
     def draw_pixel(self, x, y, color):
-        y -= 9
-
         x *= 2
         y *= 2
         self.game.set_at((x, y), color)
@@ -131,9 +128,3 @@ class ScreenController:
 
             sprite = Sprite(nt_entry, i * 8, j * 8, 0x0 | attribute)
             self.draw_sprite(sprite, True)
-
-
-# TODO REMOVE THIS TESTS METHODS LATER
-def init_nametable(memory):
-    for i in range(0x20):
-        memory[0x3F00 + i] = i

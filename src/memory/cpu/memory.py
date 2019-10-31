@@ -20,7 +20,7 @@ class Memory:
     PRGROM_SIZE = 0x4000
     UNSIGNED_BYTE_TYPE = 'B'
     PPU_BASE_REG_ADDR = 0x2000
-    PPU_MIRROR_LIMIT = 0x3FFF
+    PPU_MIRROR_LIMIT = 0x2007
 
     def __init__(self, cpu, cartridge=None):
         self.ppu_memory = PPUMemory()

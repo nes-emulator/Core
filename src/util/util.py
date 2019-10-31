@@ -14,11 +14,9 @@ def extract_8_bits(number):
     return [0] * (8 - len(bits)) + bits
 
 
-
 def extract_flags(val, n_flags):
-    flags = [bool(b) for b in extract_bits(val)]
+    flags = [bool(b) for b in extract_8_bits(val)]
     return [False] * (n_flags - len(flags)) + flags
-
 
 def flags_to_val(flags):
     flags = ([0] * (8 - len(flags))) + flags
@@ -28,7 +26,7 @@ def flags_to_val(flags):
 # Assumes that flags starts with the highest bit
 # Returns the decimal value of a bit sequence
 def flags_to_val_2(flags):
-    val = [i * (2 ** r) for i, r in zip(flags, range(len(flags) - 1, -1, -1))]
+    val = [i * (2 ** r) for i, r in zip(flags, range(len(flags), -1, -1))]
     return sum(val)
 
 

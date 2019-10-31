@@ -1,7 +1,7 @@
 from src.ppu.nametable.nametable import Nametable
 from src.util.util import extract_8_bits
 from src.ppu.pygame.screen_controller import ScreenController
-from src.ppu.control.reg import PPUCTRL
+from src.ppu.control.reg import PPUCTRL, PPUSTATUS, PPUMASK
 
 # this method will be called passing shared memory
 
@@ -61,15 +61,14 @@ class Driver:
 
             # PPUMASK
             ppumask = PPUMASK(self.regs[1])
+            show_sprites = ppumask.spr_enabled
             show_background = ppumask.bg_enabled
-            show_sprites =  ppumask.spr_enabled
 
             # PPUSTATUS
             ppustatus = PPUSTATUS(self.regs[2])
 
             # render the game
             game.init_info()
-
             if (show_background):
                 game.draw_background(base_nt_addr, self.attribute_table_addr[base_nt_addr], back_pt_addr)
 
