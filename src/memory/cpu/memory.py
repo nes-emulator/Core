@@ -50,6 +50,8 @@ class Memory:
     @PPUOperationHandler.ppu_write_verifier
     def set_content(self, addr, val):
 
+        val %= 256
+
         if not Memory._valid_memory_word(val, Memory.WORD_SIZE):
             pass
             # raise("Invalid memory storage, value stored > 16bits, word = 16bits")
@@ -59,7 +61,7 @@ class Memory:
         if addr > Memory.ROM_ADDR:
             pass
             # raise("invalid memory storage, you cant store data in ROM")
-        self.memory[addr] = val % 256
+        self.memory[addr] = val
         self.apply_memory_mirror(addr, val)
 
     def loadCHROM(self, rom_data):
@@ -108,21 +110,25 @@ class Memory:
         self.memory[addr + 0x1800] = val
 
     def apply_ppu_register_mirror(self, addr, val):
-        ppu_reg_size = 8
-        ppu_reg = (addr % ppu_reg_size) + 0x2000
+        ppu_reg = (addr - 0x2000) % 8
+        ppu_reg += 0x2000
 
         while ppu_reg <= 0x3FFF:
-            self.memory[ppu_reg] = val % 256
-            ppu_reg += ppu_reg_size
+            self.memory[ppu_reg] = val
+            ppu_reg += 8
 
     @classmethod
     # if addr is associated with a ppu reg, the reg number is returned
     def ppu_reg(cls, addr):
+
         if addr == OAMDMA.BASE_ADDR:
             return 9
-        if addr > cls.PPU_MIRROR_LIMIT:
+
+        if addr > 0x2007:
             return -1
+            
+        # if addr > 0x3FFF and addr < Memory.PPU_BASE_REG_ADDR:
+            # return -1
+
         reg = (addr - Memory.PPU_BASE_REG_ADDR) % 8
-        if 0 <= reg <= 7:
-            return reg
-        return -1
+        return reg
