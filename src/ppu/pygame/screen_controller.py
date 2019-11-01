@@ -1,4 +1,5 @@
 import os
+
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import pygame
@@ -8,11 +9,15 @@ from src.ppu.nametable.nametable import Nametable
 
 size = (249, 230)
 
+
 class ScreenController:
+    TITLE = "Emulador Nes, grupo 4"
+
     def __init__(self, memory, oam):
         pygame.init()
         (x, y) = size
         self.screen = pygame.display.set_mode((2 * x, 2 * y))
+        pygame.display.set_caption(ScreenController.TITLE)
         self.memory = memory
         self.oam = oam
         self.game = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA, 32)

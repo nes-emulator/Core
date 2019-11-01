@@ -1,6 +1,7 @@
 from src.instruction.collection import InstructionCollection
 from src.register.statusregister import StatusRegister
 from .logger import Logger
+from src.ppu.control.ppu_init import PPU_Runner_Initializer
 
 
 class InterruptVectorAddressResolver:
@@ -31,7 +32,7 @@ class Runner:
             cpu.state.pc.set_value(0xc000)
             cpu.state.status = StatusRegister(36)
 
-        while True:
+        while True and PPU_Runner_Initializer.PPU_RUNNING.value:
             params = []
 
             if Runner.NESTEST:

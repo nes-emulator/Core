@@ -17,7 +17,6 @@ class PPURegCallback:
     def mask_write(memory):
         # write to mapped reg
         memory.ppu_memory.get_regs()[PPUMASK.BASE_ADDR - BASE_ADDR] = memory.memory[PPUMASK.BASE_ADDR]
-        pass
 
     @classmethod
     def status_read(cls, memory):
@@ -33,18 +32,15 @@ class PPURegCallback:
         # save new status reg
         memory.set_content(PPUSTATUS.BASE_ADDR, status.to_val())
         memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status.to_val()
-        pass
 
     # transfer OAM[OAMADDR] to OAMDATA
     @staticmethod
     def oam_addr_write(memory):
         # ???
         memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = memory.memory[OAMADDR.BASE_ADDR]
-        pass
 
     @staticmethod
     def oam_data_read(memory):
-        # OK
         pass
 
     @staticmethod
@@ -54,7 +50,6 @@ class PPURegCallback:
         # memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
         # memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.memory[OAMDATA.BASE_ADDR]
         memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = oam_addr
-        pass
 
     # bottleneck, ppu should notify that it received the first write
     # the addres can be maped to PPUSCROLL(reg 5) Y and PPUSCROLL X(reg 9)
@@ -104,7 +99,7 @@ class PPURegCallback:
         memory.ppu_memory.get_regs()[PPUDATA.BASE_ADDR - BASE_ADDR] = memory.memory[PPUDATA.BASE_ADDR]
         memory.ppu_memory.set_val_memory(cls.pointer_address, memory.memory[PPUDATA.BASE_ADDR])
         ppuctrl = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
-        #cls.pointer_address += ppuctrl.extract_vram_increment
+        # cls.pointer_address += ppuctrl.extract_vram_increment
         cls.pointer_address += ppuctrl.extract_vram_increment()
 
     # XX00-$XXFF to OAM

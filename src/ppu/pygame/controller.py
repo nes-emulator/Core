@@ -60,11 +60,9 @@ class Controllers:
 
     # place this in main loop
     @classmethod
-    def button_press(cls):
-
+    def button_press(cls, ppu_running):
         events = pygame.event.get()
         for event in events:
-
             if event.type == pygame.KEYDOWN:
                 if event.key in cls.ctrl1_keybinds:
                     index = cls.ctrl1_keybinds[event.key]
@@ -72,3 +70,8 @@ class Controllers:
                 elif event.key in cls.ctrl2_keybinds:
                     index = cls.ctrl2_keybinds[event.key]
                     cls.ctrl2_btn_states[index] = 1
+            elif event.type == pygame.QUIT:
+                pygame.display.quit()
+                pygame.quit()
+                ppu_running.value = 0  # disable cpu
+                exit(0)

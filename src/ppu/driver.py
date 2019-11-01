@@ -3,12 +3,13 @@ from src.util.util import extract_8_bits
 from src.ppu.pygame.screen_controller import ScreenController
 from src.ppu.control.reg import PPUCTRL, PPUSTATUS, PPUMASK
 from src.ppu.pygame.controller import Controllers
+import pygame
 
 
 # this method will be called passing shared memory
 
-def ppu_main(chr_rom, regs, memory, oam, ctrl1, ctrl2):
-    driver = Driver(chr_rom, regs, memory, oam, ctrl1, ctrl2)
+def ppu_main(chr_rom, regs, memory, oam, ppu_running):
+    driver = Driver(chr_rom, regs, memory, oam, ppu_running)
     driver.main()
 
 
@@ -37,20 +38,22 @@ def get_sprites(chr_rom):
 ##### PPU MAIN DRIVER
 class Driver:
 
-    def __init__(self, chr_rom, regs, memory, oam, ctrl1, ctrl2):
+    def __init__(self, chr_rom, regs, memory, oam, ppu_running):
         self.oam = oam
         self.regs = regs
         self.memory = memory
         self.chr_rom = chr_rom
         self.attribute_table_addr = {0x2000: 0x23C0, 0x2400: 0x27C0, 0x2800: 0x2BC0, 0x2C00: 0x2FC0}
+        self.ppu_running = ppu_running
 
     def main(self):
         game = ScreenController(self.memory, self.oam)
         game.set_sprites(get_sprites(self.chr_rom))
 
         while True:
+            # window closed ?
             # parse controllers
-            Controllers.button_press()
+            Controllers.button_press(self.ppu_running)
 
             # parse control registers here
             # PPUCTRL
