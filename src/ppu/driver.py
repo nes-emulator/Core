@@ -59,7 +59,6 @@ class Driver:
                 continue
 
             base_nt_addr = ppuctrl.extract_nametable_addr()
-            # TODO: vram_incr = ppuctrl.extract_vram_increment()
             sprite_pt_addr = ppuctrl.extract_sprite_pattern_table_addr()
             back_pt_addr = ppuctrl.extract_background_pattern_table()
             # TODO: sprite size
@@ -68,9 +67,6 @@ class Driver:
             ppumask = PPUMASK(self.regs[1])
             show_sprites = ppumask.spr_enabled
             show_background = ppumask.bg_enabled
-
-            # PPUSTATUS
-            ppustatus = PPUSTATUS(self.regs[2])
 
             # render the game
             game.init_info()
@@ -81,3 +77,7 @@ class Driver:
                 game.draw_sprites(sprite_pt_addr)
 
             game.display()
+
+            # disable NMI bit in PPUSTATUS
+            # TODO: clear this based on timing
+            self.regs[2] = self.regs[2] & 0b01111111

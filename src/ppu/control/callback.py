@@ -21,19 +21,20 @@ class PPURegCallback:
 
     @classmethod
     def status_read(cls, memory):
-        # change NMI bit
-        status = PPUSTATUS(memory.memory[PPUSTATUS.BASE_ADDR])
-        status.v = True
-        # reset PPUSCROLL and PPUDATA
+        # clear NMI bit on PPUSTATUS
+        status = memory.memory[PPUSTATUS.BASE_ADDR]
+        status = status & 01111111
+        memory.set_content(PPUSTATUS.BASE_ADDR, status)
+        memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status
+
+        # reset PPUSCROLL
         memory.set_content(PPUSCROLL.BASE_ADDR, 0)
         memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = 0
+
+        # reset PPUDATA
         memory.ppu_memory.get_regs()[PPUADDR.BASE_ADDR - BASE_ADDR] = 0
         memory.memory[PPUADDR.BASE_ADDR] = 0
         cls.ppu_addr_second_write = False
-        # save new status reg
-        memory.set_content(PPUSTATUS.BASE_ADDR, status.to_val())
-        memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status.to_val()
-        pass
 
     # transfer OAM[OAMADDR] to OAMDATA
     @staticmethod

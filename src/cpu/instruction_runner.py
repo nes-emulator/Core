@@ -55,6 +55,10 @@ class Runner:
             cpu.cycles += ins.get_cycles()
 
             if Runner.should_redirect_to_nmi(cpu, mem):
+                # notify PPU
+                memory.ppu_memory.regs[2] = memory.ppu_memory.regs[2] | 0b10000000 # set NMI bit
+
+                # run NMI code
                 cpu.cycles = 0
                 mem.stack.push_pc()
                 mem.stack.push_val(cpu.state.status.to_val())
