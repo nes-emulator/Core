@@ -62,9 +62,6 @@ class Txs(Instruction, ImpliedAddr):
         x = cpu.state.x.get_value()
         cpu.state.sp.set_value(x)
 
-        cpu.cycles = 0
-        cpu.is_nmi_running = False
-
 class Tya(Instruction, ImpliedAddr):
     def __init__(self):
         super().__init__(opcode = 0x98, cycles = 2)

@@ -62,6 +62,7 @@ class Runner:
             # print ("EMULATOR TIME INTERVAL: %s / CPU PERIOD: %s / DIFF: %s " % (str(interval.total_seconds()), str(cpu_period), str(delay)))
 
             if Runner.should_redirect_to_nmi(cpu, mem):
+                cpu.cycles = 0
                 mem.stack.push_pc()
                 mem.stack.push_val(cpu.state.status.to_val())
                 nmi_address = InterruptVectorAddressResolver.get_nmi_address(mem)
@@ -83,12 +84,11 @@ class Runner:
     def should_redirect_to_nmi(cpu, memory):
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
 
-        if cpu.is_nmi_running or not is_nmi_enabled:
+        if not is_nmi_enabled:
             return False
 
         # TODO better way of deciding to change to NMI
         if cpu.cycles / 4000 > 1:
-            cpu.is_nmi_running = True
             return True
 
         return False
