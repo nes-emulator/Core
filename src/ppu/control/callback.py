@@ -23,7 +23,8 @@ class PPURegCallback:
     def status_read(cls, memory):
         # clear NMI bit on PPUSTATUS
         status = memory.memory[PPUSTATUS.BASE_ADDR]
-        status = status & 0b01111111
+        # status = status & 0b11111111
+        status = status | 0b10000000
         memory.set_content(PPUSTATUS.BASE_ADDR, status)
         memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status
 

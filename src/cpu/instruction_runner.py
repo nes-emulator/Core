@@ -56,7 +56,9 @@ class Runner:
 
             if Runner.should_redirect_to_nmi(cpu, mem):
                 # notify PPU
-                memory.ppu_memory.regs[2] = memory.ppu_memory.regs[2] | 0b10000000 # set NMI bit
+                # status = memory.ppu_memory.regs[2] | 0b10000000     # set NMI bit
+                # memory.ppu_memory.regs[2] = status
+                # memory.set_content(PPUSTATUS.BASE_ADDR, status)
 
                 # run NMI code
                 cpu.cycles = 0

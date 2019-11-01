@@ -80,4 +80,4 @@ class Driver:
 
             # disable NMI bit in PPUSTATUS
             # TODO: clear this based on timing
-            self.regs[2] = self.regs[2] & 0b01111111
+            # self.regs[2] = self.regs[2] & 0b01111111
