@@ -95,15 +95,15 @@ class PPURegCallback:
     @classmethod
     def ppu_data_read(cls, memory):
         ppuctrl = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
-        cls.pointer_address += ppuctrl.extract_vram_increment
+        cls.pointer_address += ppuctrl.extract_vram_increment()
 
     @classmethod
     def ppu_data_write(cls, memory):
         memory.ppu_memory.get_regs()[PPUDATA.BASE_ADDR - BASE_ADDR] = memory.memory[PPUDATA.BASE_ADDR]
-        status = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
-        status.increment_mode = not status.increment_mode
         memory.ppu_memory.set_val_memory(cls.pointer_address, memory.memory[PPUDATA.BASE_ADDR])
-        cls.pointer_address += 1
+        ppuctrl = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
+        #cls.pointer_address += ppuctrl.extract_vram_increment
+        cls.pointer_address += ppuctrl.extract_vram_increment()
 
     # XX00-$XXFF to OAM
     @staticmethod
