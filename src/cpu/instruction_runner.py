@@ -44,7 +44,6 @@ class Runner:
                 params.append(mem.retrieve_content(cpu.state.pc.get_value()))
 
             cpu.state.pc.inc()
-            # start_time = datetime.now()
             manipulated_mem_addr = ins.execute(memory=mem, cpu=cpu, params=params)
 
             if Runner.LOGGER_ACTIVE and not Runner.NESTEST:
@@ -54,12 +53,6 @@ class Runner:
                 Logger.next_log_line()
 
             cpu.cycles += ins.get_cycles()
-            # TODO regulate stall
-            # print ("TIME TO LOG STUFF %s" % str((datetime.now() - start_time).total_seconds()))
-            # interval = datetime.now() - start_time
-            # cpu_period = (1 / Runner.CPU_FREQUENCY_HZ) * ins.get_cycles()
-            # delay = cpu_period - interval.total_seconds()
-            # print ("EMULATOR TIME INTERVAL: %s / CPU PERIOD: %s / DIFF: %s " % (str(interval.total_seconds()), str(cpu_period), str(delay)))
 
             if Runner.should_redirect_to_nmi(cpu, mem):
                 cpu.cycles = 0
