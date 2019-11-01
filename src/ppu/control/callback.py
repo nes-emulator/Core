@@ -35,7 +35,7 @@ class PPURegCallback:
         memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status.to_val()
         pass
 
-    #transfer OAM[OAMADDR] to OAMDATA
+    # transfer OAM[OAMADDR] to OAMDATA
     @staticmethod
     def oam_addr_write(memory):
         # ???
@@ -51,8 +51,8 @@ class PPURegCallback:
     def oam_data_write(memory):
         oam_addr = memory.memory[OAMADDR.BASE_ADDR]
         oam_addr += 1
-        #memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
-        #memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.memory[OAMDATA.BASE_ADDR]
+        # memory.set_content(OAMADDR.BASE_ADDR, oam_addr)
+        # memory.ppu_memory.get_regs()[OAMDATA.BASE_ADDR - BASE_ADDR] = memory.memory[OAMDATA.BASE_ADDR]
         memory.ppu_memory.get_regs()[OAMADDR.BASE_ADDR - BASE_ADDR] = oam_addr
         pass
 
@@ -62,11 +62,14 @@ class PPURegCallback:
     def scroll_write(cls, memory):
         if cls.scroll_second_write:  # second write
             cls.scroll_second_write = False
-            memory.ppu_memory.get_regs()[8] = memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR]  # reg 9 = reg 5  X
-            memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = memory.memory[PPUSCROLL.BASE_ADDR]  # reg 5 = Y
+            memory.ppu_memory.get_regs()[8] = memory.ppu_memory.get_regs()[
+                PPUSCROLL.BASE_ADDR - BASE_ADDR]  # reg 9 = reg 5  X
+            memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = memory.memory[
+                PPUSCROLL.BASE_ADDR]  # reg 5 = Y
         else:  # first write
             cls.scroll_second_write = True
-            memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = memory.memory[PPUSCROLL.BASE_ADDR]  # reg 5 X
+            memory.ppu_memory.get_regs()[PPUSCROLL.BASE_ADDR - BASE_ADDR] = memory.memory[
+                PPUSCROLL.BASE_ADDR]  # reg 5 X
         # final state - > reg5 = Y ; reg9= X
 
     # transfer data to ppu memory
@@ -89,11 +92,9 @@ class PPURegCallback:
     def ppu_addr_read(memory):
         pass
 
-    @staticmethod
-    def ppu_data_read(memory):
+    @classmethod
+    def ppu_data_read(cls, memory):
         ppuctrl = PPUCTRL(memory.memory[PPUCTRL.BASE_ADDR])
-        # status.increment_mode = not status.increment_mode
-        # reads updates VRAM pointer
         cls.pointer_address += ppuctrl.extract_vram_increment
 
     @classmethod
@@ -111,4 +112,4 @@ class PPURegCallback:
         low_from = make_16b_binary(val, 0x00)
         high_from = make_16b_binary(val, 0xFF) + 1
         for from_addr, to_addr in zip(range(low_from, high_from), range(0, 256)):
-            memory.ppu_memory.set_val_oam(to_addr,memory.memory[from_addr])
+            memory.ppu_memory.set_val_oam(to_addr, memory.memory[from_addr])
