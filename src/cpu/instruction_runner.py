@@ -32,7 +32,7 @@ class Runner:
             cpu.state.pc.set_value(0xc000)
             cpu.state.status = StatusRegister(36)
 
-        while True and PPU_Runner_Initializer.PPU_RUNNING.value:
+        while PPU_Runner_Initializer.PPU_RUNNING.value:
             params = []
 
             if Runner.NESTEST:
