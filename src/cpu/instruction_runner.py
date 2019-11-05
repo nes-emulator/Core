@@ -54,6 +54,7 @@ class Runner:
                 Logger.next_log_line()
 
             cpu.cycles += ins.get_cycles()
+            cpu.ppu_cycles += 3 * ins.get_cycles()
 
             if Runner.should_redirect_to_nmi(cpu, mem):
                 # notify PPU
@@ -62,7 +63,7 @@ class Runner:
                 # memory.set_content(PPUSTATUS.BASE_ADDR, status)
 
                 # run NMI code
-                cpu.cycles = 0
+                cpu.ppu_cycles = 0
                 mem.stack.push_pc()
                 mem.stack.push_val(cpu.state.status.to_val())
                 nmi_address = InterruptVectorAddressResolver.get_nmi_address(mem)
@@ -83,12 +84,4 @@ class Runner:
     @staticmethod
     def should_redirect_to_nmi(cpu, memory):
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
-
-        if not is_nmi_enabled:
-            return False
-
-        # TODO better way of deciding to change to NMI
-        if cpu.cycles / 4000 > 1:
-            return True
-
-        return False
+        return is_nmi_enabled and cpu.ppu_cycles > 81940

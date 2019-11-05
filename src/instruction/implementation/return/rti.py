@@ -14,8 +14,6 @@ class Rti(Instruction, ImpliedAddr):
         new_status.unused = cpu.state.status.unused
         cpu.state.status = new_status
 
-        cpu.cycles = 0
-
         # load return address from stack
         memory.stack.pop_pc()
 
