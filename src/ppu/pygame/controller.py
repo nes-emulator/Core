@@ -32,6 +32,8 @@ class Controllers:
     def btn_loader(cls, mem_write):
         def button_state_loader(memory, addr, val):
             mem_write(memory, addr, val)
+            if addr == cls.CTRL1_ADDR and val & 0x1 == 0x1:
+                cls.ctrl1_bit_being_read = 0
 
         return button_state_loader
 
@@ -39,14 +41,15 @@ class Controllers:
     def read_button(cls, memory_access_func):
         def btn_resseter(memory, addr):
             mem_val = memory_access_func(memory, addr)
+            if cls.ctrl1_bit_being_read > 7:
+                return mem_val
+
             if addr == cls.CTRL1_ADDR:
                 mem_val = cls.ctrl1_btn_states[cls.ctrl1_bit_being_read]
                 cls.ctrl1_bit_being_read += 1
-                cls.ctrl1_bit_being_read %= cls.BTN_NUMBER
             elif addr == cls.CTRL2_ADDR:
                 mem_val = cls.ctrl2_btn_states[cls.ctrl2_bit_being_read]
                 cls.ctrl2_bit_being_read += 1
-                cls.ctrl2_bit_being_read %= cls.BTN_NUMBER
             return mem_val
 
         return btn_resseter
