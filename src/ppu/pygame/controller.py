@@ -32,11 +32,6 @@ class Controllers:
     def btn_loader(cls, mem_write):
         def button_state_loader(memory, addr, val):
             mem_write(memory, addr, val)
-            if val == 1:
-                if addr == cls.CTRL1_ADDR:
-                    cls.ctrl1_bit_being_read = 0
-                elif addr == cls.CTRL2_ADDR:
-                    cls.ctrl2_bit_being_read = 0
 
         return button_state_loader
 
@@ -46,12 +41,10 @@ class Controllers:
             mem_val = memory_access_func(memory, addr)
             if addr == cls.CTRL1_ADDR:
                 mem_val = cls.ctrl1_btn_states[cls.ctrl1_bit_being_read]
-                cls.ctrl1_btn_states[cls.ctrl1_bit_being_read] = 0
                 cls.ctrl1_bit_being_read += 1
                 cls.ctrl1_bit_being_read %= cls.BTN_NUMBER
             elif addr == cls.CTRL2_ADDR:
                 mem_val = cls.ctrl2_btn_states[cls.ctrl2_bit_being_read]
-                cls.ctrl2_btn_states[cls.ctrl2_bit_being_read] = 0
                 cls.ctrl2_bit_being_read += 1
                 cls.ctrl2_bit_being_read %= cls.BTN_NUMBER
             return mem_val
@@ -70,6 +63,13 @@ class Controllers:
                 elif event.key in cls.ctrl2_keybinds:
                     index = cls.ctrl2_keybinds[event.key]
                     cls.ctrl2_btn_states[index] = 1
+            elif event.type == pygame.KEYUP:
+                if event.key in cls.ctrl1_keybinds:
+                    index = cls.ctrl1_keybinds[event.key]
+                    cls.ctrl1_btn_states[index] = 0
+                elif event.key in cls.ctrl2_keybinds:
+                    index = cls.ctrl2_keybinds[event.key]
+                    cls.ctrl2_btn_states[index] = 0
             elif event.type == pygame.QUIT:
                 pygame.display.quit()
                 pygame.quit()
