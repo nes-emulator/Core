@@ -69,7 +69,7 @@ class ScreenController:
         for x in range(8):
             for y in range(8):
                 pixel = data[y][x]
-                if pixel:
+                if pixel or is_background:
                     color = ColorMap.get_color_rgb_reference(palette[pixel])
                     (base_x, base_y) = self.get_screen_pos(x, y, sprite)
                     self.draw_pixel(base_x, base_y, color)
