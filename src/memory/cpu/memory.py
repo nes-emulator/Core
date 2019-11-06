@@ -50,12 +50,15 @@ class Memory:
 
     def loadCHROM(self, rom_data):
         arr_chr = array(Memory.UNSIGNED_BYTE_TYPE, rom_data)
-        self.memory[self.CHROM_ADDR:(self.CHROM_ADDR + self.CHROM_SIZE)] = arr_chr
+        #self.memory[self.CHROM_ADDR:(self.CHROM_ADDR + self.CHROM_SIZE)] = arr_chr
 
     def loadROM(self, rom_data):
         arr_rom = array(Memory.UNSIGNED_BYTE_TYPE, rom_data)
-        self.memory[self.ROM_ADDR:(self.ROM_ADDR + self.PRGROM_SIZE)] = arr_rom
-        self.memory[(self.ROM_ADDR + self.PRGROM_SIZE):(self.ROM_ADDR + 2 * self.PRGROM_SIZE)] = arr_rom
+        if len(arr_rom) == self.PRGROM_SIZE:
+            self.memory[self.ROM_ADDR:(self.ROM_ADDR + self.PRGROM_SIZE)] = arr_rom
+            self.memory[(self.ROM_ADDR + self.PRGROM_SIZE):(self.ROM_ADDR + 2 * self.PRGROM_SIZE)] = arr_rom
+        else:
+            self.memory[self.ROM_ADDR:self.ROM_ADDR + len(arr_rom)] = arr_rom
 
     @classmethod
     def _valid_memory_word(cls, val, size):
