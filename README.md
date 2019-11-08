@@ -32,8 +32,13 @@
 
 [PPU Full Reference](http://wiki.nesdev.com/w/index.php/PPU)
 
+## Referências - Mês 04
 
+https://wiki.nesdev.com/w/index.php/APU_Mixer
 
+https://www.reddit.com/r/esp8266/comments/9o8dtb/ive_emulated_the_8bit_nes_apu_registersdacs_on/
+
+https://www.reddit.com/r/EmuDev/comments/ck5p3a/adding_apu_emulation_to_a_nes_emulator/
 
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
