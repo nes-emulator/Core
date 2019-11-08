@@ -40,6 +40,8 @@ https://www.reddit.com/r/esp8266/comments/9o8dtb/ive_emulated_the_8bit_nes_apu_r
 
 https://www.reddit.com/r/EmuDev/comments/ck5p3a/adding_apu_emulation_to_a_nes_emulator/
 
+[Square Wave Example Pygame](https://gist.github.com/ohsqueezy/6540433)
+
 ## Referências instruções 6502
 - http://www.6502.org/tutorials/6502opcodes.html
 - http://www.obelisk.me.uk/6502/reference.html
