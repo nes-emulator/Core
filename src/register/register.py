@@ -12,6 +12,18 @@ class Register:
     def set_value(self, value):
         self.value = value
 
+    def get_bit(self, n):
+        mask = 1 << n
+
+        if (self.value & mask):
+            return 1
+        else:
+            return 0
+
+    def set_bit(self, n):
+        mask = 1 << n
+        self.value = self.value | mask
+
     def inc(self):
         self.value += 1
 
