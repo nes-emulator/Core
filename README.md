@@ -34,7 +34,27 @@
 
 ## Referências - Mês 04
 
-https://wiki.nesdev.com/w/index.php/APU_Mixer
+[APU Main Page](https://wiki.nesdev.com/w/index.php/APU)
+
+[APU Registers](https://wiki.nesdev.com/w/index.php/APU_registers)
+
+[APU Pulse](https://wiki.nesdev.com/w/index.php/APU_Pulse)
+
+[APU Triangle](https://wiki.nesdev.com/w/index.php/APU_Triangle)
+
+[APU Noise](https://wiki.nesdev.com/w/index.php/APU_Noise)
+
+[APU DMC](https://wiki.nesdev.com/w/index.php/APU_DMC)
+
+[APU Frame Counter](https://wiki.nesdev.com/w/index.php/APU_Frame_Counter)
+
+[Length Counter](https://wiki.nesdev.com/w/index.php/APU_Length_Counter)
+
+[APU Envelope](https://wiki.nesdev.com/w/index.php/APU_Envelope)
+
+[APU Sweep](https://wiki.nesdev.com/w/index.php/APU_Sweep)
+
+[APU Mixer](https://wiki.nesdev.com/w/index.php/APU_Mixer)
 
 https://www.reddit.com/r/esp8266/comments/9o8dtb/ive_emulated_the_8bit_nes_apu_registersdacs_on/
 
