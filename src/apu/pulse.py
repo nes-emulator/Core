@@ -10,37 +10,21 @@ class PulseChannel:
         self.length_timer = Register(fourth)
 
     ## Parsing control bits (ADDR 4000 or 4004)
-    # Duty ranges from 0 to 3 inclusive
     def set_duty(self, val):
         bits = extract_bits(val)
-        # low duty bit
-        if (bits[0]):
-            self.control.set_bit(6)
-        else:
-            self.control.clear_bit(6)
-        # hi duty bit
-        if (bits[1]):
-            self.control.set_bit(7)
-        else:
-            self.control.clear_bit(7)
+        self.control.change_bits(6, bits)
 
     def get_duty(self):
         return self.control.get_bit(7) * 2 + self.control.get_bit(6)
 
     def set_loop_envelope(self, val):
-        if (val):
-            self.control.set_bit(5)
-        else:
-            self.control.clear_bit(5)
+        self.control.change_bit(5, val)
 
     def get_loop_envelope(self):
         return self.control.get_bit(5)
 
     def set_volume(self, val):
-        if (val):
-            self.control.set_bit(4)
-        else:
-            self.control.clear_bit(4)
+        self.control.change_bit(4, val)
 
     def get_volume(self):
         return self.control.get_bit(4)
@@ -51,7 +35,7 @@ class PulseChannel:
         self.control.change_bits(0, bits)
 
     def get_envelope_period(self):
-        return self.control.get_bits(0, 4)
+        return flags_to_val_low(self.control.get_bits(0, 4))
 
     ## Parsing Sweep Unit (4001 or 4005)
     def get_sweep_enabled(self):
@@ -61,7 +45,7 @@ class PulseChannel:
         self.sweep.change_bit(7, val)
 
     def get_period(self):
-        return self.sweep.get_bits(4, 3)
+        return flags_to_val_low(self.sweep.get_bits(4, 3))
 
     def set_period(self, bits):
         self.sweep.change_bits(4, bits)
@@ -72,11 +56,11 @@ class PulseChannel:
     def set_negative(self, val):
         self.sweep.change_bit(3, val)
 
+    def get_shift_count(self):
+        return flags_to_val_low(self.sweep.get_bits(0, 3))
+
     def set_shift_count(self, bits):
         self.sweep.change_bits(0, bits)
-
-    def get_shift_count(self):
-        return self.sweep.get_bits(0, 3)
 
     ## Parsing timer low
     def get_timer_low(self):
@@ -91,11 +75,11 @@ class PulseChannel:
         self.length_timer.change_bits(0, bits)
 
     def get_timer_high(self):
-        return self.length_timer.get_bits(0, 3)
+        return flags_to_val_low(self.length_timer.get_bits(0, 3))
 
     def set_lcl(self, val):
         bits = extract_bits(val)
         self.length_timer.change_bits(3, bits)
 
     def get_lcl(self):
-        return self.length_timer.get_bits(3, 5)
+        return flags_to_val_low(self.length_timer.get_bits(3, 5))
