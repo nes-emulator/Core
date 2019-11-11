@@ -18,17 +18,21 @@ def extract_flags(val, n_flags):
     flags = [bool(b) for b in extract_8_bits(val)]
     return [False] * (n_flags - len(flags)) + flags
 
+# please dont call this
 def flags_to_val(flags):
     flags = ([0] * (8 - len(flags))) + flags
     val = [i * (2 ** int(r)) for i, r in zip(flags, range(0, len(flags)))]
     return sum(val)
 
-# Assumes that flags starts with the highest bit
-# Returns the decimal value of a bit sequence
+# Returns the decimal value of a bit sequence starting with the highest bit
 def flags_to_val_2(flags):
-    val = [i * (2 ** r) for i, r in zip(flags, range(len(flags), -1, -1))]
+    val = [i * (2 ** r) for i, r in zip(flags, range(len(flags) - 1, -1, -1))]
     return sum(val)
 
+# Returns the decimal value of a bit sequence starting with the lowest bit
+def flags_to_val_low(flags):
+    val = [i * (2 ** int(r)) for i, r in zip(flags, range(0, len(flags)))]
+    return sum(val)
 
 def is_negative(number, n_digits):
     bits = extract_bits(number)
