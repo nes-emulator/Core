@@ -8,6 +8,7 @@ from array import array
 from src.ppu.control.operation_handler import PPUOperationHandler
 from src.ppu.control.reg import OAMDMA
 from src.memory.ppu.PPUMemory import PPUMemory
+from src.memory.apu.APUMemory import APUMemory
 from src.ppu.pygame.controller import Controllers
 
 
@@ -24,6 +25,7 @@ class Memory:
 
     def __init__(self, cpu, cartridge=None):
         self.ppu_memory = PPUMemory()
+        self.apu_memory = APUMemory()
         self.stack = Stack(self, cpu.state)
         self.reset()
         # write all NROM data to memory
@@ -47,6 +49,7 @@ class Memory:
         val %= 256
         self.memory[addr] = val
         self.apply_memory_mirror(addr, val)
+        self.apu_memory.set_reg(addr, val)
 
     def loadCHROM(self, rom_data):
         arr_chr = array(Memory.UNSIGNED_BYTE_TYPE, rom_data)

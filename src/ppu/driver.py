@@ -8,8 +8,8 @@ import pygame
 
 # this method will be called passing shared memory
 
-def ppu_main(chr_rom, regs, memory, oam, ppu_running):
-    driver = Driver(chr_rom, regs, memory, oam, ppu_running)
+def ppu_main(chr_rom, regs, apu_regs, memory, oam, ppu_running):
+    driver = Driver(chr_rom, regs, apu_regs, memory, oam, ppu_running)
     driver.main()
 
 
@@ -38,11 +38,12 @@ def get_sprites(chr_rom):
 ##### PPU MAIN DRIVER
 class Driver:
 
-    def __init__(self, chr_rom, regs, memory, oam, ppu_running):
+    def __init__(self, chr_rom, regs, apu_regs, memory, oam, ppu_running):
         self.oam = oam
         self.regs = regs
         self.memory = memory
         self.chr_rom = chr_rom
+        self.apu_regs = apu_regs
         self.attribute_table_addr = {0x2000: 0x23C0, 0x2400: 0x27C0, 0x2800: 0x2BC0, 0x2C00: 0x2FC0}
         self.ppu_running = ppu_running
 
