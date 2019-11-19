@@ -87,6 +87,41 @@ Usar o comando `nes` do linux para rodar visualmente os executáveis gerados
 
 - https://marketplace.visualstudio.com/items?itemName=EngineDesigns.retroassembler
 
+## PyPy + Pygame
+- Download pypy
+```console
+wget https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v7.2.0-linux64.tar.bz2
+tar xf pypy3.6-v7.2.0-linux64.tar.bz2; rm pypy3.6-v7.2.0-linux64.tar.bz2
+rm pypy3.6-v7.2.0-linux64.tar.bz2
+```
+- Install pygame build dependencies
+```console
+sudo apt-get install git python3-dev python3-setuptools python3-numpy python3-opengl \
+    libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev \
+    libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev \
+    libtiff5-dev libx11-6 libx11-dev fluid-soundfont-gm timgm6mb-soundfont \
+    xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic fontconfig fonts-freefont-ttf libfreetype6-dev
+```
+
+- rename pypy3.6-v7.2.0-linux64 folder to pypy
+
+```console
+mv pypy3.6-v7.2.0-linux64 pypy
+```
+
+- install pygame on pypy
+
+```console
+pypy/bin/pypy3 -m ensurepip
+pypy/bin/pip install -U pip wheel
+pypy/bin/pip install pygame  
+```
+- run using pypy
+
+```console
+ pypy/bin/pypy3 emulator.py game/game.bin
+```
+
 ## Other tools
 - https://wiki.nesdev.com/w/index.php/Tools
 
