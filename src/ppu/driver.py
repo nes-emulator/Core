@@ -3,6 +3,7 @@ from src.util.util import extract_8_bits
 from src.ppu.pygame.screen_controller import ScreenController
 from src.ppu.control.reg import PPUCTRL, PPUSTATUS, PPUMASK
 from src.ppu.pygame.controller import Controllers
+import time
 import pygame
 
 
@@ -51,9 +52,14 @@ class Driver:
         game = ScreenController(self.memory, self.oam)
         game.set_sprites(get_sprites(self.chr_rom))
 
+        previous = time.time()
+
         while True:
+            start = time.time()
             # window closed ?
             # parse controllers
+            if (start - previous < 1 / 60):  # 60fps
+                continue
             Controllers.button_press(self.ppu_running)
 
             # parse control registers here
@@ -81,7 +87,7 @@ class Driver:
                 game.draw_sprites(sprite_pt_addr)
 
             game.display()
-
+            previous = time.time()
             # disable NMI bit in PPUSTATUS
             # TODO: clear this based on timing
             # self.regs[2] = self.regs[2] & 0b01111111

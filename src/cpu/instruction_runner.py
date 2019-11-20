@@ -1,7 +1,11 @@
+from time import sleep
+
 from src.instruction.collection import InstructionCollection
 from src.register.statusregister import StatusRegister
 from .logger import Logger
 from src.ppu.control.ppu_init import PPU_Runner_Initializer
+from datetime import datetime
+import time
 
 
 class InterruptVectorAddressResolver:
@@ -21,6 +25,7 @@ class Runner:
     LOGGER_ACTIVE = False
     NESTEST = False
     CPU_FREQUENCY_HZ = 1789773
+    CPU_PERIOD_S = 1 / CPU_FREQUENCY_HZ
 
     @staticmethod
     def run(prg_rom, cpu, mem):
@@ -38,6 +43,7 @@ class Runner:
             if Runner.NESTEST:
                 Logger.log_nestest(cpu)
 
+            start_time = time.time()
             opcode = mem.retrieve_content(cpu.state.pc.get_value())
             ins = InstructionCollection.get_instruction(opcode)
             for _ in range(getattr(ins, 'parameter_length', 0)):
@@ -53,15 +59,19 @@ class Runner:
                     Logger.log_mem_manipulation(mem, manipulated_mem_addr)
                 Logger.next_log_line()
 
+            interval = time.time() - start_time
+            cpu_period = Runner.CPU_PERIOD_S * ins.get_cycles()
             cpu.cycles += ins.get_cycles()
+            delay = cpu_period - interval
+            if delay > 0:
+                pass
+                sleep(delay / 1.6)
             cpu.ppu_cycles += 3 * ins.get_cycles()
-
             if Runner.should_redirect_to_nmi(cpu, mem):
                 # notify PPU
                 # status = memory.ppu_memory.regs[2] | 0b10000000     # set NMI bit
                 # memory.ppu_memory.regs[2] = status
                 # memory.set_content(PPUSTATUS.BASE_ADDR, status)
-
                 # run NMI code
                 cpu.ppu_cycles = 0
                 mem.stack.push_pc()

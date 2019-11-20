@@ -46,9 +46,12 @@ class Controllers:
 
             if addr == cls.CTRL1_ADDR:
                 mem_val = cls.ctrl1_btn_states[cls.ctrl1_bit_being_read]
+                # cls.ctrl1_btn_states[cls.ctrl1_bit_being_read] = 0
                 cls.ctrl1_bit_being_read += 1
+
             elif addr == cls.CTRL2_ADDR:
                 mem_val = cls.ctrl2_btn_states[cls.ctrl2_bit_being_read]
+                # cls.ctrl2_btn_states[cls.ctrl2_bit_being_read] = 0
                 cls.ctrl2_bit_being_read += 1
             return mem_val
 
