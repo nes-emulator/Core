@@ -2,7 +2,7 @@ from src.instruction.collection import InstructionCollection
 from src.register.statusregister import StatusRegister
 from .logger import Logger
 from src.ppu.control.ppu_init import PPU_Runner_Initializer
-
+from src.apu.play import APUPlayState
 
 class InterruptVectorAddressResolver:
     @staticmethod
@@ -54,6 +54,7 @@ class Runner:
                 Logger.next_log_line()
 
             cpu.cycles += ins.get_cycles()
+            cpu.apu_cycles += ins.get_cycles() / 2
             cpu.ppu_cycles += 3 * ins.get_cycles()
 
             if Runner.should_redirect_to_nmi(cpu, mem):

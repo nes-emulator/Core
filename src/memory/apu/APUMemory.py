@@ -12,7 +12,7 @@ class APUMemory:
 
     def set_reg(self, addr, value):
         index = addr - APUMemory.BASE_ADDR
-        if index < 0 or index >= APUMemory.NUM_REGS:
+        if index < 0 or index >= APUMemory.NUM_REGS or not value:
             return
 
         self.regs[index] = value
