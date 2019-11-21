@@ -37,6 +37,8 @@ class Runner:
             cpu.state.pc.set_value(0xc000)
             cpu.state.status = StatusRegister(36)
 
+        accumulated_delay = 0
+
         while PPU_Runner_Initializer.PPU_RUNNING.value:
             params = []
 
@@ -63,9 +65,13 @@ class Runner:
             cpu_period = Runner.CPU_PERIOD_S * ins.get_cycles()
             cpu.cycles += ins.get_cycles()
             delay = cpu_period - interval
+
             if delay > 0:
-                pass
-                sleep(delay / 1.6)
+                accumulated_delay += delay / 1.6
+                if delay >= 0.3:
+                    sleep(accumulated_delay)
+                    accumulated_delay = 0
+
             cpu.ppu_cycles += 3 * ins.get_cycles()
             if Runner.should_redirect_to_nmi(cpu, mem):
                 # notify PPU
@@ -94,4 +100,4 @@ class Runner:
     @staticmethod
     def should_redirect_to_nmi(cpu, memory):
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
-        return is_nmi_enabled and cpu.ppu_cycles > 60000
+        return is_nmi_enabled and cpu.ppu_cycles > 80000
