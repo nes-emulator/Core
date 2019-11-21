@@ -67,8 +67,8 @@ class Runner:
             delay = cpu_period - interval
 
             if delay > 0:
-                accumulated_delay += delay / 1.6
-                if delay >= 0.3:
+                accumulated_delay += delay
+                if delay >= 0.0000015:
                     sleep(accumulated_delay)
                     accumulated_delay = 0
 
