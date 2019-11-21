@@ -27,7 +27,7 @@ class PulseChannel:
         self.control.change_bit(4, val)
 
     def get_volume(self):
-        return self.control.get_bit(4)
+        return self.control.get_value() & 0b00001111
 
     # 4-bit value
     def set_envelope_period(self, val):

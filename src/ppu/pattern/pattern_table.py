@@ -3,17 +3,17 @@
 class PatternTable:
     pattern = []
 
-    def get_all_tiles(self, mem):
-        initial_address = 0x0000
-        while initial_address < 0x1000:
-            self.get_tile(mem, initial_address)
-            initial_address += 0x0010
+    def __init__(self, mem, initial_address):
+        addr = initial_address
+        while addr < initial_address + 0x1000:
+            self.get_tile(mem, addr)
+            addr += 0x0010
 
     def get_tile(self, mem, address):
         initial = address & 0x11111100
         for i in range(8):
-            left_plane = mem.retrieve_content(initial + i)
-            right_plane = mem.retrieve_content(initial + i + 8)
+            left_plane = mem[initial + i]
+            right_plane = mem[initial + i + 8]
 
             for j in range(8):
                 mask = (1 << (7 - j))
