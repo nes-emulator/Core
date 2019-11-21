@@ -53,9 +53,9 @@ class PPUMemory:
         if 0x2000 <= addr <= 0x2EFF:
             return addr + 0x1000
         if 0x3F20 <= addr <= 0x3FFF:
-            return addr - 0x20
-        if 0x3F00 <= addr <= 0x3F1F:
-            return addr + 0x20
+            return 0x3F00 + (addr % 0x20)
+        #if 0x3F00 <= addr <= 0x3F1F:
+        #    return addr
         return None
 
     def apply_ppu_mirroring(self, addr, val):

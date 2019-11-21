@@ -84,5 +84,10 @@ class Runner:
 
     @staticmethod
     def should_redirect_to_nmi(cpu, memory):
+        if cpu.ppu_cycles > 60000:
+            status = memory.memory[0x2002]
+            status = (status | 0b10000000)
+            memory.memory[0x2002] = status
+
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
         return is_nmi_enabled and cpu.ppu_cycles > 60000
