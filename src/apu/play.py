@@ -1,8 +1,12 @@
 import pygame
+import numpy
+import scipy.signal
 from array import array
 from time import sleep
+
 from pygame.mixer import Sound, get_init, pre_init
 from .pulse import PulseChannel
+from .triangle import TriangleChannel
 
 CPU_CLOCK = 1789773
 pre_init(44100, -16, 1, 1024)
@@ -24,6 +28,20 @@ class PulseNote(Sound):
                 samples[time] = -amplitude
         return samples
 
+class TriangleNote(Sound):
+    def __init__(self, frequency, volume=.1):
+        self.frequency = frequency
+        Sound.__init__(self, self.build_sample())
+        self.set_volume(volume)
+
+    def build_sample(self):
+        wave = scipy.signal.triang(500 * 440 // self.frequency)
+        amplitude = 2 ** (15) - 1
+        sample = wave * amplitude
+        sample = numpy.resize(sample, 44100)
+        return sample.astype(numpy.int16)
+
+
 class APUPlayState:
 
     @staticmethod
@@ -38,6 +56,17 @@ class APUPlayState:
             regs[start_index + 3] = 0
 
     @staticmethod
+    def play_tri(regs, start_index):
+        channel = TriangleChannel(regs[start_index], regs[start_index + 2], regs[start_index + 3]) ## skips $4009
+        timer = (channel.get_timer_high() << 8) + channel.get_timer_low()
+        frequency = CPU_CLOCK / (32 * (timer + 1))
+        TriangleNote(frequency).play(timer)
+        regs[start_index + 2] = 0
+        regs[start_index + 3] = 0
+        regs[start_index] = 0
+
+    @staticmethod
     def play(regs):
         APUPlayState.play_pulse(regs, 0)
         APUPlayState.play_pulse(regs, 4)
+        APUPlayState.play_tri(regs, 8)
