@@ -31,8 +31,9 @@ class APUPlayState:
         pulse = PulseChannel(regs[start_index], regs[start_index + 1], regs[start_index + 2], regs[start_index + 3])
         timer = (pulse.get_timer_high() << 8) + pulse.get_timer_low()
         if timer > 7:
+            volume = pulse.get_volume() / 15
             frequency = CPU_CLOCK / (16 * (timer + 1))
-            PulseNote(frequency).play(timer)
+            PulseNote(frequency, volume).play(timer)
             regs[start_index] = 0
             regs[start_index + 2] = 0
             regs[start_index + 3] = 0
