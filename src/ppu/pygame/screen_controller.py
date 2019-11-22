@@ -6,8 +6,9 @@ import pygame
 from .sprite import Sprite
 from ..palette.palette import ColorMap, SpriteColorPalette, BackgroundColorPalette
 from src.ppu.nametable.nametable import Nametable
+from src.ppu.pattern.pattern_table import PatternTable
 
-size = (249, 230)
+size = (249, 222)
 
 class ScreenController:
     TITLE = "Emulador Nes, grupo 4"
@@ -91,6 +92,8 @@ class ScreenController:
     def draw_sprites(self, ptable_start):
         initial_addr = len(self.oam)
 
+        pattern_table = PatternTable(self.memory, ptable_start)
+
         for i in range(64):
             base_addr = initial_addr - ((i + 1) * 4)
 
@@ -124,6 +127,8 @@ class ScreenController:
         nt_addr = nametable_start
         at_addr = atable_start
         pt_addr = ptable_start
+
+        pattern_table = PatternTable(self.memory, pt_addr)
 
         for idx in range(0x03C0):
             i = idx % 32

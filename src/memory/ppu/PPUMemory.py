@@ -16,8 +16,6 @@ class PPUMemory:
     def __init__(self):
         self.clear_memory()
 
-    # TODO Init regs with power up state
-
     def clear_memory(self):
         self.memory = PPU_Runner_Initializer.mp_context.Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.PPU_MEM_SIZE,lock=False)
         self.oam_memory = PPU_Runner_Initializer.mp_context.Array(PPUMemory.UNSIGNED_BYTE, (0,) * PPUMemory.PPU_OAM_SIZE, lock=False)
@@ -53,9 +51,12 @@ class PPUMemory:
         if 0x2000 <= addr <= 0x2EFF:
             return addr + 0x1000
         if 0x3F20 <= addr <= 0x3FFF:
-            return addr - 0x20
-        if 0x3F00 <= addr <= 0x3F1F:
-            return addr + 0x20
+            return 0x3F00 + (addr % 0x20)
+        if addr >= 0x3F10 and addr % 4 == 0:
+            return 0x3F00 + (addr % 0x10)
+        if addr >= 0x3F00 and addr % 4 == 0:
+            return 0x3F10 + (addr % 0x10)
+
         return None
 
     def apply_ppu_mirroring(self, addr, val):

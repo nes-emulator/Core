@@ -1,6 +1,6 @@
 from src.util.util import make_16b_binary
 from .reg import *
-
+import random
 
 class PPURegCallback:
     scroll_second_write = False
@@ -23,8 +23,10 @@ class PPURegCallback:
     def status_read(cls, memory):
         # clear NMI bit on PPUSTATUS
         status = memory.memory[PPUSTATUS.BASE_ADDR]
-        # status = status & 0b11111111
-        status = status | 0b10000000
+
+        sprite0_hit = 0x40 if random.choice([True, False]) else 0x00
+        status = (status & 0b00111111) | sprite0_hit
+        #status = status | 0b10000000
         memory.set_content(PPUSTATUS.BASE_ADDR, status)
         memory.ppu_memory.get_regs()[PPUSTATUS.BASE_ADDR - BASE_ADDR] = status
 
