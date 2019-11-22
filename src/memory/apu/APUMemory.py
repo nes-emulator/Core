@@ -1,7 +1,7 @@
 from src.ppu.control.ppu_init import PPU_Runner_Initializer
 
 class APUMemory:
-    NUM_REGS = 0x18
+    NUM_REGS = 18
     BASE_ADDR = 0x4000
 
     def __init__(self):
@@ -11,8 +11,13 @@ class APUMemory:
         return self.regs
 
     def set_reg(self, addr, value):
+
         index = addr - APUMemory.BASE_ADDR
-        if index < 0 or index >= APUMemory.NUM_REGS or not value:
+
+        if index < 0 or index >= APUMemory.NUM_REGS:
             return
+
+        if index == 8:
+            print(value)
 
         self.regs[index] = value
