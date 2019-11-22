@@ -23,6 +23,7 @@ class Runner:
     PRG_ROM_START = 0
     LOGGER_ACTIVE = False
     NESTEST = False
+    NMI_INTERVAL = 100000
     CPU_FREQUENCY_HZ = 1789773
     CPU_PERIOD_S = 1 / CPU_FREQUENCY_HZ
 
@@ -70,8 +71,8 @@ class Runner:
 
             if delay > 0:
                 accumulated_delay += delay
-                if accumulated_delay >= 0.0000015:
-                    #sleep(accumulated_delay)
+                if accumulated_delay >= 0.01:
+                    sleep(accumulated_delay / 1.6)
                     accumulated_delay = 0
 
             cpu.ppu_cycles += 3 * ins.get_cycles()
@@ -101,10 +102,10 @@ class Runner:
 
     @staticmethod
     def should_redirect_to_nmi(cpu, memory):
-        if cpu.ppu_cycles > 60000:
+        if cpu.ppu_cycles > Runner.NMI_INTERVAL:
             status = memory.memory[0x2002]
             status = (status | 0b10000000)
             memory.memory[0x2002] = status
 
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
-        return is_nmi_enabled and cpu.ppu_cycles > 86400
+        return is_nmi_enabled and cpu.ppu_cycles > Runner.NMI_INTERVAL
