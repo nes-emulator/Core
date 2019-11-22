@@ -5,14 +5,13 @@ from array import array
 from time import sleep
 from random import randint
 import numpy as np
-from pygame.mixer import Sound, get_init, pre_init
+from pygame.mixer import Sound, get_init, pre_init, set_num_channels
 from .pulse import PulseChannel
 from .triangle import TriangleChannel
 from .noise import NoiseChannel
 
 CPU_CLOCK = 1789773
 pre_init(44100, -16, 1, 1024)
-
 
 class PulseNote(Sound):
     def __init__(self, frequency, volume=.1):
@@ -70,7 +69,7 @@ class APUPlayState:
         if timer > 7:
             volume = pulse.get_volume() / 15
             frequency = CPU_CLOCK / (16 * (timer + 1))
-            PulseNote(frequency, volume).play(timer)
+            pygame.mixer.Channel(start_index).play(PulseNote(frequency, volume), timer)
             regs[start_index] = 0
             regs[start_index + 2] = 0
             regs[start_index + 3] = 0
@@ -80,10 +79,11 @@ class APUPlayState:
         channel = TriangleChannel(regs[start_index], regs[start_index + 2], regs[start_index + 3])  ## skips $4009
         timer = (channel.get_timer_high() << 8) + channel.get_timer_low()
         frequency = CPU_CLOCK / (32 * (timer + 1))
-        TriangleNote(frequency).play(timer)
-        regs[start_index + 2] = 0
-        regs[start_index + 3] = 0
-        regs[start_index] = 0
+        if timer > 0:
+            pygame.mixer.Channel(start_index).play(TriangleNote(frequency), timer)
+            regs[start_index + 2] = 0
+            regs[start_index + 3] = 0
+            regs[start_index] = 0
 
     @staticmethod
     def play_noise(regs, start_index):
@@ -91,13 +91,14 @@ class APUPlayState:
         timer = (channel.get_lcl() << 8) + channel.get_loop_noise()
         period = channel.get_noise_period()
         frequency = randint(1, 15) * 440 ** 2
-        NoiseNote(frequency, period).play(timer)
+        pygame.mixer.Channel(start_index).play(NoiseNote(frequency, period), timer)
         regs[start_index + 2] = 0
         regs[start_index + 3] = 0
         regs[start_index] = 0
 
     @staticmethod
     def play(regs):
+        set_num_channels(0x10)
         APUPlayState.play_pulse(regs, 0)
         APUPlayState.play_pulse(regs, 4)
         APUPlayState.play_tri(regs, 8)
