@@ -72,7 +72,7 @@ class Runner:
             if delay > 0:
                 accumulated_delay += delay
                 if accumulated_delay >= 0.01:
-                    sleep(accumulated_delay / 1.6)
+                    sleep(accumulated_delay * 2)
                     accumulated_delay = 0
 
             cpu.ppu_cycles += 3 * ins.get_cycles()

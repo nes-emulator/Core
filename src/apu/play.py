@@ -1,7 +1,7 @@
 import pygame
 import numpy
 import numpy as np
-# import scipy.signal
+import scipy.signal
 
 from array import array
 from time import sleep
@@ -41,7 +41,7 @@ class TriangleNote(Sound):
         self.set_volume(volume)
 
     def build_sample(self):
-        # wave = scipy.signal.triang(500 + int(self.frequency)) #
+        #wave = scipy.signal.triang(500 + int(self.frequency)) #
         wave = scipy.signal.triang(130 + int(self.frequency)) #
         amplitude = 2 ** (15) - 1
         sample = wave * amplitude
@@ -89,7 +89,7 @@ class APUPlayState:
         frequency = CPU_CLOCK / (32 * (timer + 1))
         # print(frequency)
         # TriangleNote(frequency).play(20)
-        pygame.mixer.Channel(8).play(TriangleNote(frequency), 20)
+        pygame.mixer.Channel(8).play(TriangleNote(frequency), 0)
         # regs[8] = 0
         # regs[10] = 0
         # regs[11] = 0
@@ -112,7 +112,7 @@ class APUPlayState:
         control = ApuControl(regs[15], regs[17])
 
         # if control.get_triangle_lc_enable() == 1:
-        #APUPlayState.play_tri(regs)
+        APUPlayState.play_tri(regs)
 
         APUPlayState.play_pulse(regs, 0)
         APUPlayState.play_pulse(regs, 4)
