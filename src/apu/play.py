@@ -7,9 +7,10 @@ from time import sleep
 from pygame.mixer import Sound, get_init, pre_init
 from .pulse import PulseChannel
 from .triangle import TriangleChannel
+from .control_registers import ApuControl
 
 CPU_CLOCK = 1789773
-pre_init(44100, -16, 1, 1024)
+pre_init(44100, -16, 2, 1024)
 
 class PulseNote(Sound):
     def __init__(self, frequency, volume=.1):
@@ -35,7 +36,9 @@ class TriangleNote(Sound):
         self.set_volume(volume)
 
     def build_sample(self):
-        wave = scipy.signal.triang(500 * 440 // self.frequency)
+        print(self.frequency)
+        # wave = scipy.signal.triang(500 + int(self.frequency)) #
+        wave = scipy.signal.triang(130 + int(self.frequency)) #
         amplitude = 2 ** (15) - 1
         sample = wave * amplitude
         sample = numpy.resize(sample, 44100)
@@ -57,17 +60,27 @@ class APUPlayState:
             regs[start_index + 3] = 0
 
     @staticmethod
-    def play_tri(regs, start_index):
-        channel = TriangleChannel(regs[start_index], regs[start_index + 2], regs[start_index + 3]) ## skips $4009
+    def play_tri(regs):
+        channel = TriangleChannel(regs[8], regs[10], regs[11]) ## skips $4009
         timer = (channel.get_timer_high() << 8) + channel.get_timer_low()
+
+        if not timer:
+            return
+
         frequency = CPU_CLOCK / (32 * (timer + 1))
-        TriangleNote(frequency).play(timer)
-        regs[start_index + 2] = 0
-        regs[start_index + 3] = 0
-        regs[start_index] = 0
+        # print(frequency)
+        TriangleNote(frequency).play(20)
+        # regs[8] = 0
+        # regs[10] = 0
+        # regs[11] = 0
 
     @staticmethod
     def play(regs):
+
+        control = ApuControl(regs[15], regs[17])
+
+        # if control.get_triangle_lc_enable() == 1:
+        APUPlayState.play_tri(regs)
+
         APUPlayState.play_pulse(regs, 0)
         APUPlayState.play_pulse(regs, 4)
-        APUPlayState.play_tri(regs, 8)
