@@ -9,7 +9,6 @@ from src.ppu.nametable.nametable import Nametable
 
 size = (249, 230)
 
-
 class ScreenController:
     TITLE = "Emulador Nes, grupo 4"
 
@@ -20,7 +19,7 @@ class ScreenController:
         pygame.display.set_caption(ScreenController.TITLE)
         self.memory = memory
         self.oam = oam
-        self.game = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA, 32)
+        self.pixels = [ [0 for _ in range(264)] for _ in range(264) ]
 
     def init_info(self):
         self.sprite_palette = SpriteColorPalette(self.memory)
@@ -36,12 +35,16 @@ class ScreenController:
         return self.sprite_palette
 
     def draw_pixel(self, x, y, color):
+        if (self.pixels[x][y] == color):
+            return
+
+        self.pixels[x][y] = color
+        y -= 9
         x *= 2
         y *= 2
-        self.game.set_at((x, y), color)
-        self.game.set_at((x, y + 1), color)
-        self.game.set_at((x + 1, y), color)
-        self.game.set_at((x + 1, y + 1), color)
+        pixel = pygame.Surface((2, 2))
+        pixel.fill(color)
+        self.screen.blit(pixel, (x, y))
 
     def get_sprite_data(self, number, is_background):
         if is_background:
@@ -99,7 +102,6 @@ class ScreenController:
             self.draw_sprite(Sprite(tile, x, y, attributes), False)
 
     def display(self):
-        self.screen.blit(self.game, (0, 0))
         pygame.display.flip()
 
     def decode_attribute_table(self, idx, entry):

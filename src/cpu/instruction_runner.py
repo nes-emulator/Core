@@ -66,11 +66,11 @@ class Runner:
             cpu.cycles += ins.get_cycles()
             delay = cpu_period - interval
 
-            if delay > 0:
-                accumulated_delay += delay
-                if delay >= 0.0000015:
-                    sleep(accumulated_delay)
-                    accumulated_delay = 0
+            # if delay > 0:
+            #     accumulated_delay += delay
+            #     if accumulated_delay >= 0.0000015:
+            #         sleep(accumulated_delay)
+            #         accumulated_delay = 0
 
             cpu.ppu_cycles += 3 * ins.get_cycles()
             if Runner.should_redirect_to_nmi(cpu, mem):
@@ -100,4 +100,4 @@ class Runner:
     @staticmethod
     def should_redirect_to_nmi(cpu, memory):
         is_nmi_enabled = memory.ppu_memory.regs[0] & 0b10000000
-        return is_nmi_enabled and cpu.ppu_cycles > 80000
+        return is_nmi_enabled and cpu.ppu_cycles > 86400

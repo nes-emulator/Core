@@ -52,5 +52,6 @@ if __name__ == "__main__":
             Runner.log_as_nestest()
             main(sys.argv[1])
     except Exception as e:
+        print(e)
         sys.exit(0)
 
