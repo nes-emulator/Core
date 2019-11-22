@@ -41,7 +41,6 @@ class TriangleNote(Sound):
         self.set_volume(volume)
 
     def build_sample(self):
-        print(self.frequency)
         # wave = scipy.signal.triang(500 + int(self.frequency)) #
         wave = scipy.signal.triang(130 + int(self.frequency)) #
         amplitude = 2 ** (15) - 1
@@ -90,7 +89,7 @@ class APUPlayState:
         frequency = CPU_CLOCK / (32 * (timer + 1))
         # print(frequency)
         # TriangleNote(frequency).play(20)
-        pygame.mixer.Channel(start_index).play(TriangleNote(frequency), timer)
+        pygame.mixer.Channel(8).play(TriangleNote(frequency), 20)
         # regs[8] = 0
         # regs[10] = 0
         # regs[11] = 0
